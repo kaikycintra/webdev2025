@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aula 6: HTMX e UI</title>
+    
+    <!-- Prism.js CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" rel="stylesheet" />
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        code {
+            padding: 2px 4px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        pre {
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        .note {
+            background-color: #e7f5ff;
+            border-left: 4px solid #4dabf7;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>Aula 6: HTMX e UI</h1>
+
+    <h2>Introdução</h2>
+    <ul>
+        <li>Até agora, discutimos como construir páginas web simples usando HTML e CSS. Também começamos a usar Django para criar aplicações web, e aprendemos a usar modelos Django para armazenar informações em nossos sites. Depois introduzimos JavaScript e aprendemos como usá-lo para tornar páginas web mais interativas.</li>
+        <li>Hoje, discutiremos paradigmas comuns em design de Interface de Usuário, usando JavaScript e CSS para tornar nossos sites ainda mais amigáveis ao usuário.</li>
+    </ul>
+
+    <h2>Interfaces de Usuário</h2>
+    <p>Uma Interface de Usuário é como visitantes de uma página web interagem com essa página. Nosso objetivo como desenvolvedores web é tornar essas interações o mais agradáveis possível para o usuário, e há muitos métodos que podemos usar para isso.</p>
+
+    <h2>Single Page Applications (SPAs)</h2>
+    <p>Anteriormente, se quiséssemos um site com múltiplas páginas, faríamos isso usando rotas diferentes em nossa aplicação Django. Agora, temos a capacidade de carregar apenas uma única página e então usar JavaScript para manipular a DOM. Uma grande vantagem disso é que só precisamos modificar a parte da página que está realmente mudando. Por exemplo, se temos uma Barra de Navegação que não muda baseada na página atual, não gostaríamos de ter que renderizar novamente essa Barra toda vez que mudamos para uma nova parte da página.</p>
+    
+    <h3>Requests AJAX</h3>
+    <p>Requests AJAX (Asynchronous JavaScript and XML) permitem que páginas web se comuniquem com o servidor de forma assíncrona, ou seja, sem recarregar a página inteira. Isso melhora a experiência do usuário, pois apenas partes específicas da página são atualizadas. AJAX se refere a uma técnica e não uma tecnologia ou ferramenta específica, por isso existem várias formas de realizar esse tipo de request e atualizar o conteúdo da página.</p>
+    <p>Abaixo temos um exemplo em que atualizamos nossa página com uma resposta HTML do servidor:</p>
+    <pre><code class="language-javascript">document.addEventListener('DOMContentLoaded', function() {
+            const button = document.getElementById('fetchHtml');
+            const result = document.getElementById('result');
+            
+            button.addEventListener('click', async function() {
+                try {
+                    const response = await fetch('/server-endpoint');
+                    if (!response.ok) {
+                        throw new Error('Erro ao buscar o HTML');
+                    }
+                    const html = await response.text();
+                    result.innerHTML = html; // Insere o HTML retornado no elemento result
+                } catch (error) {
+                    result.innerHTML = `&lt;p style="color: red;"&gt;${error.message}&lt;/p&gt;`;
+                }
+            });
+        });</code></pre>
+
+    <p>Abaixo temos um exemplo em que atualizamos nossa página com uma resposta JSON do servidor:</p>
+    <pre><code class="language-javascript">document.addEventListener('DOMContentLoaded', function() {
+            const button = document.getElementById('fetchJson');
+            const result = document.getElementById('result');
+        
+            button.addEventListener('click', async function() {
+                try {
+                    const response = await fetch('/server-endpoint'); // Substitua pelo endpoint do servidor
+                    if (!response.ok) {
+                        throw new Error('Erro ao buscar os dados');
+                    }
+                    const data = await response.json();
+                    result.innerHTML = `
+                        &lt;h4&gt;${data.title}&lt;/h4&gt;
+                        &lt;p&gt;${data.body}&lt;/p&gt;
+                    `;
+                } catch (error) {
+                    result.innerHTML = `&lt;p style="color: red;"&gt;${error.message}&lt;/p&gt;`;
+                }
+            });
+        });</code></pre>
+    
+    <h2>HTMX</h2>
+    <p>HTMX é uma biblioteca que permite acessar recursos modernos dos navegadores diretamente do HTML, em vez de usar JavaScript.</p>
+
+    <p>Para entender o HTMX, primeiro vamos dar uma olhada em uma tag âncora:</p>
+
+    <pre><code class="language-html">&lt;a href="/blog"&gt;Blog&lt;/a&gt;</code></pre>
+
+    <p>Esta tag âncora diz ao navegador:</p>
+    <p class="note">"Quando um usuário clicar neste link, faça uma requisição HTTP GET para '/blog' e carregue o conteúdo da resposta na janela do navegador".</p>
+
+    <p>Com isso em mente, considere o seguinte trecho de HTML:</p>
+
+    <pre><code class="language-html">&lt;button hx-post="/clicked"
+        hx-trigger="click"
+        hx-target="#parent-div"
+        hx-swap="outerHTML"&gt;
+        Clique Aqui!
+&lt;/button&gt;</code></pre>
+        
+    <p>Isso diz ao HTMX:</p>
+    <p class="note">"Quando um usuário clicar neste botão, faça uma requisição HTTP POST para '/clicked' e use o conteúdo da resposta para substituir o elemento com o id parent-div no DOM"</p>
+
+    <p>O HTMX estende e generaliza a ideia central do HTML como hipertexto, abrindo muitas mais possibilidades diretamente na linguagem:</p>
+
+    <ul>
+        <li>Agora qualquer elemento, não apenas âncoras e formulários, pode fazer requisições HTTP</li>
+        <li>Agora qualquer evento, não apenas cliques ou envios de formulários, pode acionar requisições</li>
+        <li>Agora qualquer verbo HTTP, não apenas GET e POST, pode ser usado</li>
+        <li>Agora qualquer elemento, não apenas a janela inteira, pode ser o alvo para atualização pela requisição</li>
+    </ul>
+
+    <p class="note">Observe que quando você está usando HTMX, no lado do servidor você normalmente responde com HTML, não com JSON.</p>
+
+    Falar sobre hx-push-url
+    <h2>Requests HTMX</h2>
+    <p>Vamos começar com um exemplo simples, entendendo como usar HTMX para atualizar o conteúdo da tela de forma dinâmica. No exemplo abaixo temos um site mostrando uma página inicial:<p> 
+    <pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html lang="pt-br"&gt;
+    &lt;head&gt;
+        &lt;title&gt;Meu Site&lt;/title&gt;
+        &lt;style&gt;...&lt;/style&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;h1&gt;Meu Site&lt;/h1&gt;
+        &lt;hr&gt;
+        &lt;h2&gt;Página 1&lt;/h2&gt;
+        &lt;p&gt;Conteúdo da página um&lt;/p&gt;
+    &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+    <p>Antes, quando pensávamos na navegação para outras páginas dentro da lógica de uma MPA (Multi Page Application), pensávamos em adicionar anchor tags com links que recarregariam a tela e nos levariam para uma outra página a partir de uma resposta do servidor contendo um arquivo HTML completo. Com HTMX, entretanto, podemos ser mais eficientes e trocar somente as partes que nos interessam.</p>
+    <p>No exemplo acima, em vez de adicionar uma anchor tag, podemos então adicionar um botão que troca somente o conteúdo após a tag hr</p>
+    <pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html lang="pt-br"&gt;
+    &lt;head&gt;
+        &lt;title&gt;Olá&lt;/title&gt;
+        &lt;script src="https://unpkg.com/htmx.org@2.0.4" integrity="sha384-HGfztofotfshcF7+8n44JQL2oJmowVChPTg48S+jvZoztPfvwD79OC/LTtG6dMp+" crossorigin="anonymous"&gt;&lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;h1&gt;Meu Site&lt;/h1&gt;
+        &lt;nav&gt;
+            &lt;button hx-get="pagina2"
+                    hx-target="main"&gt;
+                Página 2
+            &lt;/button&gt;
+        &lt;/nav&gt;
+        &lt;hr&gt;
+        &lt;main&gt;
+            &lt;h2&gt;Página 1&lt;/h2&gt;
+            &lt;p&gt;Conteúdo da página um&lt;/p&gt;
+        &lt;/main&gt;
+    &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+    <p>Perceba que mudamos algumas coisas, importamos o HTMX dentro da head e encapsulamos o conteúdo da página dentro de uma tag main. Esse encapsulamento serve para podermos "mirar" no conteúdo que queremos trocar com o parâmetro hx-target. Além disso, não especificamos o hx-swap que nos diz como a resposta do servidor vai substituir nosso alvo, isso porque o hx-swap padrão é o 'innerHTML'. Isso significa que a resposta do servidor vai entrar entre as tags main. Um exemplo de resposta seria este:</p>
+    <pre><code class="language-html">&lt;h2&gt;Página 2&lt;/h2&gt;
+&lt;p&gt;Conteúdo da página dois&lt;/p&gt;</code></pre>
+    <p>Podemos então adicionar um botão que nos leva de volta à primeira página, assim como um endpoint que resposta com o conteúdo da primeira página:</p>
+    <pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html lang="pt-br"&gt;
+    &lt;head&gt;
+        &lt;title&gt;Olá&lt;/title&gt;
+        &lt;script src="https://unpkg.com/htmx.org@2.0.4" integrity="sha384-HGfztofotfshcF7+8n44JQL2oJmowVChPTg48S+jvZoztPfvwD79OC/LTtG6dMp+" crossorigin="anonymous"&gt;&lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;h1&gt;Meu Site&lt;/h1&gt;
+        &lt;nav&gt;
+            &lt;button hx-get="pagina1"
+                    hx-target="main"&gt;
+                Página 1
+            &lt;/button&gt;
+            &lt;button hx-get="pagina2"
+                    hx-target="main"&gt;
+                Página 2
+            &lt;/button&gt;
+        &lt;/nav&gt;
+        &lt;hr&gt;
+        &lt;main&gt;
+            &lt;h2&gt;Página 1&lt;/h2&gt;
+            &lt;p&gt;Conteúdo da página um&lt;/p&gt;
+        &lt;/main&gt;
+    &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+    <pre><code class="language-html">&lt;h2&gt;Página 1&lt;/h2&gt;
+&lt;p&gt;Conteúdo da página um&lt;/p&gt;</code></pre>
+    <p>Como temos todo o código modularizado agora, podemos até mesmo omitir o conteúdo da página um da nossa primeira página. Observe que isso pode ser feito com um block ao trabalhar com templates Django, mas também podemos fazer algo parecido com HTMX para deixar que o cliente peça o conteúdo de outra forma. Uma forma possível é solicitar a página um no momento que a página inicial for carregada.</p>
+    <pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html lang="pt-br"&gt;
+    &lt;head&gt;
+        &lt;title&gt;Olá&lt;/title&gt;
+        &lt;script src="https://unpkg.com/htmx.org@2.0.4" integrity="sha384-HGfztofotfshcF7+8n44JQL2oJmowVChPTg48S+jvZoztPfvwD79OC/LTtG6dMp+" crossorigin="anonymous"&gt;&lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;h1&gt;Meu Site&lt;/h1&gt;
+        &lt;nav&gt;
+            &lt;button hx-get="pagina1"
+                    hx-target="main"&gt;
+                Página 1
+            &lt;/button&gt;
+            &lt;button hx-get="pagina2"
+                    hx-target="main"&gt;
+                Página 2
+            &lt;/button&gt;
+        &lt;/nav&gt;
+        &lt;hr&gt;
+        &lt;main hx-get="pagina1"
+              hx-target="main"
+              hx-trigger="load"&gt;
+        &lt;/main&gt;
+    &lt;/body&gt; 
+&lt;/html&gt;</code></pre>
+    <h2>Paginação</h2>
+    <p>
+        Paginação é uma técnica de bancos de dados que permite retornar as linhas de uma tabela em páginas.
+        Isso é útil para quando temos conteúdo demais em uma tabela e queremos mostrá-lo em partes para os usuários.
+    </p>
+    <p>
+        Para experimentar com paginação usando Django e HTMX podemos usar o modelo padrão de usuários:
+    </p>
+    <ul>
+        <li>python manage.py migrate</li>
+        <li>python manage.py createsuperuser</li>
+        <li>ir para http://localhost:8000/admin</li>
+        <li>criar usuários na página de admin</li>
+    </ul>
+    <p>views.py:</p>
+    <pre><code class="language-python">from django.shortcuts import render
+from django.core.paginator import Paginator
+from django.contrib.auth.models import User
+from django.views.decorators.http import require_http_methods
+
+@require_http_methods(["GET"])
+def index(request):
+    return render(request, "ccapp/index.html")
+
+@require_http_methods(["GET"])
+def usuarios(request):
+    usuarios = User.objects.all().order_by('id')
+    paginator = Paginator(usuarios, 2)
+    pagina = request.GET.get('pagina', 1)
+    usuarios = paginator.page(pagina)
+    ultima_pagina = not usuarios.has_next()
+
+    return render(request, "ccapp/usuarios.html", {
+        "usuarios": usuarios,
+        "ultima_pagina": ultima_pagina,
+        "pagina": pagina,
+    })</code></pre>
+    <p>index.html:</p>
+    <pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html lang="pt-br"&gt;
+    &lt;head&gt;
+        &lt;title&gt;CodeClass&lt;/title&gt;
+        &lt;script src="https://unpkg.com/htmx.org@2.0.4" integrity="sha384-HGfztofotfshcF7+8n44JQL2oJmowVChPTg48S+jvZoztPfvwD79OC/LTtG6dMp+" crossorigin="anonymous"&gt;&lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;h1&gt;CodeClass&lt;/h1&gt;
+        &lt;nav&gt;
+            &lt;button hx-get="cursos"
+                    hx-target="main"&gt;
+                Cursos
+            &lt;/button&gt;
+            &lt;button hx-get="usuarios"
+                    hx-target="main"&gt;
+                Usuários
+            &lt;/button&gt;
+        &lt;/nav&gt;
+        &lt;hr&gt;
+        &lt;main hx-get="usuarios"
+              hx-target="main"
+              hx-trigger="load"&gt;
+        &lt;/main&gt;
+    &lt;/body&gt; 
+&lt;/html&gt;</code></pre>
+    <p>usuarios.html:</p>
+    <pre><code class="language-html">&lt;div&gt;
+    {% for usuario in usuarios %}
+    &lt;h3&gt;{{ usuario }}&lt;/h3&gt;
+    {% endfor %}
+    &lt;p&gt;&lt;strong&gt;Página {{ pagina }}&lt;/strong&gt;&lt;/p&gt;
+    &lt;button hx-get="usuarios?pagina={{ pagina|add:'-1' }}"
+            hx-target="closest main"
+            {% if pagina == 1 %} disabled {% endif %}&gt;
+        Anterior
+    &lt;/button&gt;
+    &lt;button hx-get="usuarios?pagina={{ pagina|add:'1' }}"
+            hx-target="closest main"
+            {% if ultima_pagina %} disabled {% endif %}&gt;
+        Próximo
+    &lt;/button&gt;
+&lt;/div&gt;</code></pre>
+    <h3> Criando um usuário com POST</h3>
+    <h3> Apagando um usuário com DELETE</h3>
+
+    <h2>Scroll Infinito</h2>
+    <p>usuarios.html:</p>
+    <pre><code class="language-html">&lt;div&gt;
+    {% if ultima_pagina is not True %}
+    &lt;div hx-get="usuarios?pagina={{ pagina|add:'1'}}"
+         hx-trigger="intersect"
+         hx-target="closest main"
+         hx-swap="beforeend"&gt;
+    &lt;/div&gt;
+    {% else %}
+    &lt;!--Loop nas páginas partindo do começo--&gt;
+    &lt;div hx-get="usuarios?pagina=1"
+         hx-trigger="intersect"
+         hx-target="closest main"
+         hx-swap="beforeend"&gt;
+    &lt;/div&gt;
+    {% endif %}
+    {% for usuario in usuarios %}
+    &lt;div style="background-color: green; height: 300px; width: 300px;"&gt;
+        &lt;h3&gt;{{ usuario }}&lt;/h3&gt;
+    &lt;/div&gt;
+    {% endfor %}
+&lt;/div&gt;</code></pre>
+    <h2>Busca</h2>
+    <p>usuarios.html:</p>
+    <pre><code class="language-html">&lt;input type="text" 
+       name="busca"
+       style="margin-top: 10px;"
+       hx-get="usuarios"
+       hx-trigger="input changed delay:500ms"
+       hx-target="#div-usuarios"
+       hx-select="#div-usuarios"&gt;
+&lt;div id="div-usuarios"&gt;
+    {% for usuario in usuarios %}
+        &lt;h3&gt;{{ usuario }}&lt;/h3&gt;
+    {% empty %}
+        &lt;h3&gt;Nenhum usuário encontrado&lt;/h3&gt;
+    {% endfor %}
+&lt;/div&gt;</code></pre>
+    <h2>Carregamento</h2>
+    <p>
+        É importante saber lidar com tempos de carregamento maiores para que os usuários não se sintam frustrados.
+        Podemos simular uma resposta mais demorado usando o time.sleep no nosso views.py
+    </p>
+    <p>views.py:</p>
+    <pre><code class="language-python">from django.shortcuts import render
+from django.core.paginator import Paginator
+from django.contrib.auth.models import User
+from django.views.decorators.http import require_http_methods
+import time
+
+@require_http_methods(["GET"])
+def index(request):
+    return render(request, "ccapp/index.html")
+
+@require_http_methods(["GET"])
+def usuarios(request):
+    busca = request.GET.get('busca')
+    if busca:
+        usuarios = User.objects.filter(username__icontains=busca)
+    else:
+        usuarios = User.objects.all()
+
+    time.sleep(2)
+    return render(request, "ccapp/usuarios.html", {
+        "usuarios": usuarios,
+    })</code></pre>
+    
+    <p>
+        Já no nosso usuarios.html, usamos o atributo hx-indicator com uma classe própria definida no index.
+        Também usamos o hx-on para fazer o resultado atual sumir e o novo aparecer. Usamos o bootstrap para placeholder.
+    </p>
+    <p>usuarios.html:</p>
+    <pre><code class="language-html">&lt;input type="text" 
+        name="busca"
+        style="margin-top: 10px;"
+        hx-get="usuarios"
+        hx-trigger="input changed delay:500ms"
+        hx-target="#div-usuarios"
+        hx-select="#div-usuarios"
+        hx-indicator="#loading"
+        hx-on::before-request="document.getElementById('div-usuarios').style.display = 'none';"
+        hx-on::after-request="document.getElementById('div-usuarios').style.display = 'block';"&gt;
+ 
+ &lt;p id="loading" class="placeholder-glow my-indicator"&gt;
+     &lt;span class="placeholder w-100"&gt;&lt;/span&gt;
+ &lt;/p&gt;
+ 
+ &lt;div id="div-usuarios"&gt;
+     {% for usuario in usuarios %}
+         &lt;h3&gt;{{ usuario }}&lt;/h3&gt;
+     {% empty %}
+         &lt;h3&gt;Nenhum usuário encontrado&lt;/h3&gt;
+     {% endfor %}
+ &lt;/div&gt;</code></pre> 
+
+    <p>Importamos o bootstrap e definimos a classe my-indicator no index.html:</p>
+    <pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html lang="pt-br"&gt;
+    &lt;head&gt;
+        &lt;title&gt;CodeClass&lt;/title&gt;
+        &lt;script src="https://unpkg.com/htmx.org@2.0.4" integrity="sha384-HGfztofotfshcF7+8n44JQL2oJmowVChPTg48S+jvZoztPfvwD79OC/LTtG6dMp+" crossorigin="anonymous"&gt;&lt;/script&gt;
+        &lt;script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js" integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO" crossorigin="anonymous"&gt;&lt;/script&gt;
+        &lt;link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous"&gt;
+    &lt;/head&gt;
+    &lt;style&gt;
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .my-indicator{
+            display: none;
+        }
+        .htmx-request .my-indicator{
+            display: inline;
+        }
+        .htmx-request.my-indicator{
+            display: inline;
+        }
+    &lt;/style&gt;
+    &lt;body&gt;
+        &lt;h1&gt;CodeClass&lt;/h1&gt;
+        &lt;nav&gt;
+            &lt;button hx-get="cursos"
+                    hx-target="main"&gt;
+                Cursos
+            &lt;/button&gt;
+            &lt;button hx-get="usuarios"
+                    hx-target="main"&gt;
+                Usuários
+            &lt;/button&gt;
+        &lt;/nav&gt;
+        &lt;hr class="w-50"&gt;
+        &lt;main hx-get="usuarios"
+              hx-target="main"
+              hx-trigger="load"&gt;
+        &lt;/main&gt;
+    &lt;/body&gt; 
+&lt;/html&gt;</code></pre>
+    <h2>Animações</h2>
+    <p>
+        Existem várias formas de animar elementos, uma delas é usar a propriedade <code class="language-css">transition</code> de CSS.
+        Como um exemplo, vamos animar o clique em um usuário para que apareça um fundo laranja temporariamente.
+    </p>
+    <p>dentro da tag style do index.html:</p>
+    <pre><code class="language-css">h3 {
+    transition: background-color 0.2s ease-in-out;
+}
+.highlight {
+    background-color: rgb(207, 166, 90);
+}</code></pre> 
+    <p>div-usuarios no usuarios.html:</p>
+    <pre><code class="language-html">&lt;div id="div-usuarios"&gt;
+    {% for usuario in usuarios %}
+        &lt;h3 hx-on:click="
+                this.classList.add('highlight');
+                setTimeout(() =&gt; this.classList.remove('highlight'), 500)"&gt;
+            {{ usuario }}
+        &lt;/h3&gt;
+    {% empty %}
+        &lt;h3&gt;Nenhum usuário encontrado&lt;/h3&gt;
+    {% endfor %}
+&lt;/div&gt;</code></pre>
+    <p>Também podemos animar usando keyframes CSS. Keyframes permitem definir múltiplos estágios de uma animação, dando mais controle sobre o movimento e aparência dos elementos.</p>
+<pre><code class="language-css">@keyframes pulseBackgroundColor {
+    0% {
+        background-color: transparent; /* Cor inicial */
+    }
+    50% {
+        background-color: rgb(207, 166, 90);
+    }
+    100% {
+        background-color: transparent; /* Cor final, voltando ao inicial */
+    }
+}
+.animate-pulse {
+  animation: pulseBackgroundColor 0.5s ease-in-out; /* Duração e timing da animação */
+}</code></pre> 
+<pre><code class="language-html"></code>&lt;h3 hx-on:click="
+    this.classList.add('animate-pulse');
+    setTimeout(() =&gt; this.classList.remove('animate-pulse'), 500)"&gt;
+    {{ usuario }}
+&lt;/h3&gt;</code></pre> 
+
+    <!-- Prism.js JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html>
