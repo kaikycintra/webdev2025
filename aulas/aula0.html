@@ -4,64 +4,210 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aula 0: HTML e CSS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+
     <style>
+        :root {
+            --background-color: #292827; /* Nova cor de fundo */
+            --surface-color: #363636; /* Um pouco mais claro que o fundo para contraste */
+            --primary-text-color: #e0e0e0;
+            --secondary-text-color: #a0a0a0;
+            --disabled-text-color: #666;
+            --accent-color-1: #ff690a; /* Laranja vibrante */
+            --accent-color-2: #ff690a; /* Laranja vibrante */
+            --border-color: #444; /* Borda mais escura */
+            --code-bg: #404040; /* Fundo para blocos de código */
+            --note-bg: #4a4a4a; /* Fundo para notas */
+            --note-border: var(--accent-color-2); /* Borda da nota */
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            max-width: 900px;
+            font-family: 'Roboto', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            line-height: 1.7;
+            background-color: var(--background-color);
+            color: var(--primary-text-color);
+            margin: 0;
+            padding: 0;
+            max-width: 800px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 0rem 1.5rem;
         }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+            box-sizing: border-box; /* Garante que padding não estoure a largura */
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            color: var(--accent-color-1);
+            font-weight: 700;
+            margin-top: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 1rem;
+        }
+
+        h2 {
+            font-size: 2.2rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.5rem;
+        }
+
+        h3 {
+            font-size: 1.8rem;
+        }
+
+        a {
+            color: var(--accent-color-2);
+            transition: color 0.2s ease-in-out;
+        }
+
+        a:hover {
+            color: var(--primary-text-color);
+            text-decoration: underline;
+        }
+
+        ul, ol {
+            padding-left: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        ul li, ol li {
+            margin-bottom: 0.5rem;
+        }
+
         code {
-            padding: 2px 4px;
+            background-color: var(--code-bg);
+            color: var(--accent-color-2);
+            padding: 0.2em 0.4em;
             border-radius: 4px;
-            font-family: monospace;
+            font-family: 'Roboto Mono', monospace;
+            font-size: 0.9em;
         }
+
         pre {
-            background-color: #f8f9fa;
-            padding: 10px;
-            border-radius: 4px;
+            background-color: var(--code-bg);
+            padding: 1rem;
+            border-radius: 8px;
             overflow-x: auto;
+            margin-top: 1.5rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            font-family: 'Roboto Mono', monospace;
+            font-size: 0.95em;
+            line-height: 1.4;
+            color: var(--primary-text-color);
+            border: 1px solid var(--border-color);
         }
+
+        pre code {
+            background-color: transparent;
+            color: inherit;
+            padding: 0;
+        }
+
         .note {
-            background-color: #e7f5ff;
-            border-left: 4px solid #4dabf7;
-            padding: 10px;
-            margin: 10px 0;
+            background-color: var(--note-bg);
+            border-left: 5px solid var(--note-border);
+            padding: 1rem 1.5rem;
+            margin: 2rem 0;
+            border-radius: 8px;
+            color: var(--primary-text-color);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         }
+        .note p {
+            margin: 0;
+        }
+
         table {
             border-collapse: collapse;
             width: 100%;
-            margin: 20px 0;
+            margin: 2rem 0;
+            background-color: var(--surface-color);
+            border-radius: 8px;
+            overflow: hidden; /* Para bordas arredondadas funcionarem com a borda interna */
         }
         th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
+            border: 1px solid var(--border-color);
+            padding: 12px 15px;
             text-align: left;
+            vertical-align: top;
         }
         th {
-            background-color: #f2f2f2;
+            background-color: var(--code-bg); /* Use cor de código para cabeçalho */
+            font-weight: 700;
+            color: var(--primary-text-color);
         }
+        tr:nth-child(even) {
+            background-color: #2f2f2f; /* Cor alternativa para linhas pares */
+        }
+        tr:hover {
+            background-color: #3e3e3e; /* Destaque ao passar o mouse */
+        }
+
         img {
             max-width: 100%;
             height: auto;
+            display: block; /* Remove espaço extra abaixo da imagem */
+            margin: 2rem auto; /* Centraliza imagens e adiciona margem */
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1.5rem 1rem;
+            }
+            h1 {
+                font-size: 2.2rem;
+            }
+            h2 {
+                font-size: 1.8rem;
+            }
+            h3 {
+                font-size: 1.5rem;
+            }
+            body {
+                font-size: 0.95em;
+            }
+        }
+        @media (max-width: 480px) {
+            .container {
+                padding: 1rem 0.8rem;
+            }
+            h1 {
+                font-size: 1.8rem;
+            }
+            h2 {
+                font-size: 1.5rem;
+            }
         }
     </style>
 </head>
 <body>
     <h1>Aula 0: HTML e CSS</h1>
-    
+    <h3 style="margin: 0;"><a href="/index.html">Página inicial</a></h3>
     <h2>Conteúdos</h2>
     <ul>
         <li>Introdução do curso</li>
-        <li>HTML
+        <li><a href="#html">HTML</a>
             <ul>
                 <li>Document Object Model (DOM)</li>
                 <li>Mais Elementos HTML</li>
                 <li>Forms</li>
             </ul>
         </li>
-        <li>CSS (Cascading Style Sheets)
+        <li><a href="#css">CSS</a>
             <ul>
                 <li>Fundamentos</li>
                 <li>Seletores</li>
@@ -69,9 +215,9 @@
                 <li>Pseudo-Classes</li>
             </ul>
         </li>
-        <li>Design Responsivo
+        <li><a href="#responsivo">Design Responsivo</a>
             <ul>
-                <li><a href="#mediaquery">Media Queries</a></li>
+                <li>Media Queries</li>
                 <li>Flexbox</li>
             </ul>
         </li>
@@ -84,7 +230,7 @@
     <p>Nós usuários da internet a navegamos entrando em uma página (por exemplo o Google), interagindo com ela e depois clicando em links para outras páginas com as quais também podemos interagir.</p>
     <p>Essas páginas são escritas em um formato específico, o HTML, Hypertext Markup Language. O objetivo dessa primeira aula é ensinar vocês a escrever uma página web usando o HTML.</p>
 
-    <h2>HTML</h2>
+    <h2 id="html">HTML</h2>
     <p>HTML é uma linguagem de markup que define a estrutura de uma página web. Ela é interpretada pelo seu browser que sabe como renderizar o conteúdo na sua tela.</p>
     <p>Aqui temos um exemplo de um arquivo HTML:</p>
     
@@ -229,7 +375,7 @@
 
     <p>Existem outros elementos que podem ser usados dentro de um formulário e também é possível criar seus próprios elementos <a href="https://www.w3schools.com/howto/howto_custom_select.asp" target="_blank">como neste exemplo</a>.</p>
 
-    <h2>CSS (Cascading Style Sheets)</h2>
+    <h2 id="css">CSS (Cascading Style Sheets)</h2>
     <p>CSS é usado para mudar a aparência de um website. É possível aplicar estilos específicos para cada elemento adicionando um parâmetro style a ele, isso é chamado de estilização in-line. Nós mudamos o estilo alterando as propriedades CSS de um elemento, como <code>color: blue</code> ou <code>text-align: center</code>, como no exemplo abaixo:</p>
     
     <pre><code>&lt;!DOCTYPE html&gt;
@@ -529,13 +675,13 @@ td, th {
     
     <img src="/static/static0/pseudoclasses.png" alt="Exemplo de pseudo-classe hover">
 
-    <h2>Design Responsivo</h2>
+    <h2 id="responsivo">Design Responsivo</h2>
     <p>Hoje em dia, muitas pessoas acessam sites por meio de dispositivos além de computadores, como smartphones e tablets. É importante garantir que seu site seja legível em todos os dispositivos.</p>
     <p>Uma forma de conseguir isso é através do conhecimento sobre o <strong>viewport</strong>. O <em>viewport</em> é a parte da tela que está visível para o usuário em um determinado momento. Por padrão, muitas páginas da web assumem que o <em>viewport</em> é o mesmo em qualquer dispositivo, o que faz com que muitos sites (especialmente os mais antigos) sejam difíceis de usar em dispositivos móveis.</p>
     <p>Uma maneira simples de melhorar a aparência de um site em um dispositivo móvel é adicionar a seguinte linha dentro da <em>head</em> dos arquivos HTML. Essa linha informa ao dispositivo móvel para usar um <em>viewport</em> com a mesma largura do dispositivo que você está usando, em vez de um muito maior:</p>
     <pre><code>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</code></pre>
 
-    <h3 id="mediaquery">Media Queries</h3>
+    <h3>Media Queries</h3>
     <p>Outra forma de lidar com diferentes dispositivos é por meio de <strong>media queries</strong>. <em>Media queries</em> permitem alterar o estilo de uma página com base em como ela está sendo visualizada.</p>
     <p>Como exemplo de uma <em>media query</em>, vamos apenas mudar a cor de fundo da tela quando ela for reduzida a um certo tamanho. Indicamos uma <em>media query</em> digitando <code>@media</code> seguido do tipo de consulta entre parênteses:</p>
     
