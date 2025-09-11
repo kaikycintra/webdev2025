@@ -1,12 +1,191 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Webdev 2025</title>
+    <title>Curso WebDev 2025</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --background-color: #292827;
+            --surface-color: #1e1e1e;
+            --primary-text-color: #e0e0e0;
+            --secondary-text-color: #a0a0a0;
+            --disabled-text-color: #666;
+            --accent-color-1: #ff690a;
+            --accent-color-2: #ff690a;
+            --border-color: #333;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            background-color: var(--background-color);
+            color: var(--primary-text-color);
+            font-family: 'Roboto', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: var(--accent-color-1);
+            margin: 0;
+        }
+
+        header p {
+            font-size: 1.2rem;
+            color: var(--secondary-text-color);
+        }
+
+        main section h2 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--accent-color-2);
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 0.5rem;
+            margin-bottom: 2rem;
+        }
+
+        ul.course-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .course-list li {
+            background-color: var(--surface-color);
+            margin-bottom: 1rem;
+            padding: 1.5rem;
+            border-left: 5px solid var(--border-color);
+            transition: all 0.2s ease-in-out;
+        }
+
+        .course-list li:hover {
+            border-left-color: var(--accent-color-1);
+            transform: translateY(-2px);
+        }
+        
+        .course-list .lesson-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+
+        .course-list a {
+            color: var(--accent-color-2);
+            text-decoration: none;
+            display: block;
+        }
+        
+        .course-list a:hover {
+            text-decoration: underline;
+        }
+        
+        .course-list .unavailable {
+            color: var(--disabled-text-color);
+            cursor: not-allowed;
+        }
+        
+        .course-list .soon-tag {
+            font-size: 0.9rem;
+            font-style: italic;
+            margin-left: 0.5rem;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 5rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color);
+            color: var(--secondary-text-color);
+            font-size: 0.9rem;
+        }
+
+        footer a {
+            color: var(--accent-color-2);
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+            main section h2 {
+                font-size: 1.8rem;
+            }
+            .course-list .lesson-title {
+                font-size: 1.2rem;
+            }
+        }
+
+    </style>
 </head>
 <body>
-    <h1>Bem-vindo ao curso</h1>
-    <a href="aulas/aula0.html">Aula 0</a>
+
+    <div class="container">
+
+        <header>
+            <h1>WebDev 2025</h1>
+            <p>Página do curso de desenvolvimento web do CodeLab</p>
+        </header>
+
+        <main>
+            <section id="aulas">
+                <h2>Aulas</h2>
+                <ul class="course-list">
+                    
+                    <li>
+                        <a href="aulas/aula0.html">
+                            <span class="lesson-title">Aula 0: HTML, CSS e Responsividade</span>
+                        </a>
+                    </li>
+
+                    <li class="unavailable">
+                        <span class="lesson-title">Aula 1: Javascript</span>
+                        <span class="soon-tag">(em breve)</span>
+                    </li>
+
+                    <li class="unavailable">
+                        <span class="lesson-title">Aula 2: Django</span>
+                        <span class="soon-tag">(em breve)</span>
+                    </li>
+
+                    <li class="unavailable">
+                        <span class="lesson-title">Aula 3: SQL e Models</span>
+                        <span class="soon-tag">(em breve)</span>
+                    </li>
+
+                    <li class="unavailable">
+                        <span class="lesson-title">Aula 4: HTMX e UI</span>
+                        <span class="soon-tag">(em breve)</span>
+                    </li>
+
+                    <li class="unavailable">
+                        <span class="lesson-title">Aula 5: Deployment</span>
+                        <span class="soon-tag">(em breve)</span>
+                    </li>
+
+                </ul>
+            </section>
+        </main>
+
+        <footer>
+            <p>&copy; 2025 <a href="https://codelab.ime.usp.br/#/" target="_blank" rel="noopener noreferrer">Codelab IME-USP</a>.</p>
+        </footer>
+
+    </div>
+
 </body>
 </html>
