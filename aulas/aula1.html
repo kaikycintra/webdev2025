@@ -1,55 +1,202 @@
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="pt-br">
 <head>
-    <title>Aula 5</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aula 0: HTML e CSS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+
     <style>
-        /* Estilo para blocos de código */
+        :root {
+            --background-color: #292827; /* Nova cor de fundo */
+            --surface-color: #363636; /* Um pouco mais claro que o fundo para contraste */
+            --primary-text-color: #e0e0e0;
+            --secondary-text-color: #a0a0a0;
+            --disabled-text-color: #666;
+            --accent-color-1: #ff690a; /* Laranja vibrante */
+            --accent-color-2: #ff690a; /* Laranja vibrante */
+            --border-color: #444; /* Borda mais escura */
+            --code-bg: #404040; /* Fundo para blocos de código */
+            --note-bg: #4a4a4a; /* Fundo para notas */
+            --note-border: var(--accent-color-2); /* Borda da nota */
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            max-width: 900px;
+            font-family: 'Roboto', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            line-height: 1.7;
+            background-color: var(--background-color);
+            color: var(--primary-text-color);
+            margin: 0;
+            padding: 0;
+            max-width: 800px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 0rem 1.5rem;
         }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+            box-sizing: border-box; /* Garante que padding não estoure a largura */
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            color: var(--accent-color-1);
+            font-weight: 700;
+            margin-top: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 1rem;
+        }
+
+        h2 {
+            font-size: 2.2rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.5rem;
+        }
+
+        h3 {
+            font-size: 1.8rem;
+        }
+
+        a {
+            color: var(--accent-color-2);
+            transition: color 0.2s ease-in-out;
+        }
+
+        a:hover {
+            color: var(--primary-text-color);
+            text-decoration: underline;
+        }
+
+        ul, ol {
+            padding-left: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        ul li, ol li {
+            margin-bottom: 0.5rem;
+        }
+
         code {
-            padding: 2px 4px;
+            background-color: var(--code-bg);
+            color: var(--accent-color-2);
+            padding: 0.2em 0.4em;
             border-radius: 4px;
-            font-family: monospace;
+            font-family: 'Roboto Mono', monospace;
+            font-size: 0.9em;
         }
+
         pre {
-            background-color: #f8f9fa;
-            padding: 10px;
-            border-radius: 4px;
+            background-color: var(--code-bg);
+            padding: 1rem;
+            border-radius: 8px;
             overflow-x: auto;
+            margin-top: 1.5rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            font-family: 'Roboto Mono', monospace;
+            font-size: 0.95em;
+            line-height: 1.4;
+            color: var(--primary-text-color);
+            border: 1px solid var(--border-color);
         }
+
+        pre code {
+            background-color: transparent;
+            color: inherit;
+            padding: 0;
+        }
+
         .note {
-            background-color: #e7f5ff;
-            border-left: 4px solid #4dabf7;
-            padding: 10px;
-            margin: 10px 0;
+            background-color: var(--note-bg);
+            border-left: 5px solid var(--note-border);
+            padding: 1rem 1.5rem;
+            margin: 2rem 0;
+            border-radius: 8px;
+            color: var(--primary-text-color);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         }
+        .note p {
+            margin: 0;
+        }
+
         table {
             border-collapse: collapse;
             width: 100%;
-            margin: 20px 0;
+            margin: 2rem 0;
+            background-color: var(--surface-color);
+            border-radius: 8px;
+            overflow: hidden; /* Para bordas arredondadas funcionarem com a borda interna */
         }
         th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
+            border: 1px solid var(--border-color);
+            padding: 12px 15px;
             text-align: left;
+            vertical-align: top;
         }
         th {
-            background-color: #f2f2f2;
+            background-color: var(--code-bg); /* Use cor de código para cabeçalho */
+            font-weight: 700;
+            color: var(--primary-text-color);
         }
+        tr:nth-child(even) {
+            background-color: #2f2f2f; /* Cor alternativa para linhas pares */
+        }
+        tr:hover {
+            background-color: #3e3e3e; /* Destaque ao passar o mouse */
+        }
+
         img {
             max-width: 100%;
             height: auto;
+            display: block; /* Remove espaço extra abaixo da imagem */
+            margin: 2rem auto; /* Centraliza imagens e adiciona margem */
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1.5rem 1rem;
+            }
+            h1 {
+                font-size: 2.2rem;
+            }
+            h2 {
+                font-size: 1.8rem;
+            }
+            h3 {
+                font-size: 1.5rem;
+            }
+            body {
+                font-size: 0.95em;
+            }
+        }
+        @media (max-width: 480px) {
+            .container {
+                padding: 1rem 0.8rem;
+            }
+            h1 {
+                font-size: 1.8rem;
+            }
+            h2 {
+                font-size: 1.5rem;
+            }
         }
     </style>
 </head>
 <body>
 
-<h1>Aula 5</h1>
+<h1>Aula 1</h1>
 
 <ul>
   <li><a href="#introduction">Introdução</a></li>
@@ -85,7 +232,7 @@
 
 <p>Vamos começar revisitando um diagrama de algumas aulas atrás:</p>
 
-<p><img src="static5/client_server.png" alt="Diagrama Cliente-Servidor"></p>
+<p><img src="/static/static1/client_server.png" alt="Diagrama Cliente-Servidor"></p>
 
 <p>Lembre-se que na maioria das interações online, temos um cliente/usuário que envia uma Requisição HTTP para um servidor, que envia de volta uma Resposta HTTP. Todo o código Python que escrevemos até agora usando Django foi executado no servidor. JavaScript nos permitirá executar código no lado do cliente, significando que nenhuma interação com o servidor é necessária enquanto ele está rodando, permitindo que nossos sites se tornem muito mais interativos.</p>
 
@@ -110,7 +257,7 @@
 &lt;/html&gt;
 </code></pre>
 
-<p><img src="static5/alert0.png" alt="alerta"></p>
+<p><img src="/static/static1/alert0.png" alt="alerta"></p>
 
 <h2 id="events">Eventos</h2>
 
@@ -179,7 +326,7 @@
 &lt;/html&gt;
 </code></pre>
 
-<p><img src="static5/count.gif" alt="contando"></p>
+<p><img src="/static/static1/count.gif" alt="contando"></p>
 
 <h2 id="queryselector">querySelector</h2>
 
@@ -218,7 +365,7 @@
 &lt;/html&gt;
 </code></pre>
 
-<p><img src="static5/toggle.gif" alt="alternar"></p>
+<p><img src="/static/static1/toggle.gif" alt="alternar"></p>
 
 <h2 id="dom-manipulation">Manipulação da DOM</h2>
 
@@ -243,7 +390,7 @@
 &lt;/html&gt;
 </code></pre>
 
-<p><img src="static5/count2.gif" alt="contador 2"></p>
+<p><img src="/static/static1/count2.gif" alt="contador 2"></p>
 
 <p>Podemos tornar esta página ainda mais interessante exibindo um alerta toda vez que o contador chegar a um múltiplo de dez. Neste alerta, vamos formatar uma string para personalizar a mensagem, o que em JavaScript podemos fazer usando <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals">template literals</a>. Template literals requerem que haja crases (<code>`</code>) em torno de toda a expressão e um $ e chaves em torno de qualquer substituição. Por exemplo, vamos mudar nossa função contar:</p>
 
@@ -257,7 +404,7 @@
 }
 </code></pre>
 
-<p><img src="static5/count3.gif" alt="contador com alerta"></p>
+<p><img src="/static/static1/count3.gif" alt="contador com alerta"></p>
 
 <p>Agora, vamos ver algumas maneiras de melhorar o design desta página. Primeiro, assim como tentamos evitar estilização inline com CSS, queremos evitar JavaScript inline sempre que possível. Podemos fazer isso em nosso exemplo de contador adicionando uma linha de script que muda o atributo <code>onclick</code> de um botão na página, e removendo o atributo <code>onclick</code> de dentro da tag <code>button</code>.</p>
 
@@ -268,7 +415,7 @@
 
 <p>Esta mudança sozinha não é suficiente, como podemos ver ao inspecionar a página e olhar o console do navegador:</p>
 
-<p><img src="static5/error0.png" alt="console de erro"></p>
+<p><img src="/static/static1/error0.png" alt="console de erro"></p>
 
 <p>Este erro apareceu porque quando JavaScript procurou por um elemento usando <code>document.querySelector('button')</code>, não encontrou nada. Isso porque leva um pequeno tempo para a página carregar, e nosso código JavaScript rodou antes do botão ter sido renderizado. Para contornar isso, podemos especificar que o código só será executado depois que a página tiver carregado usando a função <a href="https://www.w3schools.com/jsref/met_document_addeventlistener.asp">addEventListener</a>. Esta função recebe dois argumentos:</p>
 <ol>
@@ -313,7 +460,7 @@ document.addEventListener('DOMContentLoaded', function() {
 &lt;html lang="pt"&gt;
     &lt;head&gt;
         &lt;title&gt;Contador&lt;/title&gt;
-        &lt;script src="contador.js"&gt;&lt;/script&gt;
+        &lt;script src="/static/contador.js"&gt;&lt;/script&gt;
     &lt;/head&gt;
     &lt;body&gt;
         &lt;h1&gt;0&lt;/h1&gt;
@@ -372,7 +519,7 @@ document.addEventListener('DOMContentLoaded', function() {
 &lt;/html&gt;
 </code></pre>
 
-<p><img src="static5/greet.gif" alt="Demonstração de Saudação"></p>
+<p><img src="/static/static1/greet.gif" alt="Demonstração de Saudação"></p>
 
 <p>Algumas notas sobre a página acima:</p>
 <ul>
@@ -406,7 +553,7 @@ document.addEventListener('DOMContentLoaded', function() {
 &lt;/html&gt;
 </code></pre>
 
-<p><img src="static5/colors.gif" alt="Demonstração de Cores"></p>
+<p><img src="/static/static1/colors.gif" alt="Demonstração de Cores"></p>
 
 <p>Algumas notas sobre a página acima:</p>
 <ul>
@@ -425,7 +572,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <p>O que nos dá isso no console:</p>
 
-<p><img src="static5/consoleList.png" alt="node list"></p>
+<p><img src="/static/static1/consoleList.png" alt="node list"></p>
 
 <h3 id="arrow-functions">Arrow Functions</h3>
 
@@ -476,7 +623,7 @@ document.addEventListener('DOMContentLoaded', function() {
     &lt;/body&gt;
 &lt;/html&gt;</code></pre>
 
-<p><img src="static5/colorList.gif" alt="Lista de Cores"></p>
+<p><img src="/static/static1/colorList.gif" alt="Lista de Cores"></p>
 
 
 <p>Há muitos outros <a href="https://www.w3schools.com/js/js_events.asp">eventos</a> que podemos detectar em JavaScript incluindo os comuns abaixo:</p>
@@ -498,7 +645,7 @@ document.addEventListener('DOMContentLoaded', function() {
 &lt;html lang="pt"&gt;
     &lt;head&gt;
         &lt;title&gt;Tarefas&lt;/title&gt;
-        &lt;script src="tarefas.js"&gt;&lt;/script&gt;
+        &lt;script src="/static/tarefas.js"&gt;&lt;/script&gt;
     &lt;/head&gt;
     &lt;body&gt;
         &lt;h1&gt;Tarefas&lt;/h1&gt;
@@ -565,7 +712,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </code></pre>
 
-<p><img src="static5/tasks.gif" alt="Demonstração de Tarefas"></p>
+<p><img src="/static/static1/tasks.gif" alt="Demonstração de Tarefas"></p>
 
 <h2 id="intervals">Intervalos</h2>
 
@@ -585,7 +732,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </code></pre>
 
-<p><img src="static5/count4.gif" alt="contador automático"></p>
+<p><img src="/static/static1/count4.gif" alt="contador automático"></p>
 
 <h2 id="local-storage">Local Storage</h2>
 
@@ -624,120 +771,6 @@ document.addEventListener('DOMContentLoaded', function() {
     document.querySelector('button').onclick = contar;
 });
 </code></pre>
-
-<h2 id="apis">APIs</h2>
-
-<h3 id="javascript-objects">Objetos JavaScript</h3>
-
-<p>Um <a href="https://www.w3schools.com/js/js_objects.asp">Objeto JavaScript</a> é muito similar a um dicionário Python, pois nos permite armazenar pares chave-valor. Por exemplo, eu poderia criar um Objeto JavaScript representando Harry Potter:</p>
-
-<pre><code>let pessoa = {
-    primeiro: 'Harry',
-    ultimo: 'Potter'
-};
-</code></pre>
-
-<p>Posso então acessar ou mudar partes deste objeto usando tanto notação de colchetes quanto de ponto:</p>
-
-<p><img src="static5/console.png" alt="Harry Potter"></p>
-
-<p>Uma maneira em que Objetos JavaScript são realmente úteis é em transferir dados de um site para outro, particularmente quando usando <a href="https://www.mulesoft.com/resources/api/what-is-an-api">APIs</a></p>
-
-<p>Uma API, ou Interface de Programação de Aplicações, é uma forma estruturada de comunicação entre duas aplicações diferentes.</p>
-
-<p>Por exemplo, podemos querer que nossa aplicação obtenha informação do Google Maps, Amazon ou algum serviço de clima. Podemos fazer isso fazendo chamadas para a API de um serviço, que retornará dados estruturados para nós, frequentemente em forma de <a href="https://www.w3schools.com/js/js_json_intro.asp">JSON</a> (JavaScript Object Notation). Por exemplo, um voo em forma JSON pode se parecer com isso:</p>
-
-<pre><code>{
-    "origem": "Nova York",
-    "destino": "Londres",
-    "duração": 415
-}
-</code></pre>
-
-<p>Os valores dentro de um JSON não precisam ser apenas strings e números como no exemplo acima. Também podemos armazenar listas, ou até outros Objetos JavaScript:</p>
-
-<pre><code>{
-    "origem": {
-        "cidade": "Nova York",
-        "código": "JFK"
-    },
-    "destino": {
-        "cidade": "Londres",
-        "código": "LHR"
-    },
-    "duração": 415
-}
-</code></pre>
-
-<h3 id="currency-exchange">Câmbio de Moedas</h3>
-
-<p>Para mostrar como podemos usar APIs em nossas aplicações, vamos trabalhar em construir uma aplicação onde podemos encontrar taxas de câmbio entre duas moedas. Durante o exercício, estaremos usando a <a href="https://exchangeratesapi.io">API de Câmbio do Banco Central Europeu</a>. Ao visitar seu website, você verá a documentação da API, que geralmente é um bom lugar para começar quando você deseja usar uma API. Podemos testar esta API visitando a URL: <a href="https://api.exchangeratesapi.io/latest?base=USD">https://api.exchangeratesapi.io/latest?base=USD</a>. Quando você visitar esta página, verá a taxa de câmbio entre o Dólar Americano e muitas outras moedas, escrito em forma JSON. Você também pode mudar o parâmetro GET na URL de <code>USD</code> para qualquer outro código de moeda para mudar as taxas que você obtém.</p>
-
-<p>Vamos ver como implementar esta API em uma aplicação criando um novo arquivo HTML chamado <code>moeda.html</code> e linká-lo a um arquivo JavaScript mas deixar o corpo vazio:</p>
-
-<pre><code>&lt;!DOCTYPE html&gt;
-&lt;html lang="pt"&gt;
-    &lt;head&gt;
-        &lt;title&gt;Câmbio de Moedas&lt;/title&gt;
-        &lt;script src="moeda.js"&gt;&lt;/script&gt;
-    &lt;/head&gt;
-    &lt;body&gt;&lt;/body&gt;
-&lt;/html&gt;
-</code></pre>
-
-<p>Agora, usaremos algo chamado <a href="https://www.w3schools.com/js/js_ajax_intro.asp">AJAX</a>, ou JavaScript Assíncrono e XML, que nos permite acessar informação de páginas externas mesmo depois que nossa página carregou. Para fazer isso, usaremos a função <a href="https://javascript.info/fetch">fetch</a> que nos permitirá enviar uma Requisição HTTP. A função <code>fetch</code> retorna uma <a href="https://web.dev/promises/">promise</a>. Não falaremos sobre os detalhes do que é uma promise aqui, mas podemos pensar nela como um valor que virá em algum ponto, mas não necessariamente imediatamente. Lidamos com promises dando a elas um atributo <code>.then</code> descrevendo o que deve ser feito quando obtivermos uma <code>response</code>. O trecho de código abaixo registrará nossa resposta no console.</p>
-
-<pre><code>document.addEventListener('DOMContentLoaded', function() {
-    // Enviar uma requisição GET para a URL
-    fetch('https://api.exchangeratesapi.io/latest?base=USD')
-    // Colocar resposta em forma json
-    .then(response =&gt; response.json())
-    .then(data =&gt; {
-        // Registrar dados no console
-        console.log(data);
-    });
-});
-</code></pre>
-
-<p><img src="static5/curr_log.png" alt="Registro de Moeda"></p>
-
-<p>Um ponto importante sobre o código acima é que o argumento de <code>.then</code> é sempre uma função. Embora pareça que estamos criando as variáveis <code>response</code> e <code>data</code>, essas variáveis são apenas os parâmetros de duas funções anônimas.</p>
-
-<p>Ao invés de simplesmente registrar esses dados, podemos usar JavaScript para mostrar uma mensagem na tela, como no código abaixo:</p>
-
-<pre><code>document.addEventListener('DOMContentLoaded', function() {
-    // Enviar uma requisição GET para a URL
-    fetch('https://api.exchangeratesapi.io/latest?base=USD')
-    // Colocar resposta em forma json
-    .then(response =&gt; response.json())
-    .then(data =&gt; {
-        // Obter moeda do input do usuário e converter para maiúsculas
-        const moeda = document.querySelector('#moeda').value.toUpperCase();
-
-        // Obter taxa dos dados
-        const taxa = data.rates[moeda];
-
-        // Verificar se a moeda é válida:
-        if (taxa !== undefined) {
-            // Mostrar câmbio na tela
-            document.querySelector('#resultado').innerHTML = `1 USD é igual a ${taxa.toFixed(3)} ${moeda}.`;
-        }
-        else {
-            // Mostrar erro na tela
-            document.querySelector('#resultado').innerHTML = 'Moeda Inválida.';
-        }
-    })
-    // Capturar quaisquer erros e registrá-los no console
-    .catch(error =&gt; {
-        console.log('Erro:', error);
-    });
-    // Prevenir envio padrão
-    return false;
-    }
-});
-</code></pre>
-
-<p><img src="static5/exchange.gif" alt="Demonstração de Câmbio"></p>
 
 <p>Isso é tudo para esta aula! Na próxima, trabalharemos em usar JavaScript para criar interfaces de usuário ainda mais engajadoras!</p>
 
