@@ -8,7 +8,195 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        <link rel="stylesheet" href="aulas.css">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --background-color: #292827; /* Nova cor de fundo */
+            --surface-color: #363636; /* Um pouco mais claro que o fundo para contraste */
+            --primary-text-color: #e0e0e0;
+            --secondary-text-color: #a0a0a0;
+            --disabled-text-color: #666;
+            --accent-color-1: #ff690a; /* Laranja vibrante */
+            --accent-color-2: #ff690a; /* Laranja vibrante */
+            --border-color: #444; /* Borda mais escura */
+            --code-bg: #404040; /* Fundo para blocos de código */
+            --note-bg: #4a4a4a; /* Fundo para notas */
+            --note-border: var(--accent-color-2); /* Borda da nota */
+        }
+
+        body {
+            font-family: 'Roboto', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            line-height: 1.7;
+            background-color: var(--background-color);
+            color: var(--primary-text-color);
+            margin: 0;
+            padding: 0;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0rem 1.5rem;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+            box-sizing: border-box; /* Garante que padding não estoure a largura */
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            color: var(--accent-color-1);
+            font-weight: 700;
+            margin-top: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 1rem;
+        }
+
+        h2 {
+            font-size: 2.2rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.5rem;
+        }
+
+        h3 {
+            font-size: 1.8rem;
+        }
+
+        a {
+            color: var(--accent-color-2);
+            transition: color 0.2s ease-in-out;
+        }
+
+        a:hover {
+            color: var(--primary-text-color);
+            text-decoration: underline;
+        }
+
+        ul, ol {
+            padding-left: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        ul li, ol li {
+            margin-bottom: 0.5rem;
+        }
+
+        code {
+            background-color: var(--code-bg);
+            color: var(--accent-color-2);
+            padding: 0.2em 0.4em;
+            border-radius: 4px;
+            font-family: 'Roboto Mono', monospace;
+            font-size: 0.9em;
+        }
+
+        pre {
+            background-color: var(--code-bg);
+            padding: 1rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin-top: 1.5rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            font-family: 'Roboto Mono', monospace;
+            font-size: 0.95em;
+            line-height: 1.4;
+            color: var(--primary-text-color);
+            border: 1px solid var(--border-color);
+        }
+
+        pre code {
+            background-color: transparent;
+            color: inherit;
+            padding: 0;
+        }
+
+        .note {
+            background-color: var(--note-bg);
+            border-left: 5px solid var(--note-border);
+            padding: 1rem 1.5rem;
+            margin: 2rem 0;
+            border-radius: 8px;
+            color: var(--primary-text-color);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        .note p {
+            margin: 0;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 2rem 0;
+            background-color: var(--surface-color);
+            border-radius: 8px;
+            overflow: hidden; /* Para bordas arredondadas funcionarem com a borda interna */
+        }
+        th, td {
+            border: 1px solid var(--border-color);
+            padding: 12px 15px;
+            text-align: left;
+            vertical-align: top;
+        }
+        th {
+            background-color: var(--code-bg); /* Use cor de código para cabeçalho */
+            font-weight: 700;
+            color: var(--primary-text-color);
+        }
+        tr:nth-child(even) {
+            background-color: #2f2f2f; /* Cor alternativa para linhas pares */
+        }
+        tr:hover {
+            background-color: #3e3e3e; /* Destaque ao passar o mouse */
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block; /* Remove espaço extra abaixo da imagem */
+            margin: 2rem auto; /* Centraliza imagens e adiciona margem */
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1.5rem 1rem;
+            }
+            h1 {
+                font-size: 2.2rem;
+            }
+            h2 {
+                font-size: 1.8rem;
+            }
+            h3 {
+                font-size: 1.5rem;
+            }
+            body {
+                font-size: 0.95em;
+            }
+        }
+        @media (max-width: 480px) {
+            .container {
+                padding: 1rem 0.8rem;
+            }
+            h1 {
+                font-size: 1.8rem;
+            }
+            h2 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
 
     </head>
 
@@ -20,6 +208,8 @@
             <div id="lecture-3">
 
             <h1 class="no_toc">Aula 3: Django</h1>
+            <h3 style="margin: 0;"><a href="/index.html">Página inicial</a></h3>
+            <h2>Conteúdos</h2>
 
             <ul id="markdown-toc">
 
@@ -153,14 +343,79 @@
                 A vantagem de usar um framework como o Django é que muito do código já está pronto para usarmos.
             </p>
 
-            <ul>
-                <li data-marker="*">Para começar, precisamos instalar o Django, o que também exige <a href="https://pip.pypa.io/en/stable/installation/" target="_blank"> instalar o pip</a> caso ainda não o tenha instalado.</li>
-                <li data-marker="*">Uma vez que o pip estiver instalado, você pode executar <code class="plaintext">pip3 install Django</code> no terminal para instalar o Django.</li>
-            </ul>
+            <h3>Passo Essencial: Criando um Ambiente Virtual (venv)</h3>
 
-            <p>
-                Depois de instalar o Django, podemos seguir os passos para criar um novo projeto:
-            </p>
+<p>
+Antes de instalar o Django ou qualquer outro pacote, é uma <strong>prática altamente recomendada</strong> criar um "ambiente virtual" (virtual environment). Pense nisso como uma caixa de areia isolada para cada um dos seus projetos. Isso garante que as dependências de um projeto não interfiram nas de outro e mantém a sua instalação principal do Python limpa.
+</p>
+
+<p>Siga estes passos no seu terminal (Prompt de Comando, PowerShell, ou Terminal no macOS/Linux):</p>
+
+<ol>
+<li>
+<strong>Navegue até a pasta do seu projeto:</strong>
+
+
+Use o comando <code>cd</code> para entrar no diretório onde você quer que seu projeto viva.
+
+
+<code class="plaintext">cd caminho/para/meu_projeto_django</code>
+</li>
+
+
+<li>
+<strong>Crie o ambiente virtual:</strong>
+
+
+Este comando cria uma nova pasta (geralmente chamada de "venv") contendo uma instalação isolada do Python e do pip.
+
+
+<code class="plaintext">python -m venv venv</code>
+
+
+<em>(Em alguns sistemas macOS ou Linux, você talvez precise usar <code>python3</code> em vez de <code>python</code>).</em>
+</li>
+
+
+<li>
+<strong>Ative o ambiente virtual:</strong>
+
+
+Este é o passo crucial. O comando para ativar varia conforme o sistema operacional:
+<ul>
+<li data-marker=""><strong>Windows (Prompt de Comando / CMD):</strong>
+
+
+<code class="plaintext">venv\Scripts\activate</code>
+</li>
+<li data-marker=""><strong>Windows (PowerShell):</strong>
+
+
+<code class="plaintext">venv\Scripts\Activate.ps1</code>
+
+<em>(Se encontrar um erro sobre política de execução, tente rodar este comando primeiro: <code>Set-ExecutionPolicy Unrestricted -Scope Process</code>)</em>
+</li>
+<li data-marker="*"><strong>macOS e Linux:</strong>
+
+
+<code class="plaintext">source venv/bin/activate</code>
+</li>
+</ul>
+<p>Você saberá que o ambiente está ativo porque o nome dele, <strong>(venv)</strong>, aparecerá no início da linha do seu terminal.</p>
+</li>
+</ol>
+
+<p>
+Quando terminar de trabalhar no seu projeto, você pode desativar o ambiente virtual simplesmente digitando o comando <code>deactivate</code> no terminal.
+</p>
+
+<h3>Instalando o Django</h3>
+
+<ul>
+<li data-marker="">Para começar, precisamos instalar o Django, o que também exige <a href="https://pip.pypa.io/en/stable/installation/" target="_blank"> instalar o pip</a> caso ainda não o tenha instalado (o venv já inclui o pip).</li>
+<li data-marker="">Uma vez que o ambiente virtual <strong>(venv)</strong> estiver ativo, você pode executar o comando abaixo no terminal para instalar o Django <strong>apenas neste ambiente</strong>.</li>
+<li data-marker="*"><code class="plaintext">pip install Django</code></li>
+</ul>
 
             <ol>
 
@@ -179,7 +434,7 @@
                     Inicie o projeto executando <code class="plaintext">python manage.py runserver</code>. Isso abrirá um servidor de desenvolvimento, que você pode acessar visitando a URL fornecida. 
                     Este servidor de desenvolvimento está sendo executado localmente na sua máquina, o que significa que outras pessoas não podem acessar seu site. Isso deve levá-lo a uma página de destino padrão:
                     <br>
-                    <img src="static3/django.png" alt="Página inicial do Django">
+                    <img src="../static/static3/django.png" alt="Página inicial do Django">
                     <br>
                 </li>
 
@@ -192,7 +447,7 @@
                     Precisamos instalar a nova aplicação. Para isso, edite <code class="plaintext">settings.py</code>, role até a lista <code class="plaintext">INSTALLED_APPS</code>, 
                     e adicione o nome da aplicação na lista.
                     <br>
-                    <img src="static3/novo_app.png" alt="Lista INSTALLED_APPS">
+                    <img src="../static/static3/novo_app.png" alt="Lista INSTALLED_APPS">
                     <br>
                     No nosso exemplo, criamos o app Users, que será nossa página do usuário.
                 </li>
@@ -310,12 +565,12 @@
 
                 Agora, quando se iniciar a aplicação usando <code class="plaintext">python manage.py runserver</code> e visitar a URL fornecida, temos seguinte tela:
                 <br>
-                <img src="static3/not_found.png" alt="erro 404">
+                <img src="../static/static3/not_found.png" alt="erro 404">
                 <br>
                 Isso ocorre porque definimos apenas a URL <code class="plaintext">localhost:8000/user</code>, mas não definimos a URL 
                 <code class="plaintext">localhost:8000</code> sem nada no final. Então, ao adicionar <code class="plaintext">/user</code> na barra de endereços:
                 <br>
-                <img src="static3/oi_usuario.png" alt="Oi Usuário!">
+                <img src="../static/static3/oi_usuario.png" alt="Oi Usuário!">
                 <br>
                 Agora que tivemos sucesso, vamos revisar o que acabou de acontecer para chegarmos a esse ponto:
                 
@@ -388,9 +643,9 @@
                 Agora, o site permanece igual quando visitamos <code class="plaintext">localhost:8000/user</code>, 
                 mas temos páginas diferentes quando adicionamos <code class="plaintext">kaiky</code> ou <code class="plaintext">rafael</code> no final da URL:
                 <br>
-                <img src="static3/oi_kaiky.png" alt="Kaiky">
+                <img src="../static/static3/oi_kaiky.png" alt="Kaiky">
                 <br>
-                <img src="static3/oi_rafael.png" alt="Rafael">
+                <img src="../static/static3/oi_rafael.png" alt="Rafael">
                 <br>
             </p>
 
@@ -425,9 +680,9 @@
             <p>
                 Essa é uma nova sintaxe, mas, essencialmente, estamos dizendo que não estamos mais procurando uma palavra ou nome específico na URL, mas qualquer string que o usuário possa digitar. Agora, podemos testar o site com algumas URLs diferentes:
                 <br>
-                <img src="static3/oi_ryan.png" alt="ryan">
+                <img src="../static/static3/oi_ryan.png" alt="ryan">
                 <br>
-                <img src="static3/oi_vitor.png" alt="vitor">
+                <img src="../static/static3/oi_vitor.png" alt="vitor">
                 <br>
             </p>
 
@@ -444,9 +699,9 @@
 
             <p>
                 <br>
-                <img src="static3/oi_ryan2.png" alt="Ryan">
+                <img src="../static/static3/oi_ryan2.png" alt="Ryan">
                 <br>
-                <img src="static3/oi_vitor2.png" alt="Vitor">
+                <img src="../static/static3/oi_vitor2.png" alt="Vitor">
                 <br>
             </p>
 
@@ -473,7 +728,7 @@
 
             <p>
                 <br>
-                <img src="static3/oi_usuario_azul.png" alt="Azul">
+                <img src="../static/static3/oi_usuario_azul.png" alt="Azul">
                 <br>
             </p>
 
@@ -504,7 +759,7 @@
 
             <p>
                 <br>
-                <img src="static3/arquivos.png" alt="Pastaception">
+                <img src="../static/static3/arquivos.png" alt="Pastaception">
                 <br>
             </p>
 
@@ -533,7 +788,7 @@
             <p>
                 Agora, quando visitarmos a página principal da nossa aplicação, veremos que o cabeçalho e o título foram atualizados:
                 <br>
-                <img src="static3/oi_html.png" alt="Primeiro template">
+                <img src="../static/static3/oi_html.png" alt="Primeiro template">
                 <br>
             </p>
 
@@ -580,9 +835,9 @@
                 Você deve ter notado que usamos uma nova sintaxe: chaves duplas. 
                 Essa sintaxe nos permite acessar variáveis que fornecemos no argumento de contexto. Agora, ao testarmos:
                 <br>
-                <img src="static3/pagina_ryan.png" alt="Template página do Ryan">
+                <img src="../static/static3/pagina_ryan.png" alt="Template página do Ryan">
                 <br>
-                <img src="static3/pagina_vitor.png" alt="Template página do Vitor">
+                <img src="../static/static3/pagina_vitor.png" alt="Template página do Vitor">
                 <br>
             </p>
 
@@ -671,9 +926,9 @@
 
             <p>
                 <br>
-                <img src="static3/kaiky_adm.png" alt="É adm">
+                <img src="../static/static3/kaiky_adm.png" alt="É adm">
                 <br>
-                <img src="static3/kim_namd.png" alt="Não é adm">
+                <img src="../static/static3/kim_namd.png" alt="Não é adm">
                 <br>
             </p>
 
@@ -681,7 +936,7 @@
 
             <p>
                 <br>
-                <img src="static3/inspect.png" alt="Inspecionar com caso positivo">
+                <img src="../static/static3/inspect.png" alt="Inspecionar com caso positivo">
                 <br>
             </p>
 
@@ -690,7 +945,7 @@
                 o que significa que o Django está usando o template HTML que escrevemos para criar um novo arquivo HTML que possuí apenas a parte verdadeira do bloco if, e só então o envia ao navegador. 
                 Se inspecionarmos a página do Kim, veremos que o caso oposto será exibido:
                 <br>
-                <img src="static3/inspect2.png" alt="Inspecionar com caso negativo">
+                <img src="../static/static3/inspect2.png" alt="Inspecionar com caso negativo">
                 <br>
             </p>
 
@@ -767,9 +1022,12 @@
             <p>
                 Agora, se reiniciarmos o servidor, veremos que as mudanças de estilo foram aplicadas de fato:
                 <br>
-                <img src="static3/ryan_css.png" alt="Nome laranja">
+                <img src="../static/static3/ryan_css.png" alt="Nome laranja">
                 <br>
             </p>
+
+            <p><strong>Nota:</strong> a depender da versão, é possível ter algum erro envolvendo o import do <code class="plaintext">static</code>.
+            Caso isso aconteça, vá ao <code class="plaintext">settings.py</code> do projeto, procure pela linha <code>STATIC_URL = 'static/'</code> e coloque como <code>STATIC_URL = '/static/'</code></p>
 
             </div>
 
@@ -788,7 +1046,7 @@
                 <li>
                     Edite o arquivo <code class="plaintext">settings.py</code>, adicionando "Cursos" à lista <code class="plaintext">INSTALLED_APPS</code>
                     <br>
-                    <img src="static3/novo_app2.png" alt="Novo app cursos">
+                    <img src="../static/static3/novo_app2.png" alt="Novo app cursos">
                     <br>
                 </li>
                 
@@ -876,7 +1134,7 @@
                 Repare que conseguimos iterar sobre nossas tarefas usando uma sintaxe semelhante às condicionais que vimos anteriormente, 
                 e também parecida com um laço for em Python. Quando acessamos a página de tarefas agora, conseguimos ver nossa lista sendo exibida:
                 <br>
-                <img src="static3/cursos.png" alt="Lista de cursos">
+                <img src="../static/static3/cursos.png" alt="Lista de cursos">
                 <br>
             </p>
 
@@ -1019,7 +1277,7 @@
 
             <p>
                 <br>
-                <img src="static3/novo_curso.png" alt="Novo curso">
+                <img src="../static/static3/novo_curso.png" alt="Novo curso">
                 <br>
             </p>
 
@@ -1078,9 +1336,9 @@
 
             <p>
                 <br>
-                <img src="static3/redirect1.png" alt="Redirecionamento para novo curso">
+                <img src="../static/static3/redirect1.png" alt="Redirecionamento para novo curso">
                 <br>
-                <img src="static3/redirect2.png" alt="Redirecionamento para lista de cursos">
+                <img src="../static/static3/redirect2.png" alt="Redirecionamento para lista de cursos">
                 <br>
             </p>
 
@@ -1148,7 +1406,7 @@
                 Essa linha adiciona um campo oculto com o token CSRF fornecido pelo Django, de forma que, ao recarregarmos a página, 
                 parece que nada mudou. No entanto, se inspecionarmos o elemento, notaremos que um novo campo de entrada foi adicionado:
                 <br>
-                <img src="static3/inspect3.png" alt="HTML do token CSRF">
+                <img src="../static/static3/inspect3.png" alt="HTML do token CSRF">
                 <br>
             </p>
 
@@ -1324,9 +1582,9 @@
             <p>
                 Finalmente, podemos adicionar um curso:
                 <br>
-                <img src="static3/add_curso1.png" alt="Adicionando novo curso">
+                <img src="../static/static3/add_curso1.png" alt="Adicionando novo curso">
                 <br>
-                <img src="static3/add_curso2.png" alt="Novo curso na lista de cursos">
+                <img src="../static/static3/add_curso2.png" alt="Novo curso na lista de cursos">
                 <br>
             </p>
 
@@ -1395,11 +1653,11 @@
             <p>
                 Assim, temos que as telas por sessão serão:
                 <br>
-                <img src="static3/new_session.png" alt="Nova sessão">
+                <img src="../static/static3/new_session.png" alt="Nova sessão">
                 <br>
-                <img src="static3/new_session_add.png" alt="Adicionando curso em nova sessão">
+                <img src="../static/static3/new_session_add.png" alt="Adicionando curso em nova sessão">
                 <br>
-                <img src="static3/new_session_added.png" alt="Novo curso adicionado na lista da sessão">
+                <img src="../static/static3/new_session_added.png" alt="Novo curso adicionado na lista da sessão">
                 <br>
             </p>
 
