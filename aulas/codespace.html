@@ -197,6 +197,9 @@
 <li>Este arquivo será o principal para a configuração do ambiente. Ele indica qual imagem usar, quais portas serão expostas, e quais comandos serão executados na criação. Iremos escolher uma imagem de container com Python instalado, mas existem outras opções de imagens. O snippet do arquivo é como a seguir:<pre><code>{
 <span class="hljs-attr">"name"</span>: <span class="hljs-string">"Meu-Projeto"</span>,
 <span class="hljs-attr">"image"</span>: <span class="hljs-string">"mcr.microsoft.com/devcontainers/python:dev-3.12-bookworm"</span>,
+<span class="hljs-attr">"features"</span>: {
+    <span class="hljs-attr">"ghcr.io/devcontainers/features/git-lfs:1": {}</span>
+},
 <span class="hljs-attr">"forwardPorts"</span>: [<span class="hljs-number">8000</span>],
 <span class="hljs-attr">"postCreateCommand"</span>: <span class="hljs-string">"pip install -r requirements.txt &amp;&amp; python manage.py migrate"</span>,
 <span class="hljs-attr">"customizations"</span>: {
@@ -214,7 +217,7 @@
 </code></pre></li>
 <li>Agora precisamos dizer ao Codespace para reconstruir o Container. O motivo para isto é para que as mudanças indicadas no arquivo json sejam aplicadas. Para fazer o <strong>rebuild</strong>, abra o <strong>Command Pallete</strong> do VSCode (Menu &gt; View &gt; Command Pallete), pesquise por &quot;Codespaces: Rebuild Container&quot;, selecione e confirme que quer realizar a reconstrução. Assim, o nosso ambiente de desenvolvimento terá as ferramentas necessárias e o Django já será instalado.<h2 id="publicando-nosso-projeto">Publicando nosso projeto</h2>
 Feito isso, nosso projeto agora terá as ferramentas necessárias, incluindo o <strong>Git</strong> (visto que iniciamos por meio do nosso repositório). Entretanto, os arquivos do Codespace ainda não estão no repositório no GitHub (estão apenas em um volume hosteado no GitHub). O problema disso é que se fecharmos o Codespace e ele ser deletado (o que acontece após um certo período de inatividade), nosso trabalho e configuração serão deletados. Então, para evitar isso, iremos publicar nossas mudanças.</li>
-<li>Dentro do terminal do Codespace, digite os seguintes comandos na raiz do projeto (Obs: se houver algum erro envolvendo o comando <code>git-lfs</code>, rode este comando: <code>rm -f .git/hooks/pre-push</code>):<pre><code>&gt; git <span class="hljs-keyword">add</span><span class="bash"> .
+<li>Dentro do terminal do Codespace, digite os seguintes comandos na raiz do projeto:<pre><code>&gt; git <span class="hljs-keyword">add</span><span class="bash"> .
 </span>&gt; git commit -m <span class="hljs-string">"Initial codespace setup"</span>
 &gt; git push -u origin main
 </code></pre><ol>
@@ -224,4 +227,5 @@ Feito isso, nosso projeto agora terá as ferramentas necessárias, incluindo o <
 </ol>
 <p>Agora, só seguir com o setup do Django para conseguir trabalhar! O endereço de URL <code>localhost</code> onde colocamos o aplicativo em desenvolvimento do Django é automaticamente exportado pelo Codespaces, então, só clicar no link quando o ver no terminal :)
 Qualquer mudança que fizer (como criação das páginas, configurações do Django, etc), só adicionar os arquivos mudados com o <code>git add</code> e fazer os commits necessários. Isso irá salvar seu progresso e evitará futuras perdas no seu projeto.</p>
+<p>Por fim, quando terminar o uso do Codespace, não se esqueça de parar ele! Isso pode ser feito na página do GitHub Codespaces. Lembre-se que há um limite de uso para o Codespace, então não é uma boa gastar o uso.</p>
 </body></html>
