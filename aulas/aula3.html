@@ -3,53 +3,196 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aula 4: SQL e Django Models</title>
+    <title>Aula 3: SQL e Django Models</title>
+</head>
+
     <style>
+        :root {
+            --background-color: #292827; /* Nova cor de fundo */
+            --surface-color: #363636; /* Um pouco mais claro que o fundo para contraste */
+            --primary-text-color: #e0e0e0;
+            --secondary-text-color: #a0a0a0;
+            --disabled-text-color: #666;
+            --accent-color-1: #ff690a; /* Laranja vibrante */
+            --accent-color-2: #ff690a; /* Laranja vibrante */
+            --border-color: #444; /* Borda mais escura */
+            --code-bg: #404040; /* Fundo para blocos de código */
+            --note-bg: #4a4a4a; /* Fundo para notas */
+            --note-border: var(--accent-color-2); /* Borda da nota */
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            max-width: 900px;
+            font-family: 'Roboto', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            line-height: 1.7;
+            background-color: var(--background-color);
+            color: var(--primary-text-color);
+            margin: 0;
+            padding: 0;
+            max-width: 800px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 0rem 1.5rem;
         }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+            box-sizing: border-box; /* Garante que padding não estoure a largura */
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            color: var(--accent-color-1);
+            font-weight: 700;
+            margin-top: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 1rem;
+        }
+
+        h2 {
+            font-size: 2.2rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.5rem;
+        }
+
+        h3 {
+            font-size: 1.8rem;
+        }
+
+        a {
+            color: var(--accent-color-2);
+            transition: color 0.2s ease-in-out;
+        }
+
+        a:hover {
+            color: var(--primary-text-color);
+            text-decoration: underline;
+        }
+
+        ul, ol {
+            padding-left: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        ul li, ol li {
+            margin-bottom: 0.5rem;
+        }
+
         code {
-            padding: 2px 4px;
+            background-color: var(--code-bg);
+            color: var(--accent-color-2);
+            padding: 0.2em 0.4em;
             border-radius: 4px;
-            font-family: monospace;
+            font-family: 'Roboto Mono', monospace;
+            font-size: 0.9em;
         }
+
         pre {
-            background-color: #f8f9fa;
-            padding: 10px;
-            border-radius: 4px;
+            background-color: var(--code-bg);
+            padding: 1rem;
+            border-radius: 8px;
             overflow-x: auto;
+            margin-top: 1.5rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            font-family: 'Roboto Mono', monospace;
+            font-size: 0.95em;
+            line-height: 1.4;
+            color: var(--primary-text-color);
+            border: 1px solid var(--border-color);
         }
+
+        pre code {
+            background-color: transparent;
+            color: inherit;
+            padding: 0;
+        }
+
         .note {
-            background-color: #e7f5ff;
-            border-left: 4px solid #4dabf7;
-            padding: 10px;
-            margin: 10px 0;
+            background-color: var(--note-bg);
+            border-left: 5px solid var(--note-border);
+            padding: 1rem 1.5rem;
+            margin: 2rem 0;
+            border-radius: 8px;
+            color: var(--primary-text-color);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         }
+        .note p {
+            margin: 0;
+        }
+
         table {
             border-collapse: collapse;
             width: 100%;
-            margin: 20px 0;
+            margin: 2rem 0;
+            background-color: var(--surface-color);
+            border-radius: 8px;
+            overflow: hidden; /* Para bordas arredondadas funcionarem com a borda interna */
         }
         th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
+            border: 1px solid var(--border-color);
+            padding: 12px 15px;
             text-align: left;
+            vertical-align: top;
         }
         th {
-            background-color: #f2f2f2;
+            background-color: var(--code-bg); /* Use cor de código para cabeçalho */
+            font-weight: 700;
+            color: var(--primary-text-color);
         }
+        tr:nth-child(even) {
+            background-color: #2f2f2f; /* Cor alternativa para linhas pares */
+        }
+        tr:hover {
+            background-color: #3e3e3e; /* Destaque ao passar o mouse */
+        }
+
         img {
             max-width: 100%;
             height: auto;
+            display: block; /* Remove espaço extra abaixo da imagem */
+            margin: 2rem auto; /* Centraliza imagens e adiciona margem */
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1.5rem 1rem;
+            }
+            h1 {
+                font-size: 2.2rem;
+            }
+            h2 {
+                font-size: 1.8rem;
+            }
+            h3 {
+                font-size: 1.5rem;
+            }
+            body {
+                font-size: 0.95em;
+            }
+        }
+        @media (max-width: 480px) {
+            .container {
+                padding: 1rem 0.8rem;
+            }
+            h1 {
+                font-size: 1.8rem;
+            }
+            h2 {
+                font-size: 1.5rem;
+            }
         }
     </style>
-</head>
 <body>
-    <h1>Aula 4: SQL e Django Models</h1>
+    <h1>Aula 3: SQL e Django Models</h1>
     
     <h2>Conteúdos</h2>
     <ul>
@@ -98,12 +241,12 @@
 
     <h2 id="sql">SQL</h2>
     <p><a href="https://www.w3schools.com/sql/">SQL</a>, ou Structured Query Language, é uma linguagem de programação que nos permite atualizar e consultar bancos de dados.</p>
-    <p><img src="static4/sql.png" alt="Logo SQL"></p>
+    <p><img src="../static/static4/logo_sql.png" alt="Logo SQL"></p>
 
     <h3 id="databases">Bancos de Dados</h3>
     <p>Antes de entrarmos em como usar a linguagem SQL, devemos discutir como nossos dados são armazenados. Ao usar SQL, trabalharemos com um <a href="https://www.oracle.com/database/what-is-a-relational-database/#:~:text=A%20relational%20database%20is%20a,of%20representing%20data%20in%20tables.">banco de dados relacional</a> onde todos os nossos dados são armazenados em várias <a href="https://www.essentialsql.com/what-is-a-database-table/">tabelas</a>. Cada uma dessas tabelas é composta por um número fixo de colunas e um número variável de linhas.</p>
     <p>Para ilustrar como trabalhar com SQL, usaremos o exemplo de um site de cursos, que armazena dados do curso, usuários, entre outras coisas. Um exemplo de tabela que iremos ver está a seguir:</p>
-    <p><img src="static4/users.png" alt="usuários"></p>
+    <p><img src="../static/static4/users.png" alt="usuários"></p>
     <p>Existem vários sistemas de gerenciamento de banco de dados relacionais diferentes que são comumente usados para armazenar informações e que podem interagir facilmente com comandos SQL:</p>
     <ul>
         <li><a href="https://www.mysql.com/">MySQL</a></li>
@@ -165,19 +308,19 @@ VALUES ("fulano_dev", "fulano@codelab.br", "2b$12");</code></pre>
     <pre><code>SELECT * FROM users;</code></pre>
 
     <p>O comando acima (*) recupera todos os dados da nossa tabela de usuários</p>
-    <p><img src="static4/todos.png" alt="todos"></p>
+    <p><img src="../static/static4/todos.png" alt="todos"></p>
 
     <p>Pode ser o caso, porém, que não precisamos realmente de todas as colunas do banco de dados, apenas username e email. Para acessar apenas essas colunas, podemos substituir o * pelos nomes das colunas que gostaríamos de acessar. A consulta a seguir retorna todos os usernames e emails.</p>
     
     <pre><code>SELECT username, email FROM users;</code></pre>
 
-    <p><img src="static4/2cols.png" alt="Apenas duas colunas"></p>
+    <p><img src="../static/static4/2cols.png" alt="Apenas duas colunas"></p>
 
     <p>À medida que nossas tabelas ficam cada vez maiores, também queremos reduzir quais linhas nossa consulta retorna. Fazemos isso adicionando um <a href="https://www.w3schools.com/sql/sql_where.asp">WHERE</a> seguido por alguma condição. Por exemplo, o comando a seguir seleciona apenas a linha com um <code>id</code> de <code>3</code>:</p>
     
     <pre><code>SELECT * FROM users WHERE id = 3;</code></pre>
 
-    <p><img src="static4/1row.png" alt="apenas uma linha"></p>
+    <p><img src="../static/static4/1row.png" alt="apenas uma linha"></p>
 
     <h3 id="working-with-sql-in-the-terminal">Trabalhando com SQL no Terminal</h3>
     <p>Agora que conhecemos alguns comandos básicos de SQL, vamos testá-los no terminal! Para trabalhar com SQLite em seu computador, você deve primeiro <a href="https://www.sqlite.org/download.html">baixar o SQLite</a>. (Não usaremos em aula, mas você também pode <a href="https://sqlitebrowser.org/dl/">baixar o DB Browser</a> para uma maneira mais amigável de executar consultas SQL.)</p>
@@ -247,29 +390,29 @@ id  username     email               password_hash
     
     <pre><code>SELECT * FROM users WHERE id > 1;</code></pre>
 
-    <p><img src="static4/500.png" alt="> 500"></p>
+    <p><img src="../static/static4/500.png" alt="> 500"></p>
 
     <p>E também podemos usar outra lógica (<a href="https://www.w3schools.com/sql/sql_and_or.asp">AND, OR</a>) como em Python:</p>
     
     <pre><code>SELECT * FROM users WHERE id > 1 AND email = "alano@codelab.br";</code></pre>
 
-    <p><img src="static4/2andemail.png" alt="> 1 e email"></p>
+    <p><img src="../static/static4/2andemail.png" alt="> 1 e email"></p>
 
     <pre><code>SELECT * FROM users WHERE id > 3 OR email = "fulano@codelab.br";</code></pre>
 
-    <p><img src="static4/3oremail.png" alt="> 3 ou email"></p>
+    <p><img src="../static/static4/3oremail.png" alt="> 3 ou email"></p>
 
     <p>Também podemos usar a palavra-chave <a href="https://www.w3schools.com/sql/sql_in.asp">IN</a> para ver se um pedaço de dados é uma de várias opções:</p>
     
     <pre><code>SELECT * FROM users WHERE username IN ("fulano_dev", "ciclano_dev");</code></pre>
 
-    <p><img src="static4/in.png" alt="em"></p>
+    <p><img src="../static/static4/in.png" alt="em"></p>
 
     <p>Podemos até usar expressões regulares para pesquisar palavras de forma mais ampla usando a palavra-chave <a href="https://www.w3schools.com/sql/sql_like.asp">LIKE</a>. A consulta abaixo encontra todos os resultados com um <code>f</code> no username, usando <code>%</code> como caractere curinga.</p>
     
     <pre><code>SELECT * FROM users WHERE username LIKE "%f%";</code></pre>
 
-    <p><img src="static4/like.png" alt="username tem um 'f'"></p>
+    <p><img src="../static/static4/like.png" alt="username tem um 'f'"></p>
 
     <h3 id="functions">Funções</h3>
     <p>Também há várias funções SQL que podemos aplicar aos resultados de uma consulta. Elas podem ser úteis se não precisarmos de todos os dados retornados por uma consulta, mas apenas de algumas estatísticas resumidas dos dados.</p>
@@ -306,9 +449,9 @@ WHERE username = "alano_dev";</code></pre>
     <h2 id="joining-tables">Unindo Tabelas</h2>
     <p>Até agora, trabalhamos apenas com uma tabela por vez, mas muitos bancos de dados na prática são preenchidos por várias tabelas que se relacionam de alguma forma. Como exemplo, no CodeClass, além da tabela de usuários, podemos ter uma tabela de cursos, mostrando cada curso disponível. Então, poderiamos relacionar as duas tabelas.</p>
     <p>A tabela de cursos pode ser mais ou menos assim</p>
-    <p><img src="static4/cursos.png" alt="Tabela Cursos"></p>
+    <p><img src="../static/static4/cursos.png" alt="Tabela Cursos"></p>
     <p>Dessa forma, podemos relacionar os usuários com cursos. Entretanto, um usuário pode estar inscrito em vários cursos, então se tivéssemos que relacionar os usuários com seus cursos, teríamos que criar várias colunas na tabela <code>users</code>, o que não é intuitivo. Assim, podemos criar mais uma tabela <code>enrollments</code>, que armazena as matrículas dos usuários. Ela se parece como:</p>
-    <img src="static4/enrollments.png"alt="table enrollments">
+    <img src="../static/static4/enrollments.png"alt="table enrollments">
     <p>Agora temos uma tabela enrollments, onde cada matrícula está relacionada a um usuário e a um curso. Como estamos usando a coluna <code>id</code> da tabela de usuários para preencher <code>user_id</code> e <code>id</code> da tabela de cursos para preencher <code>course_id</code>, chamamos esses valores de <a href="https://www.w3schools.com/sql/sql_foreignkey.asp">Chaves Estrangeiras</a>.</p>
     <p>A relação entre <code>users</code> e <code>courses</code> é conhecida como <strong>Muitos para muitos</strong>.</p>
     <p>A tabela de matrículas é conhecida como uma <strong>tabela de associação</strong>, pois associa as tabelas <code>users</code> e <code>courses</code>.</p>
@@ -395,13 +538,13 @@ WHERE username = "harry"--" AND password = "12345";</code></pre>
     <pre><code>>> python manage.py makemigrations</code></pre>
 
     <p>Este comando cria alguns arquivos Python que criarão ou editarão nosso banco de dados para poder armazenar o que temos em nossos models. Você deve obter uma saída que se parece mais ou menos com a abaixo, e se navegar até seu diretório <code>migrations</code>, notará que um novo arquivo foi criado para nós</p>
-    <p><img src="static4/migrations.png" alt="saída de migrações 0"></p>
+    <p><img src="../static/static4/migrations.png" alt="saída de migrações 0"></p>
     <p>A seguir, para aplicar essas migrações ao nosso banco de dados, executamos o comando</p>
     
     <pre><code>>> python manage.py migrate</code></pre>
 
     <p>Agora, você verá que algumas migrações padrão foram aplicadas junto com as nossas, e também notará que agora temos um arquivo chamado <code>db.sqlite3</code> no diretório do nosso projeto</p>
-    <p><img src="static4/migration1.png" alt="saída de migração"></p>
+    <p><img src="../static/static4/migration1.png" alt="saída de migração"></p>
 
     <h2 id="shell">Shell</h2>
     <p>Agora, para começar a adicionar informações e manipular este banco de dados, podemos entrar no shell do Django, onde podemos executar comandos Python dentro de nosso projeto.</p>
@@ -581,7 +724,7 @@ def index(request):
 
     <p>O que fizemos aqui é criar uma página padrão onde temos uma lista de todos os cursos que criamos até agora. Quando abrimos a página agora, ela se parece com isso</p>
 
-    <img src="static4/index.png" alt="Apenas um curso na lista">
+    <img src="../static/static4/index.png" alt="Apenas um curso na lista">
 
     <p>Agora, vamos adicionar mais alguns cursos à nossa aplicação voltando ao shell do Django:</p>
 
@@ -593,7 +736,7 @@ def index(request):
 </code></pre>
 
     <p>Agora, nossa página se parece com isso:</p>
-    <img src="static4/index2.png" alt="2 cursos">
+    <img src="../static/static4/index2.png" alt="2 cursos">
 
     <h2 id="django-admin">Django Admin</h2>
 
@@ -618,11 +761,11 @@ admin.site.register(Enrollment)</code></code></pre>
 
     <p>Agora, quando visitamos nosso site e adicionamos <code>/admin</code> à url, podemos fazer login em uma página que se parece com isso</p>
 
-    <img src="static4/login.png" alt="login">
+    <img src="../static/static4/login.png" alt="login">
 
     <p>Depois de fazer login, você será levado a uma página como a abaixo, onde pode criar, editar e excluir objetos armazenados no banco de dados</p>
 
-    <img src="static4/admin.png" alt="página admin">
+    <img src="../static/static4/admin.png" alt="página admin">
 
     <p>Agora, vamos adicionar mais algumas páginas ao nosso site. Começaremos adicionando a capacidade de clicar em um curso para obter mais informações sobre ele. Para fazer isso, vamos criar um caminho de URL que inclui o <code>id</code> de um curso:</p>
 
@@ -664,11 +807,11 @@ admin.site.register(Enrollment)</code></code></pre>
 
     <p>Agora nossa página inicial se parece com isso</p>
 
-    <img src="static4/home.png" alt="Nova home, com cursos">
+    <img src="../static/static4/home.png" alt="Nova home, com cursos">
 
     <p>E quando clicamos no primeiro curso, por exemplo, somos levados a esta página</p>
 
-    <img src="static4/course1.png" alt="Curso 1, web dev">
+    <img src="../static/static4/course1.png" alt="Curso 1, web dev">
 
     <h2 id="many-to-many-relationships">Relações Muitos-para-Muitos</h2>
 
@@ -714,7 +857,7 @@ admin.site.register(Enrollment)</code></code></pre>
 
     <p>Neste ponto, quando clicamos no primeiro curso (que possui id=4 agora, pelas remoções), vemos</p>
 
-    <img src="static4/coursestudents.png" alt="curso 4">
+    <img src="../static/static4/coursestudents.png" alt="curso 4">
 
     <p>Agora, vamos trabalhar em dar aos visitantes do nosso site a capacidade de adicionar uma matrícula (para fins didáticos, qualquer visitante pode matricular qualquer estudante disponível, o que não é o ideal em um cenário real). Faremos isso adicionando uma rota de matrícula em <code>urls.py</code>:</p>
 
@@ -770,7 +913,7 @@ admin.site.register(Enrollment)</code></code></pre>
     
     <p>Agora, vamos ver como o site fica quando vamos para uma página de curso e adicionamos estudantes:</p>
 
-    <img src="static4/form.png" alt="formulário">
+    <img src="../static/static4/form.png" alt="formulário">
 
     <p>Outra vantagem de usar o aplicativo admin do Django é que ele é personalizável. Por exemplo, se desejarmos ver todos os aspectos de um curso na interface admin, podemos criar uma nova classe dentro de <code>admin.py</code> e adicioná-la como um argumento ao registrar o model <code>Course</code>:</p>
 
@@ -789,7 +932,7 @@ admin.site.register(Course, CourseAdmin)</code></pre>
     Também há outras coisas que podemos definir, como limite de estudantes na string, etc.</p>
 
     <p>Agora, quando visitamos a página admin para cursos, podemos ver as mudanças:</p>
-    <img src="static4/courseadmin.png" alt="tabela admin">
+    <img src="../static/static4/courseadmin.png" alt="tabela admin">
     <p>Confira a <a href="https://docs.djangoproject.com/en/4.0/ref/contrib/admin/">documentação do admin do Django</a> para encontrar mais maneiras de personalizar o aplicativo admin.</p>
  
     <h2 id="users">Usuários</h2>
@@ -883,9 +1026,9 @@ return render(request, "users/login.html", {
     
     <p>Agora que terminamos, aqui está uma demonstração do site</p>
 
-    <img src="static4/users1.png" alt="Demo1">
-    <img src="static4/users2.png" alt="Demo2">
-    <img src="static4/users3.png" alt="Demo3">
-    <img src="static4/users4.png" alt="Demo4">
+    <img src="../static/static4/users1.png" alt="Demo1">
+    <img src="../static/static4/users2.png" alt="Demo2">
+    <img src="../static/static4/users3.png" alt="Demo3">
+    <img src="../static/static4/users4.png" alt="Demo4">
 
-    <p>Isso é tudo para esta aula! Na próxima, aprenderemos nossa segunda linguagem de programação do curso: JavaScript.</p>
+    <p>Isso é tudo para esta aula!</p> 
