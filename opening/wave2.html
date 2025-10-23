@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Three.js Smooth Fill Wave with Border</title>
+    <style>
+        body { margin: 0; overflow: hidden; background-color: #000000; }
+        canvas { display: block; }
+    </style>
+</head>
+<body>
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+                "simplex-noise": "https://cdn.skypack.dev/simplex-noise"
+            }
+        }
+    </script>
+    <script type="module">
+        import * as THREE from 'three';
+        import { createNoise2D } from 'simplex-noise';
+
+        // --- SCENE SETUP ---
+        const scene = new THREE.Scene();
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        let width = window.innerWidth;
+        let height = window.innerHeight;
+
+        const camera = new THREE.OrthographicCamera(width / -2, width / 2, height / 2, height / -2, 1, 1000);
+        camera.position.z = 10;
+
+        // --- WAVE PARAMETERS ---
+        const WAVE_CONFIG = {
+            waveCount: 60,      // How many waves to create at the start
+            segments: 200,      // Number of segments in the semicircle arc
+            growthSpeed: 5,     // How fast the radius grows
+            noiseAmount: 42,    // Amplitude of the noise (waviness)
+            noiseFrequency: 1.5,// Frequency of the noise (detail)
+            startHue: 0.6,      // Starting color (blue)
+            endHue: 0.8,        // Ending color (purple/magenta)
+            borderSize: 2.3,      // Thickness of the border in pixels
+            borderColor: 0x0000005b // Black border color
+        };
+
+        const noise2D = createNoise2D();
+        const waves = [];
+        const emissionCenter = new THREE.Vector2(width / -2, 0);
+        let time = 0;
+
+        // --- WAVE CLASS ---
+        class Wave {
+            constructor(center, color, maxRadius) {
+                this.center = center;
+                this.radius = 0;
+                this.maxRadius = maxRadius;
+                this.stopped = false;
+
+                // Border Mesh (rendered first, so it's behind the main wave)
+                const borderGeometry = new THREE.BufferGeometry();
+                const borderMaterial = new THREE.MeshBasicMaterial({ color: WAVE_CONFIG.borderColor, side: THREE.DoubleSide });
+                this.borderMesh = new THREE.Mesh(borderGeometry, borderMaterial);
+                scene.add(this.borderMesh);
+
+                // Main Wave Mesh
+                const mainGeometry = new THREE.BufferGeometry();
+                const mainMaterial = new THREE.MeshBasicMaterial({ color: color, side: THREE.DoubleSide });
+                this.mainMesh = new THREE.Mesh(mainGeometry, mainMaterial);
+                scene.add(this.mainMesh);
+            }
+
+            update() {
+                if (this.stopped) return;
+
+                if (this.radius >= this.maxRadius) {
+                    this.stopped = true;
+                    this.radius = this.maxRadius; // Clamp to final size
+                } else {
+                    this.radius += WAVE_CONFIG.growthSpeed;
+                }
+                
+                this.updateGeometry();
+            }
+
+            updateGeometry() {
+                // Update border geometry (slightly larger radius)
+                this._updateMeshGeometry(this.borderMesh, this.radius + WAVE_CONFIG.borderSize);
+                // Update main wave geometry
+                this._updateMeshGeometry(this.mainMesh, this.radius);
+            }
+
+            _updateMeshGeometry(mesh, currentRadius) {
+                const vertices = [];
+                vertices.push(this.center.x, this.center.y, 0);
+
+                for (let i = 0; i <= WAVE_CONFIG.segments; i++) {
+                    const angle = (i / WAVE_CONFIG.segments) * Math.PI - Math.PI / 2;
+                    const noise = noise2D(angle * WAVE_CONFIG.noiseFrequency, time) * WAVE_CONFIG.noiseAmount;
+                    
+                    // Add noise to the current radius for both border and main wave
+                    const effectiveRadius = currentRadius + noise;
+                    
+                    const x = this.center.x + effectiveRadius * Math.cos(angle);
+                    const y = this.center.y + effectiveRadius * Math.sin(angle);
+                    vertices.push(x, y, 0);
+                }
+
+                const indices = [];
+                for (let i = 1; i < WAVE_CONFIG.segments; i++) {
+                    indices.push(0, i, i + 1);
+                }
+
+                mesh.geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
+                mesh.geometry.setIndex(indices);
+                mesh.geometry.attributes.position.needsUpdate = true;
+            }
+        }
+
+        // --- INITIALIZE WAVES ---
+        // Create all waves at the start, from largest to smallest, so they layer correctly
+        // (Largest waves are added to scene first, so they are drawn behind smaller ones)
+        for (let i = WAVE_CONFIG.waveCount - 1; i >= 0; i--) {
+            const progress = i / (WAVE_CONFIG.waveCount - 1);
+            
+            const maxRadius = progress * (width + WAVE_CONFIG.noiseAmount * 2 + WAVE_CONFIG.borderSize * 2);
+            
+            const hue = WAVE_CONFIG.startHue + progress * (WAVE_CONFIG.endHue - WAVE_CONFIG.startHue);
+            const color = new THREE.Color().setHSL(hue, 0.8, 0.6);
+
+            const newWave = new Wave(emissionCenter, color, maxRadius);
+            waves.push(newWave);
+        }
+
+        // --- ANIMATION LOOP ---
+        function animate() {
+            requestAnimationFrame(animate);
+            time += 0.005;
+
+            for (const wave of waves) {
+                wave.update();
+            }
+
+            renderer.render(scene, camera);
+        }
+
+        // --- START ---
+        animate();
+
+        // --- RESIZE HANDLER ---
+        window.addEventListener('resize', () => {
+            width = window.innerWidth;
+            height = window.innerHeight;
+
+            camera.left = width / -2;
+            camera.right = width / 2;
+            camera.top = height / 2;
+            camera.bottom = height / -2;
+            camera.updateProjectionMatrix();
+            
+            emissionCenter.x = width / -2;
+            renderer.setSize(width, height);
+            
+            // Re-creating waves on resize would be more complex to maintain the "painted" state.
+            // For this example, waves are static after initial creation, so resizing
+            // will just stretch/compress the existing waves.
+        });
+    </script>
+</body>
+</html>

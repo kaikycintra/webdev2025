@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>p5.js Lorenz Attractor</title>
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
+    <style>
+        /* Remove margens e garante que o canvas preencha a tela */
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #000;
+        }
+        canvas {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <script>
+        let attractors = [];
+        const attractorScale = 20;
+
+        // Ângulos atuais da câmera
+        let camAngleX = 0, camAngleY = 0, camAngleZ = 0;
+        // Ângulos alvo da câmera
+        let targetCamAngleX = 0, targetCamAngleY = 0, targetCamAngleZ = 0;
+        // Velocidade da interpolação para um movimento suave
+        let angleLerpSpeed = 0.05;
+
+        function setup() {
+            let canvas = createCanvas(windowWidth, windowHeight, WEBGL);
+
+            // Gera o atrator com condições iniciais padrão
+            attractors.push(generateLorenzAttractor(0.1, 0, 0));
+
+            // Inicia os ângulos atuais e alvo com os mesmos valores aleatórios
+            camAngleX = targetCamAngleX = random(TWO_PI);
+            camAngleY = targetCamAngleY = random(TWO_PI);
+            camAngleZ = targetCamAngleZ = random(TWO_PI);
+
+            // Inicia o loop de desenho
+            loop();
+        }
+
+        function draw() {
+            background(0); // Fundo preto
+
+            // Interpola os ângulos da câmera em direção ao alvo para criar uma transição suave
+            camAngleX = lerp(camAngleX, targetCamAngleX, angleLerpSpeed);
+            camAngleY = lerp(camAngleY, targetCamAngleY, angleLerpSpeed);
+            camAngleZ = lerp(camAngleZ, targetCamAngleZ, angleLerpSpeed);
+
+            // Aplica a rotação da câmera
+            rotateX(camAngleX);
+            rotateY(camAngleY);
+            rotateZ(camAngleZ);
+
+            noFill();
+            stroke(255); // Linha branca
+            strokeWeight(1); // Deixa a linha um pouco mais fina
+
+            // Desenha as linhas do atrator
+            for (let points of attractors) {
+                beginShape();
+                for (let v of points) {
+                    vertex(v.x * attractorScale, v.y * attractorScale, v.z * attractorScale);
+                }
+                endShape();
+            }
+        }
+
+        // Gera os pontos para o atrator de Lorenz
+        function generateLorenzAttractor(x, y, z) {
+            const a = 10, b = 28, c = 8.0 / 3.0;
+            const dt = 0.01;
+            const points = [];
+            const numPoints = 2000;
+
+            for (let i = 0; i < numPoints; i++) {
+                let dx = a * (y - x) * dt;
+                let dy = (x * (b - z) - y) * dt;
+                let dz = (x * y - c * z) * dt;
+
+                x += dx;
+                y += dy;
+                z += dz;
+
+                // Adiciona o ponto ao array após o sistema "aquecer" um pouco
+                if (i > 100) {
+                    points.push(createVector(x, y, z));
+                }
+            }
+            return points;
+        }
+        
+        // Função para redimensionar o canvas quando a janela muda de tamanho
+        function windowResized() {
+            resizeCanvas(windowWidth, windowHeight);
+        }
+
+        // Função para interatividade: muda para um novo ângulo ao clicar
+        function mouseClicked() {
+            const delta = 1.5; // Máximo de radianos para mudar por eixo
+            targetCamAngleX = camAngleX + random(-delta, delta);
+            targetCamAngleY = camAngleY + random(-delta, delta);
+            targetCamAngleZ = camAngleZ + random(-delta, delta);
+            loop(); // Garante que a animação continue para a transição
+        }
+    </script>
+</body>
+</html>
