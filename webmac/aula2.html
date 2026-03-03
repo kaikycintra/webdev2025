@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aula 2: Introdução ao JavaScript</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --background-color: #292827;
+            --surface-color: #363636;
+            --primary-text-color: #e0e0e0;
+            --secondary-text-color: #a0a0a0;
+            --disabled-text-color: #666;
+            --accent-color-1: #ff690a;
+            --accent-color-2: #ff690a;
+            --border-color: #444;
+            --code-bg: #404040;
+            --note-bg: #4a4a4a;
+            --note-border: var(--accent-color-2);
+        }
+
+        body {
+            font-family: 'Roboto', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            line-height: 1.7;
+            background-color: var(--background-color);
+            color: var(--primary-text-color);
+            margin: 0;
+            padding: 0;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0rem 1.5rem;
+        }
+
+        .container { 
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+            box-sizing: border-box;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            color: var(--accent-color-1);
+            font-weight: 700;
+            margin-top: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 1rem;
+        }
+
+        h2 {
+            font-size: 2.2rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.5rem;
+        }
+
+        h3 {
+            font-size: 1.8rem; 
+        }
+
+        a {
+            color: var(--accent-color-2);
+            transition: color 0.2s ease-in-out;
+        }
+
+        a:hover {
+            color: var(--primary-text-color);
+            text-decoration: underline;
+        }
+
+        ul, ol {
+            padding-left: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        ul li, ol li {
+            margin-bottom: 0.5rem;
+        }
+
+        code {
+            background-color: var(--code-bg);
+            color: var(--accent-color-2);
+            padding: 0.2em 0.4em;
+            border-radius: 4px;
+            font-family: 'Roboto Mono', monospace;
+            font-size: 0.9em;
+        }
+
+        pre {
+            background-color: var(--code-bg);
+            padding: 1rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin-top: 1.5rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            font-family: 'Roboto Mono', monospace;
+            font-size: 0.95em;
+            line-height: 1.4;
+            color: var(--primary-text-color);
+            border: 1px solid var(--border-color);
+        }
+
+        pre code {
+            background-color: transparent;
+            color: inherit;
+            padding: 0;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 2rem auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        @media (max-width: 768px) {
+            .container { padding: 1.5rem 1rem; }
+            h1 { font-size: 2.2rem; }
+            h2 { font-size: 1.8rem; }
+            h3 { font-size: 1.5rem; }
+            body { font-size: 0.95em; }
+        }
+
+        @media (max-width: 480px) {
+            .container { padding: 1rem 0.8rem; }
+            h1 { font-size: 1.8rem; }
+            h2 { font-size: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+<h1>Aula 2: Introdução ao JavaScript</h1>
+
+<ul>
+  <li><a href="#introduction">Introdução</a></li>
+  <li><a href="#javascript">JavaScript</a></li>
+  <li><a href="#events">Eventos</a></li>
+  <li><a href="#variables">Variáveis</a></li>
+  <li><a href="#loopsandconditionals">Loops e Condicionais</a></li>
+  <li><a href="#queryselector">querySelector</a></li>
+  <li><a href="#dom-manipulation">Manipulação da DOM (Básico)</a></li>
+  <li><a href="#exercises">Exercícios</a></li>
+</ul>
+
+<h2 id="introduction">Introdução</h2>
+<ul>
+  <li>Até agora, aprendemos a construir a estrutura das nossas páginas web usando HTML e a deixá-las visualmente atraentes usando CSS. No entanto, nossas páginas ainda são estáticas; elas apenas exibem informações.</li>
+  <li>Hoje, daremos o próximo grande passo e introduziremos o <strong>JavaScript</strong>, a linguagem de programação da Web. Enquanto o HTML define <em>o que</em> está na página e o CSS define <em>como</em> ela se parece, o JavaScript define <em>o que ela faz</em>.</li>
+</ul>
+
+<h2 id="javascript">JavaScript</h2>
+<p>Vamos entender onde o JavaScript atua na comunicação da internet:</p>
+<p></p>
+<p>Na maioria das interações online, temos um <strong>cliente</strong> (o navegador do usuário) que envia uma Requisição HTTP para um <strong>servidor</strong> (onde o site está hospedado), que envia de volta uma Resposta HTTP com os arquivos da página.</p>
+<p>Muitas linguagens de programação rodam lá no servidor, mas o <strong>JavaScript nos permitirá executar código no lado do cliente (diretamente no navegador)</strong>. Isso significa que, depois que a página carrega, podemos criar interações, animações e lógicas sem precisar ficar pedindo novas informações ao servidor a todo momento. É isso que permite que nossos sites se tornem interativos e rápidos.</p>
+<p>Para adicionar JavaScript à nossa página, podemos adicionar um par de tags <code>&lt;script&gt;</code> em algum lugar do nosso HTML. Usamos as tags <code>&lt;script&gt;</code> para sinalizar ao navegador que qualquer coisa escrita entre elas é um código JavaScript que queremos executar. Nosso primeiro programa pode se parecer com isso:</p>
+<pre><code>alert('Olá, MA0350!');</code></pre>
+<p>A função <code>alert</code> em JavaScript exibe uma mensagem ao usuário que pode então ser dispensada. Para mostrar onde isso se encaixaria em um documento HTML real, aqui está um exemplo de uma página simples com algum JavaScript:</p>
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="pt"&gt;
+    &lt;head&gt;
+        &lt;title&gt;Olá&lt;/title&gt;
+        &lt;script&gt;
+            alert('Olá, MAC0350!');
+        &lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;h1&gt;Olá!&lt;/h1&gt;
+    &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+<h2 id="events">Eventos</h2>
+<p>Uma característica do JavaScript que o torna útil para programação web é seu suporte a <a href="https://medium.com/@vsvaibhav2016/introduction-to-event-driven-programming-28161b79c223">Programação Orientada a Eventos</a>.</p>
+<p>Programação Orientada a Eventos é um paradigma que se concentra na detecção de eventos e ações que devem ser tomadas quando um evento é detectado.</p>
+<p>Um evento pode ser quase qualquer coisa incluindo um botão sendo clicado, o cursor sendo movido, uma resposta sendo digitada ou uma página sendo carregada. Quase tudo que um usuário faz para interagir com uma página web pode ser considerado um evento. Em JavaScript, usamos <a href="https://www.w3schools.com/js/js_htmldom_eventlistener.asp">Ouvintes de Evento</a> que esperam por certos eventos ocorrerem e então executam algum código.</p>
+<p>Vamos começar transformando nosso JavaScript de antes em uma <a href="https://www.w3schools.com/js/js_functions.asp">função</a> chamada <code>ola</code>:</p>
+<pre><code>function ola() {
+    alert('Olá, mundo!')
+}</code></pre>
+<p>Agora, vamos fazer com que esta função seja executada quando um botão for clicado. Para isso, criaremos um botão HTML em nossa página com um atributo <code>onclick</code>, que dá ao navegador instruções sobre o que deve acontecer quando o botão é clicado:</p>
+<pre><code>&lt;button onclick="ola()"&gt;Clique Aqui&lt;/button&gt;</code></pre>
+<p>Estas mudanças nos permitem esperar para executar partes do nosso código JavaScript até que certo evento ocorra.</p>
+
+<h2 id="variables">Variáveis</h2>
+<p>JavaScript é uma linguagem de programação como Python, C ou qualquer outra linguagem com que você já trabalhou, significando que tem muitas das mesmas características incluindo variáveis. Há três palavras-chave que podemos usar para atribuir valores em JavaScript:</p>
+<ul>
+  <li><code>var</code>: usado para definir uma variável globalmente</li>
+</ul>
+<pre><code>var idade = 20;</code></pre>
+<ul>
+  <li><code>let</code>: usado para definir uma variável com escopo limitado ao bloco atual como uma função ou loop</li>
+</ul>
+<pre><code>let contador = 1;</code></pre>
+<ul>
+  <li><code>const</code>: usado para definir um valor que não mudará</li>
+</ul>
+<pre><code>const PI = 3.14;</code></pre>
+<p>Para um exemplo de como podemos usar uma variável, vamos ver uma página que mantém um contador:</p>
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="pt"&gt;
+    &lt;head&gt;
+        &lt;title&gt;Contador&lt;/title&gt;
+        &lt;script&gt;
+            let contador = 0;
+            function contar() {
+                contador++;
+                alert(contador);
+            }
+        &lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;h1&gt;Olá!&lt;/h1&gt;
+        &lt;button onclick="contar()"&gt;Contar&lt;/button&gt;
+    &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+<h2 id="loopsandconditionals">Loops e Condicionais</h2>
+<p>Como o JavaScript compartilha muitas semelhanças sintáticas com a linguagem C, as estruturas de controle de fluxo serão muito familiares para você. No entanto, existem particularidades importantes, especialmente na comparação de dados.</p>
+
+<h3>Condicionais e Coerção de Tipos</h3>
+<p>As estruturas <code>if</code>, <code>else if</code> e <code>else</code> funcionam da forma clássica. A grande diferença do JavaScript para linguagens de tipagem forte é a <strong>coerção implícita de tipos</strong>. O JS tentará converter tipos diferentes para compará-los se você usar o operador de igualdade comum. Por isso, temos dois operadores principais:</p>
+<ul>
+    <li><code>==</code> (Igualdade solta): Converte os tipos antes de comparar (ex: <code>"5" == 5</code> resulta em verdadeiro).</li>
+    <li><code>===</code> (Igualdade estrita): Compara tanto o <strong>valor</strong> quanto o <strong>tipo primitivo</strong>. A boa prática é sempre utilizar este operador para evitar bugs silenciosos.</li>
+</ul>
+
+<pre><code>let numero = 10;
+let texto = "10";
+
+// Evite usar a igualdade solta (==)
+if (numero == texto) {
+    console.log("Isso será impresso, pois o JS converte a string para número.");
+}
+
+// Prefira a igualdade estrita (===)
+if (numero === texto) {
+    console.log("Isso NÃO será impresso, pois os tipos diferem (Number vs String).");
+} else {
+    console.log("Isso será impresso, pois o JavaScript validou corretamente!");
+}</code></pre>
+
+<h3>Laços de Repetição (Loops)</h3>
+<p>Os laços <code>while</code>, <code>do...while</code> e o clássico <code>for</code> também operam como em C. A principal recomendação aqui é utilizar a palavra-chave <code>let</code> na declaração da variável iteradora dentro do <code>for</code>. Isso garante que a variável tenha um escopo de bloco e não exista fora do laço.</p>
+
+<pre><code>// Exemplo de laço FOR iterando e usando condicional
+for (let i = 0; i <= 10; i++) {
+    // Imprimindo apenas os números pares
+    if (i % 2 === 0) {
+        console.log(`Número par encontrado: ${i}`);
+    }
+}
+// Tentar acessar 'i' aqui fora causaria um erro (ReferenceError)
+
+// Exemplo de laço WHILE
+let contagem = 3;
+while (contagem > 0) {
+    console.log(`Contagem regressiva: ${contagem}`);
+    contagem--;
+}</code></pre>
+
+<h2 id="queryselector">querySelector</h2>
+<p>Além de nos permitir mostrar mensagens através de alertas, JavaScript também nos permite mudar elementos na página. Para fazer isso, devemos primeiro introduzir uma função chamada <code>document.querySelector</code>. Esta função procura e retorna elementos do DOM. Por exemplo, usaríamos:</p>
+<pre><code>let cabecalho = document.querySelector('h1');</code></pre>
+<p>para extrair um cabeçalho. Então, para manipular o elemento que encontramos, podemos mudar sua propriedade <code>innerHTML</code>:</p>
+<pre><code>cabecalho.innerHTML = `Adeus!`;</code></pre>
+<p>Assim como em Python, também podemos aproveitar <a href="https://www.w3schools.com/js/js_if_else.asp">condições</a> em JavaScript. Por exemplo, digamos que ao invés de sempre mudar nosso cabeçalho para <code>Adeus!</code>, queremos alternar entre <code>Olá!</code> e <code>Adeus!</code>. Nossa página poderia então se parecer com a abaixo. Note que em JavaScript, usamos <code>===</code> como uma comparação mais forte entre dois itens que também verifica que os objetos são do mesmo tipo. Geralmente queremos usar <code>===</code> sempre que possível.</p>
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="pt"&gt;
+    &lt;head&gt;
+        &lt;title&gt;Contador&lt;/title&gt;
+        &lt;script&gt;
+            function ola() {
+                const cabecalho = document.querySelector('h1');
+                if (cabecalho.innerHTML === 'Olá!') {
+                    cabecalho.innerHTML = 'Adeus!';
+                }
+                else {
+                    cabecalho.innerHTML = 'Olá!';
+                }
+            }
+        &lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;h1&gt;Olá!&lt;/h1&gt;
+        &lt;button onclick="ola()"&gt;Clique Aqui&lt;/button&gt;
+    &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+<h2 id="dom-manipulation">Manipulação da DOM (Básico)</h2>
+<p>Vamos usar essa ideia de manipulação da DOM para melhorar nossa página de contador:</p>
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="pt"&gt;
+    &lt;head&gt;
+        &lt;title&gt;Contador&lt;/title&gt;
+        &lt;script&gt;
+            let contador = 0;
+            function contar() {
+                contador++;
+                document.querySelector('h1').innerHTML = contador;
+            }
+        &lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;h1&gt;0&lt;/h1&gt;
+        &lt;button onclick="contar()"&gt;Contar&lt;/button&gt;
+    &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<p>Podemos tornar esta página ainda mais interessante exibindo um alerta toda vez que o contador chegar a um múltiplo de dez. Neste alerta, vamos formatar uma string para personalizar a mensagem, o que em JavaScript podemos fazer usando <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals">template literals</a>. Template literals requerem que haja crases (<code>`</code>) em torno de toda a expressão e um $ e chaves em torno de qualquer substituição. Por exemplo, vamos mudar nossa função contar:</p>
+<pre><code>function contar() {
+    contador++;
+    document.querySelector('h1').innerHTML = contador;
+        
+    if (contador % 10 === 0) {
+        alert(`Contagem está agora em ${contador}`)
+    }
+}</code></pre>
+
+<p><em>Na próxima aula, aprenderemos a melhorar o design dessa página removendo os eventos de dentro do HTML e separando nosso JavaScript em arquivos dedicados!</em></p>
+
+<h2 id="exercises">Exercícios</h2>
+<ul>
+	<p>Para os exercícios a seguir, será necessário obter o código-fonte HTML dos sites. É possível obter com a ferramenta "inspecionar", ou, acessar o repositório do site <a href="https://github.com/kaikycintra/webdev2025">neste link</a> e navegar pelo diretório <code>webmac</code>.</p>
+	<li><a href="exercicios/ex_sala2.html">Exercício de Sala</a></li>
+	<li><a href="exercicios/ex_casa2.html">Exercício de Casa</a></li>
+</ul>
+</body>
+</html>
