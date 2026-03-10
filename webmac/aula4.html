@@ -16,7 +16,7 @@
             --secondary-text-color: #a0a0a0;
             --disabled-text-color: #666;
             --accent-color-1: #ff690a; /* Laranja vibrante */
-            --accent-color-2: #ff690a; /* Laranja vibrante */
+            --accent-color-2: #ff0a0a; /* Laranja vibrante */
             --border-color: #444; /* Borda mais escura */
             --code-bg: #404040; /* Fundo para blocos de código */
             --note-bg: #4a4a4a; /* Fundo para notas */
@@ -67,7 +67,7 @@
         }
 
         a {
-            color: var(--accent-color-2);
+            color: var(--accent-color-1);
             transition: color 0.2s ease-in-out;
         }
 
@@ -87,7 +87,7 @@
 
         code {
             background-color: var(--code-bg);
-            color: var(--accent-color-2);
+            color: var(--accent-color-1);
             padding: 0.2em 0.4em;
             border-radius: 4px;
             font-family: 'Roboto Mono', monospace;
@@ -283,8 +283,17 @@
     </table>
     
     <h2>Ambiente Virtual de Python</h2>
-    Ao trabalhar com Python, é uma boa prática usar ambientes virtuais para isolar os pacotes instalados para cada projeto.
-    Dentro da pasta do nosso projeto podemos rodar o comando abaixo para criar um ambiente virtual:
+    <div class="note">
+        <p>
+            Essa seção explica como criar um ambiente virtual com o pip, o que não é possível no CEC.
+            Para fazer o setup do ambiente de desenvolvimento no CEC, leia essa seção para entender
+            o processo e siga o código na seção abaixo.
+        </p>
+    </div>
+    <p>
+        Ao trabalhar com Python, é uma boa prática usar ambientes virtuais para isolar os pacotes instalados para cada projeto.
+        Dentro da pasta do nosso projeto podemos rodar o comando abaixo para criar um ambiente virtual:
+    </p>
     <pre><code class="language-bash">
     python -m venv .venv
     </code></pre>
@@ -314,6 +323,22 @@
     touch requirements.txt                     # cria o arquivo com dependências
     echo fastapi[standard] > requirements.txt  # adiciona o pacote do fastapi no arquivo
     pip install -r requirements.txt            # instala dependências listadas no arquivo
+    </code></pre>
+
+    <h2>Ambiente virtual de Python (sem pip)</h2>
+    <p>
+        O script abaixo cria um ambiente virtual pulando a instalação do pip, ativa o ambiente,
+        obtém um workaround com o código do pip em binário e o executa para instalar o FastAPI.
+    </p>
+    <div class="note">
+        Sempre leia código que você vai executar no terminal, e verifique endereços web e projetos
+        utilizados. O arquivo python usado abaixo é especialmente suspeito por conta da execução de um blob binário.
+    </div>
+    <pre><code class="language-bash">
+    python3 -m venv --without-pip .venv
+    source .venv/bin/activate
+    wget https://bootstrap.pypa.io/get-pip.py && python3 get-pip.py
+    pip install fastapi[standard]
     </code></pre>
 
     <h2>Rodando o FastAPI</h2>
