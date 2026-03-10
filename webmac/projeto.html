@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Projeto WebMAC</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs/themes/prism-okaidia.min.css">
+        <style>
+            :root {
+                --background-color: #292827; /* Nova cor de fundo */
+                --surface-color: #363636; /* Um pouco mais claro que o fundo para contraste */
+                --primary-text-color: #e0e0e0;
+                --secondary-text-color: #a0a0a0;
+                --disabled-text-color: #666;
+                --accent-color-1: #ff690a; /* Laranja vibrante */
+                --accent-color-2: #ff953e; /* Laranja vibrante */
+                --border-color: #444; /* Borda mais escura */
+                --code-bg: #404040; /* Fundo para blocos de código */
+                --note-bg: #4a4a4a; /* Fundo para notas */
+                --note-border: var(--accent-color-2); /* Borda da nota */
+            }
+
+            body {
+                font-family: 'Roboto', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+                line-height: 1.7;
+                background-color: var(--background-color);
+                color: var(--primary-text-color);
+                margin: 0;
+                padding: 0;
+                max-width: 800px;
+                margin: 0 auto;
+                padding: 0rem 1.5rem;
+            }
+
+            .container {
+                max-width: 800px;
+                margin: 0 auto;
+                padding: 2rem 1.5rem;
+                box-sizing: border-box; /* Garante que padding não estoure a largura */
+            }
+
+            h1, h2, h3, h4, h5, h6 {
+                color: var(--accent-color-1);
+                font-weight: 700;
+                margin-top: 2.5rem;
+                margin-bottom: 1rem;
+            }
+
+            h1 {
+                font-size: 2.8rem;
+                margin-bottom: 1rem;
+                border-bottom: 2px solid var(--border-color);
+                padding-bottom: 1rem;
+            }
+
+            h2 {
+                font-size: 2.2rem;
+                border-bottom: 1px solid var(--border-color);
+                padding-bottom: 0.5rem;
+            }
+
+            h3 {
+                font-size: 1.8rem;
+            }
+
+            a {
+                color: var(--accent-color-1);
+                transition: color 0.2s ease-in-out;
+            }
+
+            a:hover {
+                color: var(--primary-text-color);
+                text-decoration: underline;
+            }
+
+            ul, ol {
+                padding-left: 1.5rem;
+                margin-bottom: 1.5rem;
+            }
+
+            ul li, ol li {
+                margin-bottom: 0.5rem;
+            }
+
+            code {
+                background-color: var(--code-bg);
+                color: var(--accent-color-1);
+                padding: 0.2em 0.4em;
+                border-radius: 4px;
+                font-family: 'Roboto Mono', monospace;
+                font-size: 0.9em;
+            }
+
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 8px;
+                overflow-x: auto;
+                margin-top: 1.5rem;
+                margin-bottom: 1.5rem;
+                position: relative;
+                font-family: 'Roboto Mono', monospace;
+                font-size: 0.95em;
+                line-height: 1.4;
+                color: var(--primary-text-color);
+                border: 1px solid var(--border-color);
+            }
+
+            pre code {
+                background-color: transparent;
+                color: inherit;
+                padding: 0;
+            }
+
+            .note {
+                background-color: var(--note-bg);
+                border-left: 5px solid var(--note-border);
+                padding: 1rem 1.5rem;
+                margin: 2rem 0;
+                border-radius: 8px;
+                color: var(--primary-text-color);
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            }
+            .note p {
+                margin: 0;
+            }
+
+            table {
+                border-collapse: collapse;
+                width: 100%;
+                margin: 2rem 0;
+                background-color: var(--surface-color);
+                border-radius: 8px;
+                overflow: hidden; /* Para bordas arredondadas funcionarem com a borda interna */
+            }
+            th, td {
+                border: 1px solid var(--border-color);
+                padding: 12px 15px;
+                text-align: left;
+                vertical-align: top;
+            }
+            th {
+                background-color: var(--code-bg); /* Use cor de código para cabeçalho */
+                font-weight: 700;
+                color: var(--primary-text-color);
+            }
+            tr:nth-child(even) {
+                background-color: #2f2f2f; /* Cor alternativa para linhas pares */
+            }
+            tr:hover {
+                background-color: #3e3e3e; /* Destaque ao passar o mouse */
+            }
+
+            img {
+                max-width: 100%;
+                height: auto;
+                display: block; /* Remove espaço extra abaixo da imagem */
+                margin: 1rem auto; /* Centraliza imagens e adiciona margem */
+                border-radius: 8px;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            }
+
+            summary::marker {
+            content: "";
+            }
+
+            summary::before {
+                content: "+";
+                font-weight: bold;
+                font-size: 2rem;
+                vertical-align: middle;
+            }
+
+            details[open] summary::before {
+                content: "-";
+            }
+
+            /* Responsividade */
+            @media (max-width: 768px) {
+                .container {
+                    padding: 1.5rem 1rem;
+                }
+                h1 {
+                    font-size: 2.2rem;
+                }
+                h2 {
+                    font-size: 1.8rem;
+                }
+                h3 {
+                    font-size: 1.5rem;
+                }
+                body {
+                    font-size: 0.95em;
+                }
+            }
+            @media (max-width: 480px) {
+                .container {
+                    padding: 1rem 0.8rem;
+                }
+                h1 {
+                    font-size: 1.8rem;
+                }
+                h2 {
+                    font-size: 1.5rem;
+                }
+            }
+        </style>
+    </head>
+
+    <body>
+        <h1>Projeto de WebMAC</h1>
+        <p>A ideia do projeto é usar todo o conteúdo apresentado durante o curso para criar um web app simples.</p>
+        <p>O projeto deve ser entregue pelo link do github submetido no moodle da disciplina.</p>
+        <p><strong>Atenção: O projeto deve ser feito individualmente.</strong></p>
+        
+        <h2>Especificações</h2>
+        <ul>
+            <li><code>HTML, CSS e JavaScript</code> Devem ser criadas duas ou mais telas</li>
+            <ul>
+                <li>Todas as interfaces devem ser responsivas para mobile e PC</li>
+            </ul>
+            <li><code>FastAPI:</code> O FastAPI deve ser usado obrigatoriamente como o framework de back-end.</li>
+            <li><code>SQL:</code> Devem ser criados dois ou mais modelos no banco de dados</li>
+            <ul>
+                <li>Pelo menos dois de seus modelos devem ter algum tipo de relação.</li>
+                <li>A relação pode ser One to One, One to Many ou Many to Many</li>
+            </ul>
+            <li><code>HTMX:</code> Usar o HTMX para implementar operações básicas CRUD:</li>
+            <ul>
+                <li>Criar objeto no banco com hx-post</li>
+                <li>Ler objeto no banco com hx-get</li>
+                <li>Atualizar objeto no banco com hx-put</li>
+                <li>Deletar objeto no banco com hx-delete</li>
+            </ul>
+            <li>Implementar ao menos uma das opções abaixo:</li>
+                <ul>
+                    <li>Busca dos objetos</li>
+                    <li>Paginação com navegação entre as páginas</li>
+                    <li>Paginação com 'scroll infinito'</li>
+                </ul>
+        </ul>
+
+        <h3>Exemplos de entregas</h3>
+        <h4>To-do</h4>
+        <p>
+            Web app para criar tarefas que pertençam a disciplinas com as funcionalides abaixo:
+        </p>    
+        <ul>
+            <li>Uma tela para a criação de tarefas e disciplinas (com hx-post)</li>
+            <li>Uma tela para a busca de tarefas</li>
+            <li>Busca de tarefas pelo nome das disciplinas (com hx-get)</li>
+            <li>Opção de deletar tarefas concluídas (com hx-delete)</li>
+            <li>Opção de atualizar texto da tarefa (com hx-put)</li>
+        </ul>
+        <h4>Ranqueador de músicas</h4>
+        <p>
+            Web app para ranquear suas músicas favoritas:
+        </p>    
+        <ul>
+            <li>Uma tela para a adição de músicas com nota e álbum ao qual pertence (com hx-post)</li>
+            <li>Uma tela para ver suas músicas ordenadas pela nota (com scroll infinito e hx-get)</li>
+            <li>Opção de deletar músicas adicionadas (com hx-delete)</li>
+            <li>Opção de atualizar nota para a música (com hx-put)</li>
+        </ul>
+        <h2>Entrega</h2>
+
+        <p>Seu projeto deve estar no repositório submetido no e-disciplinas da disciplina. Apenas verificaremos os repositórios após o período máximo de entrega.</p>
+        <p><strong>Certifique-se de que seu repositório pode ser visualizado pelo professor, monitores e/ou tutores da disciplina.</strong></p>
+
+        <h2>Recursos</h2>
+        <p>Recomendamos os recursos abaixo para guiar a execução do projeto:</p>
+        <ul>
+            <li><a href="https://fastapi.tiangolo.com/" target="_blank">Documentação do FastAPI</a></li>
+            <li><a href="https://htmx.org/docs/" target="_blank">Documentação HTMX</a></li>
+            <li><a href="https://www.youtube.com/@CodeLabBR/videos" target="_blank">Aulas gravadas do CodeLab</a></li>
+            <li><a href="../index.html" target="_blank">Notas de aula</a></li>
+        </ul>
+
+        
+        <!-- Prism.js JS -->
+        <script src="https://cdn.jsdelivr.net/npm/prismjs/prism.min.js" defer></script>
+        <script src="https://cdn.jsdelivr.net/npm/prismjs/plugins/autoloader/prism-autoloader.min.js" defer></script>
+    </body>
+    
+</html>
