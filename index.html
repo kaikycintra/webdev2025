@@ -61,6 +61,13 @@
             margin-bottom: 2rem;
         }
 
+        h3 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--accent-color-2);
+            margin-bottom: 1vh;
+        }
+
         ul.course-list {
             list-style: none;
             padding: 0;
@@ -105,6 +112,38 @@
             margin-left: 0.5rem;
         }
 
+        nav.extras-list {
+            padding: 0px;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+        }
+
+        .extras-list a {
+            margin-right: 1vw;
+            flex-grow: 1;
+            margin-bottom: 1rem;
+        }
+
+        .extras-list button {
+            background-color: var(--surface-color);
+            padding: 1.5rem;
+            border-left: 5px solid var(--border-color);
+            transition: all 0.2s ease-in-out;
+            color: var(--accent-color-2);
+            text-decoration: none;
+            font-size: 150%;
+            font-weight: 700;
+            text-align: center;
+            background-color: var(--surface-color);
+            width: 100%;
+        }
+
+        .extras-list button:hover {
+            border-left-color: var(--accent-color-1);
+            transform: translateY(-2px);
+        }
+
         footer {
             text-align: center;
             margin-top: 5rem;
@@ -143,27 +182,27 @@
 
         <main>
 			<section id="webmac">
-				<h2>Aulas - WebMAC</h2>
+				<h2>WebMAC (MAC0350 Ciclo CodeLab)</h2>
+
+                <h3>Materiais</h3>
+                <nav class="extras-list">
+                    <a href="webmac/projeto.html" style="width: 100%;">
+                    <button>Especificações do Projeto</button>
+                    </a>
+                    <a href="webmac/exercicios/exercicios_index.html">
+                    <button>Lista de Exercícios</button>
+                    </a>
+                    <a href="webmac/slides/slides.html">
+                    <button>Slides de aula</button>
+                    </a>
+                </nav>
+
+                <h3>Aulas</h3>
 				<ul class="course-list">
-                    <li>
-                        <a href="webmac/projeto.html">
-                        <span class="lesson-title">Projeto</span>
-                        </a>
-					</li>
-                    <li>
-                        <a href="webmac/exercicios/exercicios_index.html">
-							<span class="lesson-title">Exercícios</span>
-                        </a>
-					</li>
-                    <li>
-                        <a href="webmac/slides/slides.html">
-							<span class="lesson-title">Slides</span>
-                        </a>
-					</li>
 					<li>
                         <a href="/static/webmac/webmac0.pdf"
                            target="_blank">
-							<span class="lesson-title">Aula 0: HTML, CSS</span>
+							<span class="lesson-title">Aula 0: HTML e CSS</span>
                         </a>
 					</li>
 
@@ -195,7 +234,31 @@
 							<span class="lesson-title">Aula 5: Avançando com FastAPI</span>
 						</a>
 					</li>
-
+                    <li class="unavailable">
+                        <!-- <a href=""> -->
+                        <span class="lesson-title">Aula 6: Introdução ao SQL</span>
+                        <!-- </a> -->
+					</li>
+                    <li class="unavailable">
+                        <!-- <a href=""> -->
+                        <span class="lesson-title">Aula 7: SQLModel e Integração com FastAPI</span>
+                        <!-- </a> -->
+					</li>
+                    <li class="unavailable">
+                        <!-- <a href=""> -->
+                        <span class="lesson-title">Aula 8: HTMX</span>
+                        <!-- </a> -->
+					</li>
+                    <li class="unavailable">
+                        <!-- <a href=""> -->
+                        <span class="lesson-title">Aula 9: HTMX parte 2</span>
+                        <!-- </a> -->
+					</li>
+                    <li class="unavailable">
+                        <!-- <a href=""> -->
+                        <span class="lesson-title">Aula 10: Introdução ao Docker</span>
+                        <!-- </a> -->
+					</li>
 				</ul>
 			</section>
 
