@@ -8,168 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
 
-    <style>
-        :root {
-            --background-color: #292827;
-            --surface-color: #1e1e1e;
-            --primary-text-color: #e0e0e0;
-            --secondary-text-color: #a0a0a0;
-            --disabled-text-color: #666;
-            --accent-color-1: #ff690a;
-            --accent-color-2: #ff690a;
-            --border-color: #333;
-        }
-
-        body, html {
-            margin: 0;
-            padding: 0;
-            background-color: var(--background-color);
-            color: var(--primary-text-color);
-            font-family: 'Roboto', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-            line-height: 1.6;
-        }
-
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 2rem 1.5rem;
-        }
-
-        header {
-            text-align: center;
-            margin-bottom: 4rem;
-        }
-
-        h1 {
-            font-size: 3.5rem;
-            font-weight: 700;
-            color: var(--accent-color-1);
-            margin: 0;
-        }
-
-        header p {
-            font-size: 1.2rem;
-            color: var(--secondary-text-color);
-        }
-
-        main section h2 {
-            font-size: 2.2rem;
-            font-weight: 700;
-            color: var(--accent-color-2);
-            border-bottom: 2px solid var(--border-color);
-            padding-bottom: 0.5rem;
-            margin-bottom: 2rem;
-        }
-
-        h3 {
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--accent-color-2);
-            margin-bottom: 1vh;
-        }
-
-        ul.course-list {
-            list-style: none;
-            padding: 0;
-        }
-
-        .course-list li {
-            background-color: var(--surface-color);
-            margin-bottom: 1rem;
-            padding: 1.5rem;
-            border-left: 5px solid var(--border-color);
-            transition: all 0.2s ease-in-out;
-        }
-
-        .course-list li:hover {
-            border-left-color: var(--accent-color-1);
-            transform: translateY(-2px);
-        }
-        
-        .course-list .lesson-title {
-            font-size: 1.4rem;
-            font-weight: 700;
-        }
-
-        .course-list a {
-            color: var(--accent-color-2);
-            text-decoration: none;
-            display: block;
-        }
-        
-        .course-list a:hover {
-            text-decoration: underline;
-        }
-        
-        .course-list .unavailable {
-            color: var(--disabled-text-color);
-            cursor: not-allowed;
-        }
-        
-        .course-list .soon-tag {
-            font-size: 0.9rem;
-            font-style: italic;
-            margin-left: 0.5rem;
-        }
-
-        nav.extras-list {
-            padding: 0px;
-            display: flex;
-            flex-direction: row;
-            flex-wrap: wrap;
-        }
-
-        .extras-list a {
-            margin-right: 1vw;
-            flex-grow: 1;
-            margin-bottom: 1rem;
-        }
-
-        .extras-list button {
-            background-color: var(--surface-color);
-            padding: 1.5rem;
-            border-left: 5px solid var(--border-color);
-            transition: all 0.2s ease-in-out;
-            color: var(--accent-color-2);
-            text-decoration: none;
-            font-size: 150%;
-            font-weight: 700;
-            text-align: center;
-            background-color: var(--surface-color);
-            width: 100%;
-        }
-
-        .extras-list button:hover {
-            border-left-color: var(--accent-color-1);
-            transform: translateY(-2px);
-        }
-
-        footer {
-            text-align: center;
-            margin-top: 5rem;
-            padding-top: 2rem;
-            border-top: 1px solid var(--border-color);
-            color: var(--secondary-text-color);
-            font-size: 0.9rem;
-        }
-
-        footer a {
-            color: var(--accent-color-2);
-        }
-
-        @media (max-width: 600px) {
-            h1 {
-                font-size: 2.5rem;
-            }
-            main section h2 {
-                font-size: 1.8rem;
-            }
-            .course-list .lesson-title {
-                font-size: 1.2rem;
-            }
-        }
-
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
@@ -197,7 +36,7 @@
                     </a>
                 </nav>
 
-                <h3>Aulas</h3>
+                <h3 style="margin-top: 1rem;">Aulas</h3>
 				<ul class="course-list">
 					<li>
                         <a href="/static/webmac/webmac0.pdf"
@@ -319,7 +158,7 @@
         </main>
 
         <footer>
-            <p>&copy; 2025 <a href="https://codelab.ime.usp.br/#/" target="_blank" rel="noopener noreferrer">Codelab IME-USP</a>.</p>
+            <p>&copy; 2026 <a href="https://codelab.ime.usp.br/#/" target="_blank" rel="noopener noreferrer">Codelab IME-USP</a>.</p>
         </footer>
 
     </div>
