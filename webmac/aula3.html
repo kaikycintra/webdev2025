@@ -1,190 +1,221 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aula 3: JS - Manipulação Avançada da DOM</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --background-color: #292827;
-            --surface-color: #363636;
-            --primary-text-color: #e0e0e0;
-            --secondary-text-color: #a0a0a0;
-            --disabled-text-color: #666;
-            --accent-color-1: #ff690a;
-            --accent-color-2: #ff690a;
-            --border-color: #444;
-            --code-bg: #404040;
-            --note-bg: #4a4a4a;
-            --note-border: var(--accent-color-2);
-        }
+    
+    <head>
 
-        body {
-            font-family: 'Roboto', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-            line-height: 1.7;
-            background-color: var(--background-color);
-            color: var(--primary-text-color);
-            margin: 0;
-            padding: 0;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 0rem 1.5rem;
-        }
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Aula 3: Manipulação da DOM</title>
+        
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs/themes/prism-okaidia.min.css">
+        
+        <style>
+            :root {
+                --background-color: #292827;
+                --surface-color: #363636;
+                --primary-text-color: #e0e0e0;
+                --secondary-text-color: #a0a0a0;
+                --disabled-text-color: #666;
+                --accent-color-1: #ff690a;
+                --accent-color-2: #ff690a;
+                --border-color: #444;
+                --code-bg: #404040;
+                --note-bg: #4a4a4a;
+                --note-border: var(--accent-color-2);
+            }
 
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 2rem 1.5rem;
-            box-sizing: border-box;
-        }
+            body {
+                font-family: 'Roboto', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+                line-height: 1.7;
+                background-color: var(--background-color);
+                color: var(--primary-text-color);
+                margin: 0;
+                padding: 0;
+                max-width: 800px;
+                margin: 0 auto;
+                padding: 0rem 1.5rem;
+            }
 
-        h1, h2, h3 {
-            color: var(--accent-color-1);
-            font-weight: 700;
-            margin-top: 2.5rem;
-            margin-bottom: 1rem;
-        }
+            .container {
+                max-width: 800px;
+                margin: 0 auto;
+                padding: 2rem 1.5rem;
+                box-sizing: border-box;
+            }
 
-        h1 {
-            font-size: 2.8rem;
-            margin-bottom: 1rem;
-            border-bottom: 2px solid var(--border-color);
-            padding-bottom: 1rem;
-        }
+            h1, h2, h3 {
+                color: var(--accent-color-1);
+                font-weight: 700;
+                margin-top: 2.5rem;
+                margin-bottom: 1rem;
+            }
 
-        h2 {
-            font-size: 2.2rem;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 0.5rem;
-        }
+            h1 {
+                font-size: 2.8rem;
+                margin-bottom: 1rem;
+                border-bottom: 2px solid var(--border-color);
+                padding-bottom: 1rem;
+            }
 
-        h3 {
-            font-size: 1.8rem;
-        }
+            h2 {
+                font-size: 2.2rem;
+                border-bottom: 1px solid var(--border-color);
+                padding-bottom: 0.5rem;
+            }
 
-        a {
-            color: var(--accent-color-2);
-            transition: color 0.2s ease-in-out;
-        }
+            h3 {
+                font-size: 1.8rem;
+            }
 
-        a:hover {
-            color: var(--primary-text-color);
-            text-decoration: underline;
-        }
+            a {
+                color: var(--accent-color-2);
+                transition: color 0.2s ease-in-out;
+            }
 
-        ul, ol {
-            padding-left: 1.5rem;
-            margin-bottom: 1.5rem;
-        }
+            a:hover {
+                color: var(--primary-text-color);
+                text-decoration: underline;
+            }
 
-        ul li, ol li {
-            margin-bottom: 0.5rem;
-        }
+            ul, ol {
+                padding-left: 1.5rem;
+                margin-bottom: 1.5rem;
+            }
 
-        code {
-            background-color: var(--code-bg);
-            color: var(--accent-color-2);
-            padding: 0.2em 0.4em;
-            border-radius: 4px;
-            font-family: 'Roboto Mono', monospace;
-            font-size: 0.9em;
-        }
+            ul li, ol li {
+                margin-bottom: 0.5rem;
+            }
 
-        pre {
-            background-color: var(--code-bg);
-            padding: 1rem;
-            border-radius: 8px;
-            overflow-x: auto;
-            margin-top: 1.5rem;
-            margin-bottom: 1.5rem;
-            font-family: 'Roboto Mono', monospace;
-            font-size: 0.95em;
-            line-height: 1.4;
-            color: var(--primary-text-color);
-            border: 1px solid var(--border-color);
-        }
+            code {
+                background-color: var(--code-bg);
+                color: var(--accent-color-2);
+                padding: 0.2em 0.4em;
+                border-radius: 4px;
+                font-family: 'Roboto Mono', monospace;
+                font-size: 0.9em;
+            }
 
-        pre code {
-            background-color: transparent;
-            color: inherit;
-            padding: 0;
-        }
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 8px;
+                overflow-x: auto;
+                margin-top: 1.5rem;
+                margin-bottom: 1.5rem;
+                font-family: 'Roboto Mono', monospace;
+                font-size: 0.95em;
+                line-height: 1.4;
+                color: var(--primary-text-color);
+                border: 1px solid var(--border-color);
+            }
 
-        img {
-            max-width: 100%;
-            height: auto;
-            display: block;
-            margin: 2rem auto;
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-        }
-    </style>
-</head>
-<body>
+            pre code {
+                background-color: transparent;
+                color: inherit;
+                padding: 0;
+            }
 
-<h1>Aula 3: JS - Manipulação Avançada da DOM</h1>
+            img {
+                max-width: 100%;
+                height: auto;
+                display: block;
+                margin: 2rem auto;
+                border-radius: 8px;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            }
+        </style>
 
-<ul>
-  <li><a href="#event-listeners">Removendo JS Inline e Event Listeners</a></li>
-  <li><a href="#external-files">Arquivos Separados</a></li>
-  <li><a href="#styling-js">Estilização e Console</a></li>
-  <li><a href="#arrow-functions">Arrow Functions</a></li>
-  <li><a href="#todo-list">Lista de Tarefas Prática</a></li>
-  <li><a href="#intervals">Intervalos</a></li>
-  <li><a href="#local-storage">Local Storage</a></li>
-  <li><a href="#exercises">Exercício</a></li>
-</ul>
+    </head>
 
-<h2 id="event-listeners">Removendo JS Inline e Event Listeners</h2>
-<p>Na aula passada, vimos como adicionar eventos usando <code>onclick="..."</code> direto no HTML. Agora, vamos ver algumas maneiras de melhorar o design das nossas páginas. Primeiro, assim como tentamos evitar estilização inline com CSS, queremos evitar JavaScript inline sempre que possível.</p>
-<p>Podemos fazer isso adicionando uma linha de script que muda o atributo <code>onclick</code> de um botão na página, removendo-o de dentro da tag <code>&lt;button&gt;</code>:</p>
-<pre><code>document.querySelector('button').onclick = contar;</code></pre>
-<p>Não estamos chamando a função com parênteses (<code>contar()</code>), mas apenas nomeando-a (<code>contar</code>). Isso especifica que só queremos chamar a função quando o botão for clicado.</p>
-<p>Porém, esta mudança sozinha pode gerar um erro no console do navegador, pois o código JavaScript pode rodar antes do botão ter sido renderizado na tela:</p>
-<p></p>
-<p>Para contornar isso, usamos a função <a href="https://www.w3schools.com/jsref/met_document_addeventlistener.asp">addEventListener</a>. Ela espera a página carregar (<code>DOMContentLoaded</code>) antes de executar o código:</p>
-<pre><code>document.addEventListener('DOMContentLoaded', function() {
+    <body>
+
+        <h1>Aula 3: JS - Manipulação Avançada da DOM</h1>
+
+        <ul>
+            <li><a href="#event-listeners">Removendo JS Inline e Event Listeners</a></li>
+            <li><a href="#external-files">Arquivos Separados</a></li>
+            <li><a href="#styling-js">Estilização e Console</a></li>
+            <ul>
+                <li><a href="#console">Console do JavaScript</a></li>
+            </ul>
+            <li><a href="#arrow-functions">Arrow Functions</a></li>
+            <li><a href="#todo-list">Lista de Tarefas Prática</a></li>
+            <li><a href="#intervals">Intervalos</a></li>
+            <li><a href="#local-storage">Local Storage</a></li>
+            <li><a href="#exercises">Exercício</a></li>
+        </ul>
+
+        <h2 id="event-listeners">Removendo JS Inline e Event Listeners</h2>
+        
+        <p>Na aula passada, vimos como adicionar eventos usando <code>onclick="..."</code> direto no HTML. Agora, vamos ver algumas maneiras de melhorar o design das nossas páginas. Primeiro, assim como tentamos evitar estilização inline com CSS, queremos evitar JavaScript inline sempre que possível.</p>
+        <p>Podemos fazer isso adicionando uma linha de script que muda o atributo <code>onclick</code> de um botão na página, removendo-o de dentro da tag <code>&lt;button&gt;</code>:</p>
+        
+        <pre><code class="language-javascript">document.querySelector('button').onclick = contar;</code></pre>
+
+        <p>Não estamos chamando a função com parênteses (<code>contar()</code>), mas apenas nomeando-a (<code>contar</code>). Isso especifica que só queremos chamar a função quando o botão for clicado.</p>
+        <p>Porém, esta mudança sozinha pode gerar um erro no console do navegador, pois o código JavaScript pode rodar antes do botão ter sido renderizado na tela:</p>
+        <p>Para contornar isso, usamos a função <a href="https://www.w3schools.com/jsref/met_document_addeventlistener.asp">addEventListener</a>. Ela espera a página carregar (<code>DOMContentLoaded</code>) antes de executar o código:</p>
+        
+        <pre><code class="language-javascript">
+document.addEventListener('DOMContentLoaded', function() {
     // Agora é seguro buscar o botão
     document.querySelector('button').onclick = contar;
-});</code></pre>
+});
+        </code></pre>
 
-<h2 id="external-files">Arquivos Separados (.js)</h2>
-<p>Outra maneira de melhorar o código é movendo nosso JavaScript para um arquivo separado (ex: <code>contador.js</code>). É muito similar ao CSS:</p>
-<pre><code>&lt;script src="/static/contador.js"&gt;&lt;/script&gt;</code></pre>
-<p>Isso traz vantagens como: apelo visual (código mais limpo), compartilhamento entre várias páginas HTML, facilidade de colaboração em equipe e importação de bibliotecas externas (como o JS do Bootstrap).</p>
+        <h2 id="external-files">Arquivos Separados (.js)</h2>
 
-<h2 id="styling-js">Estilização, datasets e o Console</h2>
-<p>Com JavaScript, também podemos mudar a estilização de uma página! Usamos atributos <code>data-ALGO</code> no HTML para guardar informações, e lemos isso via <code>dataset</code> no JS.</p>
-<pre><code>&lt;button data-cor="red"&gt;Vermelho&lt;/button&gt;</code></pre>
-<pre><code>// Pegando todos os botões e mudando a cor do texto com base no data-cor
+        <p>Outra maneira de melhorar o código é movendo nosso JavaScript para um arquivo separado (ex: <code>contador.js</code>). É muito similar ao CSS:</p>
+        
+        <pre><code class="language-html">&lt;script src="/static/contador.js"&gt;&lt;/script&gt;</code></pre>
+        
+        <p>Isso traz vantagens como: apelo visual (código mais limpo), compartilhamento entre várias páginas HTML, facilidade de colaboração em equipe e importação de bibliotecas externas (como o JS do Bootstrap).</p>
+
+        <h2 id="styling-js">Estilização, datasets e o Console</h2>
+        
+        <p>Com JavaScript, também podemos mudar a estilização de uma página! Usamos atributos <code>data-ALGO</code> no HTML para guardar informações, e lemos isso via <code>dataset</code> no JS.</p>
+        <pre><code class="language-html">&lt;button data-cor="red"&gt;Vermelho&lt;/button&gt;</code></pre>
+        
+        <pre><code class="language-javascript">
+// Pegando todos os botões e mudando a cor do texto com base no data-cor
 document.querySelectorAll('button').forEach(function(botao) {
     botao.onclick = function() {
         document.querySelector("#ola").style.color = botao.dataset.cor;
     }
-});</code></pre>
+});
+        </code></pre>
 
-<h3>Console do JavaScript</h3>
-<p>O console é útil para depuração. Usamos a função <code>console.log()</code> para imprimir algo lá:</p>
-<pre><code>console.log(document.querySelectorAll('button'));</code></pre>
-<p></p>
+        <h3 id="console">Console do JavaScript</h3>
+        
+        <p>O console é útil para depuração. Usamos a função <code>console.log()</code> para imprimir algo lá:</p>
+        
+        <pre><code class="language-javascript">console.log(document.querySelectorAll('button'));</code></pre>
 
-<h2 id="arrow-functions">Arrow Functions e Eventos</h2>
-<p>O JavaScript moderno nos permite encurtar funções usando a sintaxe <strong>Arrow Function</strong> (<code>=&gt;</code>):</p>
-<pre><code>document.addEventListener('DOMContentLoaded', () =&gt; {
+        <h2 id="arrow-functions">Arrow Functions e Eventos</h2>
+        
+        <p>O JavaScript moderno nos permite encurtar funções usando a sintaxe <strong>Arrow Function</strong> (<code>=&gt;</code>):</p>
+        
+        <pre><code class="language-javascript">
+document.addEventListener('DOMContentLoaded', () =&gt; {
     document.querySelectorAll('button').forEach(botao =&gt; {
         botao.onclick = () =&gt; {
             document.querySelector("#ola").style.color = botao.dataset.cor;
         }
     });
-});</code></pre>
-<p>Além do <code>onclick</code>, podemos ouvir <a href="https://www.w3schools.com/js/js_events.asp">inúmeros eventos</a> como <code>onchange</code> (útil para menus dropdown <code>&lt;select&gt;</code>), <code>onmouseover</code>, <code>onkeyup</code>, entre outros.</p>
+});
+        </code></pre>
+        
+        <p>Além do <code>onclick</code>, podemos ouvir <a href="https://www.w3schools.com/js/js_events.asp">inúmeros eventos</a> como <code>onchange</code> (útil para menus dropdown <code>&lt;select&gt;</code>), <code>onmouseover</code>, <code>onkeyup</code>, entre outros.</p>
 
-<h2 id="todo-list">Lista de Tarefas (Aplicações Reais)</h2>
-<p>Vamos juntar tudo criando uma lista de tarefas. Precisaremos ler um input, habilitar/desabilitar um botão (<code>disabled</code>) e criar novos elementos HTML (<code>createElement</code> e <code>append</code>).</p>
-<pre><code>document.addEventListener('DOMContentLoaded', () =&gt; {
+        <h2 id="todo-list">Lista de Tarefas (Aplicações Reais)</h2>
+
+        <p>Vamos juntar tudo criando uma lista de tarefas. Precisaremos ler um input, habilitar/desabilitar um botão (<code>disabled</code>) e criar novos elementos HTML (<code>createElement</code> e <code>append</code>).</p>
+        
+        <pre><code class="language-javascript">
+document.addEventListener('DOMContentLoaded', () =&gt; {
     const submit = document.querySelector('#submit');
     const novaTarefa = document.querySelector('#tarefa');
     submit.disabled = true;
@@ -210,26 +241,35 @@ document.querySelectorAll('button').forEach(function(botao) {
 
         return false; // Previne a página de recarregar
     }
-});</code></pre>
+});
+        </code></pre>
 
-<h2 id="intervals">Intervalos</h2>
-<p>Podemos configurar funções para rodar repetidamente usando <code>setInterval</code>, que recebe a função a ser executada e o tempo (em milissegundos).</p>
-<pre><code>function contar() {
+        <h2 id="intervals">Intervalos</h2>
+
+        <p>Podemos configurar funções para rodar repetidamente usando <code>setInterval</code>, que recebe a função a ser executada e o tempo (em milissegundos).</p>
+        
+        <pre><code class="language-javascript">
+function contar() {
     contador++;
     document.querySelector('h1').innerHTML = contador;
 }
 
 document.addEventListener('DOMContentLoaded', () =&gt; {
     setInterval(contar, 1000); // Roda a cada 1 segundo
-});</code></pre>
+});
+        </code></pre>
 
-<h2 id="local-storage">Local Storage (Salvando Dados)</h2>
-<p>Toda vez que recarregamos a página, nossos contadores e tarefas são perdidos. Para resolver isso, usamos o <strong>Local Storage</strong> do navegador. Funciona como um dicionário chave-valor do Python:</p>
-<ul>
-  <li><code>localStorage.getItem(chave)</code>: Retorna o valor salvo.</li>
-  <li><code>localStorage.setItem(chave, valor)</code>: Salva um novo valor.</li>
-</ul>
-<pre><code>if (!localStorage.getItem('contador')) {
+        <h2 id="local-storage">Local Storage (Salvando Dados)</h2>
+
+        <p>Toda vez que recarregamos a página, nossos contadores e tarefas são perdidos. Para resolver isso, usamos o <strong>Local Storage</strong> do navegador. Funciona como um dicionário chave-valor do Python:</p>
+        
+        <ul>
+            <li><code>localStorage.getItem(chave)</code>: Retorna o valor salvo.</li>
+            <li><code>localStorage.setItem(chave, valor)</code>: Salva um novo valor.</li>
+        </ul>
+        
+        <pre><code class="language-javascript">
+if (!localStorage.getItem('contador')) {
     localStorage.setItem('contador', 0);
 }
             
@@ -243,15 +283,22 @@ function contar() {
 document.addEventListener('DOMContentLoaded', () =&gt; {
     document.querySelector('h1').innerHTML = localStorage.getItem('contador');
     document.querySelector('button').onclick = contar;
-});</code></pre>
+});
+        </code></pre>
 
-<p>Isso é tudo para nossa jornada nos fundamentos do JavaScript! Agora nossos sites ganharam memória e vida própria.</p>
+        <p>Isso é tudo para nossa jornada nos fundamentos do JavaScript! Agora nossos sites ganharam memória e vida própria.</p>
 
-<h2 id="exercises">Exercícios</h2>
-<ul>
-	<p>Para o exercício a seguir, será necessário obter o código-fonte HTML dos sites. É possível obter com a ferramenta "inspecionar", ou, acessar o repositório do site <a href="https://github.com/kaikycintra/webdev2025">neste link</a> e navegar pelo diretório <code>webmac</code>.</p>
-	<li><a href="exercicios/ex_sala3.html">Exercício de Sala</a></li>
-</ul>
+        <h2 id="exercises">Exercícios</h2>
 
-</body>
+        <p>Para o exercício a seguir, será necessário obter o código-fonte HTML dos sites. É possível obter com a ferramenta "inspecionar", ou, acessar o repositório do site <a href="https://github.com/kaikycintra/webdev2025">neste link</a> e navegar pelo diretório <code>webmac</code>.</p>
+
+        <ul>
+            <li><a href="exercicios/ex_sala3.html">Exercício de Sala</a></li>
+        </ul>
+
+        <script src="https://cdn.jsdelivr.net/npm/prismjs/prism.min.js" defer></script>
+        <script src="https://cdn.jsdelivr.net/npm/prismjs/plugins/autoloader/prism-autoloader.min.js" defer></script>
+
+    </body>
+    
 </html>

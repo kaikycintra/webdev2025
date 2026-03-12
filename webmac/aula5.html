@@ -1,311 +1,319 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aula 5: Avançando com FastAPI</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs/themes/prism.min.css">
-    <style>
-        :root {
-            --background-color: #292827; /* Nova cor de fundo */
-            --surface-color: #363636; /* Um pouco mais claro que o fundo para contraste */
-            --primary-text-color: #e0e0e0;
-            --secondary-text-color: #a0a0a0;
-            --disabled-text-color: #666;
-            --accent-color-1: #ff690a; /* Laranja vibrante */
-            --accent-color-2: #ff0a0a; /* Laranja vibrante */
-            --border-color: #444; /* Borda mais escura */
-            --code-bg: #404040; /* Fundo para blocos de código */
-            --note-bg: #4a4a4a; /* Fundo para notas */
-            --note-border: var(--accent-color-2); /* Borda da nota */
-        }
 
-        body {
-            font-family: 'Roboto', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-            line-height: 1.7;
-            background-color: var(--background-color);
-            color: var(--primary-text-color);
-            margin: 0;
-            padding: 0;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 0rem 1.5rem;
-        }
+    <head>
 
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 2rem 1.5rem;
-            box-sizing: border-box; /* Garante que padding não estoure a largura */
-        }
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Aula 5: FastAPI</title>
 
-        h1, h2, h3, h4, h5, h6 {
-            color: var(--accent-color-1);
-            font-weight: 700;
-            margin-top: 2.5rem;
-            margin-bottom: 1rem;
-        }
-
-        h1 {
-            font-size: 2.8rem;
-            margin-bottom: 1rem;
-            border-bottom: 2px solid var(--border-color);
-            padding-bottom: 1rem;
-        }
-
-        h2 {
-            font-size: 2.2rem;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 0.5rem;
-        }
-
-        h3 {
-            font-size: 1.8rem;
-        }
-
-        a {
-            color: var(--accent-color-1);
-            transition: color 0.2s ease-in-out;
-        }
-
-        a:hover {
-            color: var(--primary-text-color);
-            text-decoration: underline;
-        }
-
-        ul, ol {
-            padding-left: 1.5rem;
-            margin-bottom: 1.5rem;
-        }
-
-        ul li, ol li {
-            margin-bottom: 0.5rem;
-        }
-
-        code {
-            background-color: var(--code-bg);
-            color: var(--accent-color-1);
-            padding: 0.2em 0.4em;
-            border-radius: 4px;
-            font-family: 'Roboto Mono', monospace;
-            font-size: 0.9em;
-        }
-
-        pre {
-            background-color: var(--code-bg);
-            padding: 1rem;
-            border-radius: 8px;
-            overflow-x: auto;
-            margin-top: 1.5rem;
-            margin-bottom: 1.5rem;
-            position: relative;
-            font-family: 'Roboto Mono', monospace;
-            font-size: 0.95em;
-            line-height: 1.4;
-            color: var(--primary-text-color);
-            border: 1px solid var(--border-color);
-        }
-
-        pre code {
-            background-color: transparent;
-            color: inherit;
-            padding: 0;
-        }
-
-        .note {
-            background-color: var(--note-bg);
-            border-left: 5px solid var(--note-border);
-            padding: 1rem 1.5rem;
-            margin: 2rem 0;
-            border-radius: 8px;
-            color: var(--primary-text-color);
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-        }
-        .note p {
-            margin: 0;
-        }
-
-        table {
-            border-collapse: collapse;
-            width: 100%;
-            margin: 2rem 0;
-            background-color: var(--surface-color);
-            border-radius: 8px;
-            overflow: hidden; /* Para bordas arredondadas funcionarem com a borda interna */
-        }
-        th, td {
-            border: 1px solid var(--border-color);
-            padding: 12px 15px;
-            text-align: left;
-            vertical-align: top;
-        }
-        th {
-            background-color: var(--code-bg); /* Use cor de código para cabeçalho */
-            font-weight: 700;
-            color: var(--primary-text-color);
-        }
-        tr:nth-child(even) {
-            background-color: #2f2f2f; /* Cor alternativa para linhas pares */
-        }
-        tr:hover {
-            background-color: #3e3e3e; /* Destaque ao passar o mouse */
-        }
-
-        img {
-            max-width: 100%;
-            height: auto;
-            display: block; /* Remove espaço extra abaixo da imagem */
-            margin: 1rem auto; /* Centraliza imagens e adiciona margem */
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-        }
-
-        /* Responsividade */
-        @media (max-width: 768px) {
-            .container {
-                padding: 1.5rem 1rem;
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs/themes/prism-okaidia.min.css">    
+        
+        <style>
+            :root {
+                --background-color: #292827; /* Nova cor de fundo */
+                --surface-color: #363636; /* Um pouco mais claro que o fundo para contraste */
+                --primary-text-color: #e0e0e0;
+                --secondary-text-color: #a0a0a0;
+                --disabled-text-color: #666;
+                --accent-color-1: #ff690a; /* Laranja vibrante */
+                --accent-color-2: #ff0a0a; /* Laranja vibrante */
+                --border-color: #444; /* Borda mais escura */
+                --code-bg: #404040; /* Fundo para blocos de código */
+                --note-bg: #4a4a4a; /* Fundo para notas */
+                --note-border: var(--accent-color-2); /* Borda da nota */
             }
-            h1 {
-                font-size: 2.2rem;
-            }
-            h2 {
-                font-size: 1.8rem;
-            }
-            h3 {
-                font-size: 1.5rem;
-            }
+
             body {
-                font-size: 0.95em;
+                font-family: 'Roboto', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+                line-height: 1.7;
+                background-color: var(--background-color);
+                color: var(--primary-text-color);
+                margin: 0;
+                padding: 0;
+                max-width: 800px;
+                margin: 0 auto;
+                padding: 0rem 1.5rem;
             }
-        }
-        @media (max-width: 480px) {
+
             .container {
-                padding: 1rem 0.8rem;
+                max-width: 800px;
+                margin: 0 auto;
+                padding: 2rem 1.5rem;
+                box-sizing: border-box; /* Garante que padding não estoure a largura */
             }
+
+            h1, h2, h3, h4, h5, h6 {
+                color: var(--accent-color-1);
+                font-weight: 700;
+                margin-top: 2.5rem;
+                margin-bottom: 1rem;
+            }
+
             h1 {
+                font-size: 2.8rem;
+                margin-bottom: 1rem;
+                border-bottom: 2px solid var(--border-color);
+                padding-bottom: 1rem;
+            }
+
+            h2 {
+                font-size: 2.2rem;
+                border-bottom: 1px solid var(--border-color);
+                padding-bottom: 0.5rem;
+            }
+
+            h3 {
                 font-size: 1.8rem;
             }
-            h2 {
-                font-size: 1.5rem;
+
+            a {
+                color: var(--accent-color-1);
+                transition: color 0.2s ease-in-out;
             }
-        }
-    </style>
-</head>
-<body>
-    <h1>Aula 5: Avançando com FastAPI</h1>
-    <ul id="links-conteudo"></ul>
 
-    <h2 id="templating">Renderização</h2>
-    <p>
-        Até agora, vimos o back-end retornando dados puros (JSON). No entanto, existem duas filosofias principais para construir o que o usuário vê na tela:
-    </p>
+            a:hover {
+                color: var(--primary-text-color);
+                text-decoration: underline;
+            }
 
-    <table>
-        <thead>
-            <tr>
-                <th>Abordagem</th>
-                <th>Onde a página é montada?</th>
-                <th>O que o Back-end envia?</th>
-                <th>Exemplo de Tecnologia</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td><strong>Server-Side Rendering (SSR)</strong></td>
-                <td>No Servidor (Back-end)</td>
-                <td>HTML pronto</td>
-                <td>FastAPI + Jinja2, Django, PHP</td>
-            </tr>
-            <tr>
-                <td><strong>Client-Side Rendering (CSR)</strong></td>
-                <td>No Navegador (Front-end)</td>
-                <td>Dados (JSON)</td>
-                <td>React, Vue, Angular</td>
-            </tr>
-        </tbody>
-    </table>
+            ul, ol {
+                padding-left: 1.5rem;
+                margin-bottom: 1.5rem;
+            }
 
-    <h3>O Back-end Inteligente vs. Front-end Inteligente</h3>
-    <p>
-        Quando usamos <strong>Templating</strong>, temos um <strong>Back-end Inteligente</strong>.
-        O servidor decide exatamente como a página deve ser renderizada e entrega o HTML final.
-        Isso simplifica o front-end, que se torna apenas um "exibidor" de documentos.
-    </p>
-    <p>
-        Já em frameworks modernos de front-end, o back-end é apenas uma fonte de dados.
-        O front-end é uma aplicação completa que roda no browser do usuário, o que exige gerenciar estado,
-        rotas e lógica em dois lugares diferentes.
-    </p>
+            ul li, ol li {
+                margin-bottom: 0.5rem;
+            }
 
-    <h3>HATEOAS e a Web como ela foi pensada</h3>
-    <p>
-        <strong>HATEOAS</strong> (<em>Hypermedia as the Engine of Application State</em>)
-        é um princípio que diz que o cliente deve interagir com a aplicação inteiramente através de hipermídia
-        (links e formulários) fornecidos dinamicamente pelo servidor.
-        Desse ponto em diante do curso veremos como usar templates HTML para aplicar o princípio de HATEOAS
-        para criar interfaces modernas e interativas para aplicativos web de forma simples.
-    </p>
-    <p>
-        Focar o curso em HATEOAS e SSR foi uma escolha dos membros do CodeLab que planejaram o curso,
-        e ela será melhor explicada em aulas futuras.
-        Por enquanto, saiba que estamos te ensinando os fundamentos para que você possa
-        entender quando usar frameworks de front-end e fugir do padrão histórico pode ser uma boa ideia.
-    </p>
+            code {
+                background-color: var(--code-bg);
+                color: var(--accent-color-1);
+                padding: 0.2em 0.4em;
+                border-radius: 4px;
+                font-family: 'Roboto Mono', monospace;
+                font-size: 0.9em;
+            }
 
-    <h2>Arquivos Estáticos</h2>
-    <p>
-        Antes de renderizar arquivos HTML, é essencial criar um diretório para servir arquivos estáticos
-        (como imagens, CSS e JavaScript do front-end) que poderemos usar com nossos templates.
-        No FastAPI, usamos o <code>StaticFiles</code> para "montar" (mount) uma pasta do nosso computador em uma rota da nossa API.
-    </p>
-    <p class="note">
-        O "Mounting" cria automaticamente endpoints do tipo GET para cada arquivo dentro do diretório especificado.
-    </p>
-    <pre><code class="language-python">
-    from fastapi import FastAPI
-    from fastapi.staticfiles import StaticFiles
+            pre {
+                background-color: var(--code-bg);
+                padding: 1rem;
+                border-radius: 8px;
+                overflow-x: auto;
+                margin-top: 1.5rem;
+                margin-bottom: 1.5rem;
+                position: relative;
+                font-family: 'Roboto Mono', monospace;
+                font-size: 0.95em;
+                line-height: 1.4;
+                color: var(--primary-text-color);
+                border: 1px solid var(--border-color);
+            }
 
-    app = FastAPI()
+            pre code {
+                background-color: transparent;
+                color: inherit;
+                padding: 0;
+            }
 
-    # Monta a pasta "static" na rota "/static"
-    app.mount("/static", StaticFiles(directory="static"), name="static")
-    </code></pre>
+            .note {
+                background-color: var(--note-bg);
+                border-left: 5px solid var(--note-border);
+                padding: 1rem 1.5rem;
+                margin: 2rem 0;
+                border-radius: 8px;
+                color: var(--primary-text-color);
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            }
+            .note p {
+                margin: 0;
+            }
 
-    <h3>Templating com Jinja2</h3>
-    <p>
-        O Jinja2 é uma biblioteca python que implementa uma templating engine.
-        Com ele podemos injetar lógica no HTML usando delimitadores específicos
-        para separar o que é código do que é markup a ser renderizado:
-    </p>
-    <ul>
-        <li><code>{{ variavel }}</code>: <strong>Interpolação</strong>. Exibe um valor ou resultado de uma expressão.</li>
-        <li><code>{% instrução %}</code>: <strong>Controle</strong>. Usado para loops, condicionais e herança.</li>
-        <li><code>{# comentário #}</code>: Comentários que existem apenas no servidor e não chegam ao browser.</li>
-    </ul>
+            table {
+                border-collapse: collapse;
+                width: 100%;
+                margin: 2rem 0;
+                background-color: var(--surface-color);
+                border-radius: 8px;
+                overflow: hidden; /* Para bordas arredondadas funcionarem com a borda interna */
+            }
+            th, td {
+                border: 1px solid var(--border-color);
+                padding: 12px 15px;
+                text-align: left;
+                vertical-align: top;
+            }
+            th {
+                background-color: var(--code-bg); /* Use cor de código para cabeçalho */
+                font-weight: 700;
+                color: var(--primary-text-color);
+            }
+            tr:nth-child(even) {
+                background-color: #2f2f2f; /* Cor alternativa para linhas pares */
+            }
+            tr:hover {
+                background-color: #3e3e3e; /* Destaque ao passar o mouse */
+            }
 
-    <hr>
+            img {
+                max-width: 100%;
+                height: auto;
+                display: block; /* Remove espaço extra abaixo da imagem */
+                margin: 1rem auto; /* Centraliza imagens e adiciona margem */
+                border-radius: 8px;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            }
 
-    <h3>1. Configuração</h3>
-    <p>
-        Como o Jinja é uma biblioteca à parte, devemos instalá-lo com o pip:
-    </p>
-    <pre><code class="language-bash">
-    source &lt;nome do seu ambiente virtual&gt;/bin/activate # para linux
-    echo jinja2 >> requirements.txt
-    pip install -r requirements.txt
-    </code></pre>
-    <p class="note">
-        É sempre bom lembrar de ativar o ambiente
-        virtual e adicionar a dependência aos requisitos do nosso projeto!
-    </p>
-    <p>
-        Depois de instalar o Jinja no nosso ambiente virtual podemos inicializá-lo no nosso back-end
-        apontando para o diretório de templates de forma direta:
-    </p>
-    <pre><code class="language-python">
+            /* Responsividade */
+            @media (max-width: 768px) {
+                .container {
+                    padding: 1.5rem 1rem;
+                }
+                h1 {
+                    font-size: 2.2rem;
+                }
+                h2 {
+                    font-size: 1.8rem;
+                }
+                h3 {
+                    font-size: 1.5rem;
+                }
+                body {
+                    font-size: 0.95em;
+                }
+            }
+            @media (max-width: 480px) {
+                .container {
+                    padding: 1rem 0.8rem;
+                }
+                h1 {
+                    font-size: 1.8rem;
+                }
+                h2 {
+                    font-size: 1.5rem;
+                }
+            }
+        </style>
+    </head>
+
+    <body>
+
+        <h1>Aula 5: Avançando com FastAPI</h1>
+        <ul id="links-conteudo"></ul>
+
+        <h2 id="templating">Renderização</h2>
+        <p>
+            Até agora, vimos o back-end retornando dados puros (JSON). No entanto, existem duas filosofias principais para construir o que o usuário vê na tela:
+        </p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Abordagem</th>
+                    <th>Onde a página é montada?</th>
+                    <th>O que o Back-end envia?</th>
+                    <th>Exemplo de Tecnologia</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Server-Side Rendering (SSR)</strong></td>
+                    <td>No Servidor (Back-end)</td>
+                    <td>HTML pronto</td>
+                    <td>FastAPI + Jinja2, Django, PHP</td>
+                </tr>
+                <tr>
+                    <td><strong>Client-Side Rendering (CSR)</strong></td>
+                    <td>No Navegador (Front-end)</td>
+                    <td>Dados (JSON)</td>
+                    <td>React, Vue, Angular</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>O Back-end Inteligente vs. Front-end Inteligente</h3>
+        <p>
+            Quando usamos <strong>Templating</strong>, temos um <strong>Back-end Inteligente</strong>.
+            O servidor decide exatamente como a página deve ser renderizada e entrega o HTML final.
+            Isso simplifica o front-end, que se torna apenas um "exibidor" de documentos.
+        </p>
+        <p>
+            Já em frameworks modernos de front-end, o back-end é apenas uma fonte de dados.
+            O front-end é uma aplicação completa que roda no browser do usuário, o que exige gerenciar estado,
+            rotas e lógica em dois lugares diferentes.
+        </p>
+
+        <h3>HATEOAS e a Web como ela foi pensada</h3>
+        <p>
+            <strong>HATEOAS</strong> (<em>Hypermedia as the Engine of Application State</em>)
+            é um princípio que diz que o cliente deve interagir com a aplicação inteiramente através de hipermídia
+            (links e formulários) fornecidos dinamicamente pelo servidor.
+            Desse ponto em diante do curso veremos como usar templates HTML para aplicar o princípio de HATEOAS
+            para criar interfaces modernas e interativas para aplicativos web de forma simples.
+        </p>
+        <p>
+            Focar o curso em HATEOAS e SSR foi uma escolha dos membros do CodeLab que planejaram o curso,
+            e ela será melhor explicada em aulas futuras.
+            Por enquanto, saiba que estamos te ensinando os fundamentos para que você possa
+            entender quando usar frameworks de front-end e fugir do padrão histórico pode ser uma boa ideia.
+        </p>
+
+        <h2>Arquivos Estáticos</h2>
+        <p>
+            Antes de renderizar arquivos HTML, é essencial criar um diretório para servir arquivos estáticos
+            (como imagens, CSS e JavaScript do front-end) que poderemos usar com nossos templates.
+            No FastAPI, usamos o <code>StaticFiles</code> para "montar" (mount) uma pasta do nosso computador em uma rota da nossa API.
+        </p>
+        <p class="note">
+            O "Mounting" cria automaticamente endpoints do tipo GET para cada arquivo dentro do diretório especificado.
+        </p>
+        <pre><code class="language-python"># Arquivo main.py 
+
+from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
+
+app = FastAPI()
+
+# Monta a pasta "static" na rota "/static"
+app.mount("/static", StaticFiles(directory="static"), name="static")
+        </code></pre>
+
+        <h3>Templating com Jinja2</h3>
+        <p>
+            O Jinja2 é uma biblioteca python que implementa uma templating engine.
+            Com ele podemos injetar lógica no HTML usando delimitadores específicos
+            para separar o que é código do que é markup a ser renderizado:
+        </p>
+        <ul>
+            <li><code>{{ variavel }}</code>: <strong>Interpolação</strong>. Exibe um valor ou resultado de uma expressão.</li>
+            <li><code>{% instrução %}</code>: <strong>Controle</strong>. Usado para loops, condicionais e herança.</li>
+            <li><code>{# comentário #}</code>: Comentários que existem apenas no servidor e não chegam ao browser.</li>
+        </ul>
+
+        <hr>
+
+        <h3>1. Configuração</h3>
+        <p>
+            Como o Jinja é uma biblioteca à parte, devemos instalá-lo com o pip:
+        </p>
+        <pre><code class="language-bash">
+source &lt;nome_do_seu _ambiente_virtual&gt;/bin/activate # para linux
+echo jinja2 >> requirements.txt
+pip install -r requirements.txt
+        </code></pre>
+        <p class="note">
+            É sempre bom lembrar de ativar o ambiente
+            virtual e adicionar a dependência aos requisitos do nosso projeto!
+        </p>
+        <p>
+            Depois de instalar o Jinja no nosso ambiente virtual podemos inicializá-lo no nosso back-end
+            apontando para o diretório de templates de forma direta:
+        </p>
+        <pre><code class="language-python"># Arquivo main.py 
+
 from fastapi import FastAPI, Request
 from fastapi.templating import Jinja2Templates
 
@@ -313,23 +321,25 @@ app = FastAPI()
 
 # Sintaxe recomendada: diretório como primeiro argumento posicional
 templates = Jinja2Templates(directory="templates")
-    </code></pre>
+        </code></pre>
 
-    <h3>2. Desvios Condicionais</h3>
-    <p>Permite renderizar blocos de HTML apenas se uma condição for verdadeira (ex: verificar se um usuário é admin).</p>
-    
-    <strong>Rota FastAPI:</strong>
-    <pre><code class="language-python">
+        <h3>2. Desvios Condicionais</h3>
+        <p>Permite renderizar blocos de HTML apenas se uma condição for verdadeira (ex: verificar se um usuário é admin).</p>
+        
+        <strong>Rota FastAPI:</strong>
+        <pre><code class="language-python"># Arquivo main.py 
+        
 @app.get("/perfil")
 def ver_perfil(request: Request, logado: bool = False):
     user = {"nome": "Rodrigo", "admin": True} if logado else None
     return templates.TemplateResponse(
         request=request, name="perfil.html", context={"user": user}
     )
-    </code></pre>
+        </code></pre>
 
-    <strong>Template (perfil.html):</strong>
-    <pre><code class="language-html">
+        <strong>Template:</strong>
+        <pre><code class="language-html">&lt;!-- Arquivo perfil.html --&gt;
+
 {% if user %}
     &lt;h1&gt;Painel de {{ user.nome }}&lt;/h1&gt;
     {% if user.admin %}
@@ -338,23 +348,25 @@ def ver_perfil(request: Request, logado: bool = False):
 {% else %}
     &lt;p&gt;Por favor, faça login para acessar seu perfil.&lt;/p&gt;
 {% endif %}
-    </code></pre>
+        </code></pre>
 
-    <h3>3. For loop</h3>
-    <p>Usado para percorrer listas, dicionários ou qualquer objeto iterável vindo do Python.</p>
+        <h3>3. For loop</h3>
+        <p>Usado para percorrer listas, dicionários ou qualquer objeto iterável vindo do Python.</p>
 
-    <strong>Rota FastAPI:</strong>
-    <pre><code class="language-python">
+        <strong>Rota FastAPI:</strong>
+        <pre><code class="language-python"># Arquivo main.py
+
 @app.get("/postagens")
 def listar_posts(request: Request):
     db_posts = ["FastAPI com Jinja2", "Arquitetura REST", "HATEOAS na prática"]
     return templates.TemplateResponse(
         request=request, name="blog.html", context={"posts": db_posts}
     )
-    </code></pre>
+        </code></pre>
 
-    <strong>Template (blog.html):</strong>
-    <pre><code class="language-html">
+        <strong>Template:</strong>
+        <pre><code class="language-html">&lt;!-- Arquivo blog.html --&gt;
+
 &lt;ul&gt;
 {% for p in posts %}
     &lt;li&gt;Artigo: {{ p | title }}&lt;/li&gt;
@@ -362,15 +374,16 @@ def listar_posts(request: Request):
     &lt;li&gt;Nenhum artigo publicado ainda.&lt;/li&gt;
 {% endfor %}
 &lt;/ul&gt;
-    </code></pre>
+        </code></pre>
 
-    <h3>4. Herança de Templates (Extends/Block)</h3>
-    <p>
-        O conceito de herança permite criar um "esqueleto" (base) e injetar conteúdos específicos em blocos pré-definidos, mantendo o código <strong>DRY</strong> (<em>Don't Repeat Yourself</em>).
-    </p>
+        <h3>4. Herança de Templates (Extends/Block)</h3>
+        <p>
+            O conceito de herança permite criar um "esqueleto" (base) e injetar conteúdos específicos em blocos pré-definidos, mantendo o código <strong>DRY</strong> (<em>Don't Repeat Yourself</em>).
+        </p>
 
-    <strong>Base (layout.html):</strong>
-    <pre><code class="language-html">
+        <strong>Base:</strong>
+        <pre><code class="language-html">&lt;!-- Arquivo layout.html --&gt;
+
 &lt;html&gt;
     &lt;head&gt;&lt;title&gt;Minha Aula de FastAPI&lt;/title&gt;&lt;/head&gt;
     &lt;body&gt;
@@ -381,36 +394,38 @@ def listar_posts(request: Request):
         &lt;footer&gt;Rodapé Padrão - 2024&lt;/footer&gt;
     &lt;/body&gt;
 &lt;/html&gt;
-    </code></pre>
+        </code></pre>
 
-    <strong>Filho (home.html):</strong>
-    <pre><code class="language-html">
+        <strong>Filho:</strong>
+        <pre><code class="language-html">&lt;!-- Arquivo home.html --&gt;
+
 {% extends "layout.html" %}
 
 {% block conteudo %}
     &lt;h2&gt;Início&lt;/h2&gt;
     &lt;p&gt;Este conteúdo preenche o bloco 'conteudo' definido no layout.html.&lt;/p&gt;
 {% endblock %}
-    </code></pre>
+        </code></pre>
 
-    <h2 id="js-requests">Fazendo requests</h2>
-    <p>
-        Na última aula vimos como fazer requests usando a barra de navegação do nosso browser para consultar a API.
-        Agora veremos como implementar interações mais complexas entre o cliente e o back-end através de JavaScript e
-        a nossa API.
-    </p>
+        <h2 id="js-requests">Fazendo requests</h2>
+        <p>
+            Na última aula vimos como fazer requests usando a barra de navegação do nosso browser para consultar a API.
+            Agora veremos como implementar interações mais complexas entre o cliente e o back-end através de JavaScript e
+            a nossa API.
+        </p>
 
-    <p class="note">
-        O exemplo abaixo mostra como implementar a interação do cliente para o servidor enviando JSON no corpo do
-        request, que é o esperado pelo FastAPI. É possível fazer o FastAPI receber dados de um formulário comum
-        usando <a href="https://fastapi.tiangolo.com/tutorial/request-forms/" target="_blank">Form Data</a>.
-    </p>
+        <p class="note">
+            O exemplo abaixo mostra como implementar a interação do cliente para o servidor enviando JSON no corpo do
+            request, que é o esperado pelo FastAPI. É possível fazer o FastAPI receber dados de um formulário comum
+            usando <a href="https://fastapi.tiangolo.com/tutorial/request-forms/" target="_blank">Form Data</a>.
+        </p>
 
-    <h3>1. O Back-end</h3>
-    <p>
-        Primeiro, definimos um modelo usando Pydantic para validar os dados que chegam e uma rota <code>POST</code> para recebê-los.
-    </p>
-    <pre><code class="language-python">
+        <h3>1. O Back-end</h3>
+        <p>
+            Primeiro, definimos um modelo usando Pydantic para validar os dados que chegam e uma rota <code>POST</code> para recebê-los.
+        </p>
+        <pre><code class="language-python"># Arquivo main.py 
+
 from pydantic import BaseModel
 
 class Usuario(BaseModel):
@@ -423,19 +438,19 @@ usuarios_db = []
 def criar_usuario(user: Usuario):
     usuarios_db.append(user.dict())
     return {"usuario": user.nome}
-    </code></pre>
+        </code></pre>
 
-    <h3>2. O Front-end</h3>
-    <p>
-        No lado do cliente, utilizamos a função <code>fetch()</code>. Precisamos configurar três coisas principais:
-    </p>
-    <ul>
-        <li><strong>Método:</strong> Definido como <code>'POST'</code>.</li>
-        <li><strong>Headers:</strong> Informamos ao servidor que estamos enviando um <code>application/json</code>.</li>
-        <li><strong>Body:</strong> Onde transformamos o objeto JS em uma string JSON usando <code>JSON.stringify()</code>.</li>
-    </ul>
+        <h3>2. O Front-end</h3>
+        <p>
+            No lado do cliente, utilizamos a função <code>fetch()</code>. Precisamos configurar três coisas principais:
+        </p>
+        <ul>
+            <li><strong>Método:</strong> Definido como <code>'POST'</code>.</li>
+            <li><strong>Headers:</strong> Informamos ao servidor que estamos enviando um <code>application/json</code>.</li>
+            <li><strong>Body:</strong> Onde transformamos o objeto JS em uma string JSON usando <code>JSON.stringify()</code>.</li>
+        </ul>
 
-    <pre><code class="language-javascript">
+        <pre><code class="language-javascript">
 async function enviarUsuario() {
     const dados = {
         nome: document.getElementById('nome').value,
@@ -457,40 +472,40 @@ async function enviarUsuario() {
         alert("Erro ao enviar!");
     }
 }
-    </code></pre>
+        </code></pre>
 
-    <h3>3. Formulário HTML</h3>
-    <p>
-        Note que o botão usa <code>type="button"</code> e chama nossa função, em vez de um <code>type="submit"</code> tradicional que recarregaria a página.
-    </p>
-    <pre><code class="language-html">
+        <h3>3. Formulário HTML</h3>
+        <p>
+            Note que o botão usa <code>type="button"</code> e chama nossa função, em vez de um <code>type="submit"</code> tradicional que recarregaria a página.
+        </p>
+        <pre><code class="language-html">
 &lt;form&gt;
     &lt;input type="text" id="nome" placeholder="Nome"&gt;
     &lt;input type="text" id="bio" placeholder="Bio"&gt;
     &lt;button type="button" onclick="enviarUsuario()"&gt;Salvar via JS&lt;/button&gt;
 &lt;/form&gt;
-    </code></pre>
+        </code></pre>
 
-    <p class="note">
-        <strong>Ponto de atenção:</strong> Quando usamos <code>fetch</code>, o back-end geralmente responde com JSON. Se você quiser atualizar a tela após o envio, precisará usar o JavaScript para manipular o DOM (ex: adicionar um novo <code>&lt;li&gt;</code> na lista).
-    </p>
+        <p class="note">
+            <strong>Ponto de atenção:</strong> Quando usamos <code>fetch</code>, o back-end geralmente responde com JSON. Se você quiser atualizar a tela após o envio, precisará usar o JavaScript para manipular o DOM (ex: adicionar um novo <code>&lt;li&gt;</code> na lista).
+        </p>
 
-    <h2 id="middleware">Middleware: O "Filtro" Global</h2>
-    <p>
-        Imagine um <strong>Middleware</strong> como uma camada de software que envolve toda a sua aplicação. Ele intercepta <strong>cada</strong> requisição que chega ao servidor antes de ela atingir a rota, e também intercepta a resposta antes de ela ser enviada ao cliente.
-    </p>
+        <h2 id="middleware">Middleware: O "Filtro" Global</h2>
+        <p>
+            Imagine um <strong>Middleware</strong> como uma camada de software que envolve toda a sua aplicação. Ele intercepta <strong>cada</strong> requisição que chega ao servidor antes de ela atingir a rota, e também intercepta a resposta antes de ela ser enviada ao cliente.
+        </p>
 
-    <p>Isso é extremamente útil para tarefas transversais (cross-cutting concerns), como:</p>
-    <ul>
-        <li><strong>Logging:</strong> Registrar quem acessou o quê e quanto tempo demorou.</li>
-        <li><strong>Segurança:</strong> Adicionar headers de segurança em todas as respostas.</li>
-        <li><strong>Performance:</strong> Comprimir respostas (GZip) automaticamente.</li>
-    </ul>
+        <p>Isso é extremamente útil para tarefas transversais (cross-cutting concerns), como:</p>
+        <ul>
+            <li><strong>Logging:</strong> Registrar quem acessou o quê e quanto tempo demorou.</li>
+            <li><strong>Segurança:</strong> Adicionar headers de segurança em todas as respostas.</li>
+            <li><strong>Performance:</strong> Comprimir respostas (GZip) automaticamente.</li>
+        </ul>
 
-    <h3>Exemplo: Logger de Performance</h3>
-    <p>No exemplo abaixo, usamos o <code>call_next</code>, que é uma função que "passa a bola" para a próxima etapa (seja outro middleware ou a rota final).</p>
+        <h3>Exemplo: Logger de Performance</h3>
+        <p>No exemplo abaixo, usamos o <code>call_next</code>, que é uma função que "passa a bola" para a próxima etapa (seja outro middleware ou a rota final).</p>
 
-    <pre><code class="language-python">
+        <pre><code class="language-python">
 import time
 import logging
 
@@ -500,43 +515,44 @@ logger = logging.getLogger("API")
 
 @app.middleware("http")
 async def add_process_time_header(request: Request, call_next):
-    # 1. Código executado ANTES da rota
-    start_time = time.perf_counter()
-    
-    # 2. A requisição viaja até a rota e volta como resposta
-    response = await call_next(request)
-    
-    # 3. Código executado DEPOIS da rota
-    process_time = time.perf_counter() - start_time
-    
-    # Adicionamos um header customizado na resposta para o cliente ver
-    response.headers["X-Process-Time"] = str(process_time)
-    
-    logger.info(f"Rota: {request.url.path} | Tempo: {process_time:.4f}s")
-    
-    return response
-    </code></pre>
+# 1. Código executado ANTES da rota
+start_time = time.perf_counter()
 
-    <hr>
+# 2. A requisição viaja até a rota e volta como resposta
+response = await call_next(request)
 
- <h2 id="dependencies">Injeção de Dependências (Depends)</h2>
-    <p>
-        O sistema de <strong>Dependency Injection</strong> do FastAPI permite que você extraia lógica repetitiva (como autenticação ou conexão com banco de dados) e a "injete" apenas nas rotas que precisam dela.
-    </p>
-    <p>
-        A função <code>Depends()</code> atua como um <strong>gatekeeper</strong> (porteiro): se a função de dependência falhar ou lançar uma exceção, a rota principal nem sequer começa a ser executada.
-    </p>
+# 3. Código executado DEPOIS da rota
+process_time = time.perf_counter() - start_time
 
-    <h3>Simulando uma Sessão com Cookies</h3>
-    <p>
-        Diferente dos <em>Query Parameters</em>, os <strong>Cookies</strong> são pequenos dados que o servidor pede para o navegador guardar. Uma vez guardado, o navegador envia esse cookie automaticamente em todas as próximas requisições para o mesmo site.
-    </p>
+# Adicionamos um header customizado na resposta para o cliente ver
+response.headers["X-Process-Time"] = str(process_time)
 
-    
+logger.info(f"Rota: {request.url.path} | Tempo: {process_time:.4f}s")
 
-    <p>Vamos usar o <code>Cookie</code> do FastAPI para criar uma dependência que identifica o usuário logado:</p>
+return response
+        </code></pre>
 
-    <pre><code class="language-python">
+        <hr>
+
+    <h2 id="dependencies">Injeção de Dependências (Depends)</h2>
+        <p>
+            O sistema de <strong>Dependency Injection</strong> do FastAPI permite que você extraia lógica repetitiva (como autenticação ou conexão com banco de dados) e a "injete" apenas nas rotas que precisam dela.
+        </p>
+        <p>
+            A função <code>Depends()</code> atua como um <strong>gatekeeper</strong> (porteiro): se a função de dependência falhar ou lançar uma exceção, a rota principal nem sequer começa a ser executada.
+        </p>
+
+        <h3>Simulando uma Sessão com Cookies</h3>
+        <p>
+            Diferente dos <em>Query Parameters</em>, os <strong>Cookies</strong> são pequenos dados que o servidor pede para o navegador guardar. Uma vez guardado, o navegador envia esse cookie automaticamente em todas as próximas requisições para o mesmo site.
+        </p>
+
+        
+
+        <p>Vamos usar o <code>Cookie</code> do FastAPI para criar uma dependência que identifica o usuário logado:</p>
+
+        <pre><code class="language-python"># Arquivo main.py 
+
 from fastapi import Depends, HTTPException, status, Cookie, Response
 from typing import Annotated
 
@@ -586,58 +602,59 @@ def show_profile(request: Request, user: dict = Depends(get_active_user)):
         name="profile.html", 
         context={"username": user["username"], "bio": user["bio"]}
     )
-    </code></pre>
+        </code></pre>
 
-    <p class="note">
-        <strong>Aviso de Segurança:</strong> Em aplicações reais, nunca guardamos o nome de usuário puro em um cookie (isso permitiria que qualquer um trocasse o nome no navegador e fingisse ser outra pessoa). Usamos <strong>Tokens Assinados (JWT)</strong> ou IDs de sessão aleatórios. Para saber mais, veja a seção de 
-        <a href="https://fastapi.tiangolo.com/pt/tutorial/security/" target="_blank">Segurança</a> da documentação oficial.
-    </p>
+        <p class="note">
+            <strong>Aviso de Segurança:</strong> Em aplicações reais, nunca guardamos o nome de usuário puro em um cookie (isso permitiria que qualquer um trocasse o nome no navegador e fingisse ser outra pessoa). Usamos <strong>Tokens Assinados (JWT)</strong> ou IDs de sessão aleatórios. Para saber mais, veja a seção de 
+            <a href="https://fastapi.tiangolo.com/pt/tutorial/security/" target="_blank">Segurança</a> da documentação oficial.
+        </p>
 
-    <h3>Dependências em Cascata</h3>
-    <p>
-        Você pode criar dependências que dependem de outras. Por exemplo, uma dependência <code>get_admin_user</code> poderia chamar <code>get_active_user</code> e, após receber o dicionário do usuário, verificar se ele tem permissões de administrador antes de liberar a rota.
-    </p>
-    <h2>Exercícios</h2>
-    <h3>Exercício de Sala</h3>
-    <p>
-        Implemente uma versão do exemplo de autenticação acima:
-    </p>
-    <ul>
-        <li>Crie uma classe usuário com nome, senha e bio</li>
-        <li>Crie uma página com um formulário que usa JavaScript para fazer requests POST e criar usuários</li>
-        <li>Crie uma página para logar com um nome de usuário e senha</li>
-        <li>Crie uma página de perfil que mostre as informações do usuário logado</li>
-    </ul>
-    <p class="note">
-        Não é necessário implementar um esquema realmente seguro de autenticação!!!
-    </p>
-    <p>
-        Dicas de possível implementação:
-    </p>
-    <ul>
-        <li><code>@app.get("/")</code> retorna um template com o formulário de criação de usuário</li>
-        <li><code>@app.post("users")</code> rota que vai criar usuários novos a partir do formulário</li>
-        <li><code>@app.get("login")</code> retorna um template com o formulário de login</li>
-        <li><code>@app.post("login")</code> recebe dados do formulário de login e retorna cookie de sessão</li>
-        <li><code>@app.get("home")</code> rota protegida com o depends que depende do cookie de sessão</li>
-    </ul>
+        <h3>Dependências em Cascata</h3>
+        <p>
+            Você pode criar dependências que dependem de outras. Por exemplo, uma dependência <code>get_admin_user</code> poderia chamar <code>get_active_user</code> e, após receber o dicionário do usuário, verificar se ele tem permissões de administrador antes de liberar a rota.
+        </p>
+        <h2>Exercícios</h2>
+        <h3>Exercício de Sala</h3>
+        <p>
+            Implemente uma versão do exemplo de autenticação acima:
+        </p>
+        <ul>
+            <li>Crie uma classe usuário com nome, senha e bio</li>
+            <li>Crie uma página com um formulário que usa JavaScript para fazer requests POST e criar usuários</li>
+            <li>Crie uma página para logar com um nome de usuário e senha</li>
+            <li>Crie uma página de perfil que mostre as informações do usuário logado</li>
+        </ul>
+        <p class="note">
+            Não é necessário implementar um esquema realmente seguro de autenticação!!!
+        </p>
+        <p>
+            Dicas de possível implementação:
+        </p>
+        <ul>
+            <li><code>@app.get("/")</code> retorna um template com o formulário de criação de usuário</li>
+            <li><code>@app.post("users")</code> rota que vai criar usuários novos a partir do formulário</li>
+            <li><code>@app.get("login")</code> retorna um template com o formulário de login</li>
+            <li><code>@app.post("login")</code> recebe dados do formulário de login e retorna cookie de sessão</li>
+            <li><code>@app.get("home")</code> rota protegida com o depends que depende do cookie de sessão</li>
+        </ul>
 
-    <script src="https://cdn.jsdelivr.net/npm/prismjs/prism.min.js" defer></script>
-    <script src="https://cdn.jsdelivr.net/npm/prismjs/plugins/autoloader/prism-autoloader.min.js" defer></script>
-    <script>
-        let divLinks = document.getElementById('links-conteudo')
-        let h2List = document.querySelectorAll('h2')
-        h2List.forEach((h2, index) => {
-            h2.id = `secao${index}`
-            let li = document.createElement('li')
-            let a = document.createElement('a')
-            a.innerText = h2.innerText
-            a.href = `#${h2.id}`
-            a.style.color = "var(--accent-color-1)"
-            a.style.textDecoration = "none"
-            li.append(a)
-            divLinks.append(li)
-        });
-    </script>
-</body>
+        <script src="https://cdn.jsdelivr.net/npm/prismjs/prism.min.js" defer></script>
+        <script src="https://cdn.jsdelivr.net/npm/prismjs/plugins/autoloader/prism-autoloader.min.js" defer></script>
+        <script>
+            let divLinks = document.getElementById('links-conteudo')
+            let h2List = document.querySelectorAll('h2')
+            h2List.forEach((h2, index) => {
+                h2.id = `secao${index}`
+                let li = document.createElement('li')
+                let a = document.createElement('a')
+                a.innerText = h2.innerText
+                a.href = `#${h2.id}`
+                a.style.color = "var(--accent-color-1)"
+                a.style.textDecoration = "none"
+                li.append(a)
+                divLinks.append(li)
+            });
+        </script>
+    </body>
+
 </html>
