@@ -1,6 +1,7 @@
 :root {
     --background-color: #292827;
     --surface-color: #1e1e1e;
+    --surface-color2: #363636;
     --primary-text-color: #e0e0e0;
     --secondary-text-color: #a0a0a0;
     --disabled-text-color: #666;
@@ -312,7 +313,7 @@ nav.extras-list {
 .tip_box_content {
     padding: 1.5rem;
     align-content: center;
-    background-color: var(--surface-color);
+    background-color: var(--surface-color2);
     color: var(--primary-text-color);
     
     line-height: 1.7;

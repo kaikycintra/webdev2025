@@ -15,6 +15,7 @@
     </head>
 
     <body class="container">
+
         <h1>Aula 6: Introdução ao SQL</h1>
         
         <h2>Conteúdos</h2>
@@ -29,11 +30,17 @@
             <li><a href="#sql">SQL</a></li>
             <li><a href="#tables">Tabelas</a>
                 <ul>
+                    <li><a href="#insert">INSERT</a></li>
                     <li><a href="#select">SELECT</a></li>
                     <li><a href="#working-with-sql-in-the-terminal">Trabalhando com SQL no Terminal</a></li>
                     <li><a href="#functions">Funções</a></li>
                     <li><a href="#update">UPDATE</a></li>
                     <li><a href="#delete">DELETE</a></li>
+                    <li><a href="#references">REFERENCES</a></li>
+                    <ul>
+                        <li><a href="#create_relational">Criando tabelas com relações entre si</a></li>
+                        <li><a href="#insert_relational">Inserindo dados relacionados</a></li>
+                    </ul>
                     <li><a href="#other-clauses">Outras Cláusulas</a></li>
                 </ul>
             </li>
@@ -44,7 +51,7 @@
                     <li><a href="#sql-vulnerabilities">Vulnerabilidades SQL</a></li>
                 </ul>
             </li>
-            <li><a href="#exercise">Exercício</a></li>
+            <li><a href="#exercises">Exercícios</a></li>
         </ul>
 
         <h2 id="introduction">Introdução</h2>
@@ -147,9 +154,9 @@
                 <p class="tip_box_title">Introdução ao desafio da Aula</p>
             </div>
             <p class="tip_box_content  border-challenge">
-                Suponha que você é o mais novo programador contratado do serviço de entregas do Kiwi, como esta empresa
-                é pequena e não dispõe de uma infraestrutura robusta, foi solicitado a você, o recém contratado por ela,
-                que armazenasse informações sobre todos produtos entregues, clientes, e endereços de entrega de cada pedido.
+                Suponha que você é o mais novo programador contratado do serviço de entregas do Kiwi. Como esta empresa
+                é pequena e não dispõe de uma infraestrutura robusta, foi solicitado a você, o recém-contratado,
+                que armazenasse informações sobre todos os produtos entregues, clientes e endereços de entrega de cada pedido.
             </p>
             <p class="tip_box_end"><strong>Questão:</strong> Como você faria isso?</p>
         </div>
@@ -310,11 +317,11 @@
         <p>Agora, para realmente começar a usar SQL para interagir com um banco de dados, vamos começar criando uma nova tabela. Como exemplo, iremos criar uma tabela de usuários simples, o comando para criar uma nova tabela segue abaixo:</p>
         
         <pre><code class="language-sql">CREATE TABLE users(
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    username TEXT UNIQUE NOT NULL,
-    email TEXT UNIQUE NOT NULL,
-    password_hash TEXT NOT NULL
-);</code></pre>
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        username TEXT UNIQUE NOT NULL,
+        email TEXT UNIQUE NOT NULL,
+        password_hash TEXT NOT NULL
+    );</code></pre>
 
         <p>No comando acima, estamos criando uma nova tabela que decidimos chamar de <code>users</code>, e adicionamos quatro colunas a esta tabela:</p>
         <ol>
@@ -344,6 +351,8 @@
             <li><code>UNIQUE</code>: Garante que duas linhas não tenham o mesmo valor nessa coluna.</li>
             <li>...</li>
         </ul>
+
+        <h3 id="insert">INSERT</h3>
 
         <p>Agora que vimos como criar uma tabela, vamos ver como podemos adicionar linhas a ela. Em SQL, fazemos isso usando o comando <code>INSERT</code>:</p>
         
@@ -390,7 +399,6 @@
         <p>Podemos começar criando um arquivo para nosso banco de dados criando manualmente um novo arquivo (por exemplo, <code>users.db</code>). Agora, se executarmos <code>sqlite3 users.db</code> no terminal, seremos levados a um prompt SQLite onde podemos executar comandos SQL:</p>
         
         <pre><code class="language-sql"># Entrando no Prompt SQLite
-
     sqlite3 users.db
     SQLite version 3.49.1 2025-02-18 13:38:58
     Enter ".help" for usage hints.
@@ -511,6 +519,101 @@
         
         <pre><code class="language-sql">DELETE FROM users WHERE username = 'alano_dev';</code></pre>
 
+        <h3 id="references">REFERENCES</h3>
+
+        <p>
+            Por último, finalizando os principais comandos e instruções de modelagem em SQL,
+            temos a cláusula que estabelece a relação entre diferentes tabelas.
+        </p>
+
+        <p>
+            Seu uso costuma ser a combinação da definição de qual campo é uma <code>FOREIGN KEY</code> e a qual campo de qual outra tabela ela está fazendo referência.
+        </p>
+
+        <h4 id="create_relational">Criando tabelas com relações entre si</h4>
+
+        <p>
+            Suponha que queiramos melhorar o sistema, e agora guardaremos informações dos professores
+            e dos cursos ministrados por eles, para isso, precisaremos estabelecer uma identificação para cada professor
+            e para cada curso, e em seguida, indicar no curso, uma ligação entre ele, e o identificador único do professor que o ministra.
+        </p>
+
+            <pre><code class="language-sql">CREATE TABLE professores (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        nome TEXT NOT NULL,
+        email TEXT UNIQUE
+    );
+
+    CREATE TABLE cursos (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        nome TEXT NOT NULL,
+        professor_id INTEGER NOT NULL,
+        FOREIGN KEY (professor_id) REFERENCES professores(id)
+    );</code></pre>
+
+        <p>
+            No exemplo acima, <code>professor_id</code> na tabela <code>cursos</code> é uma chave estrangeira
+            que aponta para <code>id</code> em <code>professores</code>. Assim, cada curso fica associado a um professor válido,
+            evitando inconsistências de dados.
+        </p>
+
+        <h4 id="insert_relational">Inserindo dados relacionados</h4>
+
+        <p>
+            Dado o modelo de nossa tabela, observe que cada curso precisa do ID de um professor,
+            logo, podemos inseri-lo de duas formas:
+        </p>
+
+        <ol>
+            <li>
+                Criando a relação sabendo previamente o ID do professor:
+                <pre><code class="language-sql">INSERT INTO professores (nome, email)
+    VALUES ('deltrano_dev', 'deltrano@codelab.br');
+
+    INSERT INTO cursos (nome, professor_id)
+    VALUES ('Introdução ao SQL', 1);</code></pre>
+            </li>
+
+            <li>
+                Fazendo o banco buscar automaticamente o ID desejado:
+                <pre><code >INSERT INTO professores (nome, email)
+    VALUES ('elano_dev', 'elano@codelab.br');
+
+    INSERT INTO cursos (nome, professor_id)
+    VALUES ('Introdução ao SQL', (SELECT id FROM professores WHERE email = 'elano@codelab.br'));</code></pre>
+            </li>
+        </ol>
+
+        <p>
+            No primeiro caso, usamos <code>professor_id = 1</code> pois estamos assumindo que <code>deltrano_dev</code> seja o primeiro dado a ser inserido na tabela.
+        </p>
+            
+        <p>
+            Perceba também que o comando para buscar o <code>id</code> está entre parênteses.
+            Nesse contexto, os parênteses indicam que estamos usando uma subconsulta para retornar
+            um único valor no lugar de um valor literal.
+        </p>
+        
+        <div class="tip_box caution">
+            <div class="topLayer">
+                <img class="mini-icon" src="https://cdn-icons-png.flaticon.com/512/1768/1768400.png" alt="Ícone de cuidado">
+                <p class="tip_box_title">Cuidado!</p>
+            </div>
+
+            <p class="tip_box_content border-warning">
+                Observe que: Primeiro criamos a tabela <code>professores</code>,
+            porque a tabela <code>cursos</code> depende dela na cláusula <code>REFERENCES professores(id)</code>.
+            Depois inserimos o professor e só então inserimos o curso, já que o valor de <code>professor_id</code>
+            precisa apontar para um <code>id</code> que já exista. Se tentarmos inserir um curso antes de existir
+            o professor correspondente, o banco rejeita a operação para proteger a integridade dos dados.
+            <br><br>
+            Como regra geral, lembre-se de que a execução desses comandos em script é similar a um script em Python, em que
+            as operações sempre são executadas em ordem sequencial.
+            </p>
+        </div>
+
+
+
         <h3 id="other-clauses">Outras Cláusulas</h3>
         <p>Existem várias cláusulas adicionais que podemos usar para controlar as consultas que nos retornam</p>
         <ul>
@@ -625,47 +728,13 @@
             </p>
 
         <p>Isso é tudo para esta aula!</p> 
+        <p>Na próxima, veremos como utilizar esta base teórica para implementar nossa própria API, e como podemos, ainda, simplificar toda a sua construção em Python através do SQLModel.</p>
 
-        <h2 id="exercise">Exercício</h2>
-
-        <div class="tip_box challenge">
-            <div class="topLayer">
-                <img class="mini-icon" src="../static/webmac/aula6-7/icon-target.png" alt="Ícone de Desafio">
-                <p class="tip_box_title">Desafio da Aula</p>
-            </div>
-            <p class="tip_box_content  border-challenge">
-                Agora que você já está mais acostumado com Banco de Dados e com SQL,
-                está finalmente pronto para atender ao pedido do Serviço de Entregas do Kiwi!
-            </p>
-
-            <div class="tip_box_end">
-
-                <p><strong>Tarefa:</strong></p>
-                    
-                <p>
-                    Modele e inicie um banco de dados RELACIONAL usando SQLite que será utilizado pela empresa.
-                    Este banco precisará conter informações sobre:
-                </p>
-                
-                <ul>
-                    <li>ID do Pedido</li>
-                    <li>Data de entrega</li>
-                    <li>Entregador Responsável</li>
-                    <li>Número de tentativas de entrega</li>
-                    <li>Avaliação da Entrega</li>
-                    <li>Status da entrega</li>
-                    <li>Nome do Cliente</li>
-                    <li>Informações de contato</li>
-                    <li>Endereço de Entrega - OBS: O endereço deve estar subdividido em rua, bairro, CEP, etc...</li>
-                    <li>Produto</li>
-                    <li>Fabricante</li>
-                    <li>Vendedor</li>
-                    <li>Contato do Vendedor</li>
-                </ul>
-
-                <p>Adicione a este banco pelo menos 3 pedidos de clientes, sendo que dois deles devem ser o mesmo produto.</p>
-            </div>
-        </div>
+        <h2 id="exercises">Exercícios</h2>
+        <ul>
+            <li><a href="exercicios/ex_sala6.html">Exercício de Sala</a></li>
+            <li><a href="exercicios/ex_casa6.html">Exercício de Casa</a></li>
+        </ul>
 
         <script src="https://cdn.jsdelivr.net/npm/prismjs/prism.min.js" defer></script>
         <script src="https://cdn.jsdelivr.net/npm/prismjs/plugins/autoloader/prism-autoloader.min.js" defer></script>
