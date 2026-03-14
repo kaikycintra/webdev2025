@@ -13,8 +13,8 @@
     --note-bg: #4a4a4a;
 }
 
-body, html {
-    margin: 0px auto;
+body{
+    margin: 0px;
     padding: 0px 1.5rem;
     background-color: var(--background-color);
     color: var(--primary-text-color);
@@ -48,7 +48,7 @@ h1 {
     padding-bottom: 1rem;
 }
 
-.container h1 {
+h1 {
     font-size: 2.8rem;
     margin-bottom: 1rem;
     border-bottom: 2px solid var(--border-color);
@@ -252,6 +252,14 @@ nav.extras-list {
         margin: 0;
     }
 
+@media (orientation: portrait) {
+
+    .container {
+        max-width: 90%;
+    }
+
+}
+
 @media (max-width: 768px) {
 
     .container {
@@ -276,7 +284,7 @@ nav.extras-list {
 
 }
 
-@media (max-width: 480px) {
+@media (max-width: 768px) {
 
     .container {
         padding: 1rem 0.8rem;
