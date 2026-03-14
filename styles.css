@@ -244,6 +244,10 @@ nav.extras-list {
     cursor: not-allowed;
 }
 
+.extras-list .item {
+    max-width: 50%;
+}
+
 .note {
         background-color: var(--note-bg);
         border-left: 5px solid var(--note-border);
@@ -261,6 +265,10 @@ nav.extras-list {
 
     .container {
         max-width: 90%;
+    }
+
+    .extras-list .item {
+        max-width: 100%;
     }
 
 }
