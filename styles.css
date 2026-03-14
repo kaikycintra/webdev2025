@@ -249,22 +249,107 @@ nav.extras-list {
 }
 
 .note {
-        background-color: var(--note-bg);
-        border-left: 5px solid var(--note-border);
-        padding: 1rem 1.5rem;
-        margin: 2rem 0;
-        border-radius: 8px;
-        color: var(--primary-text-color);
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    }
-    .note p {
-        margin: 0;
-    }
+    background-color: var(--note-bg);
+    border-left: 5px solid var(--note-border);
+    padding: 1rem 1.5rem;
+    margin: 2rem 0;
+    border-radius: 8px;
+    color: var(--primary-text-color);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.note p {
+    margin: 0;
+}
+
+.tip_box {
+    margin: 2rem 0;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--surface-color);
+    flex-direction: row;
+}
+
+.topLayer {
+    display: grid; 
+    grid-template-columns: 10% 1fr; 
+    gap: 10px; 
+    padding: none;
+    padding-left: 25px; 
+    margin: none;
+    align-items: center;
+    max-height: 200px;
+}
+
+.tip_box_tab {
+    display: flex;
+    align-items: center;
+    padding: 1.2rem 1.5rem;
+    color: white;
+    font-weight: 700;
+    font-size: 1.1rem;
+    gap: 1rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.mini-icon {
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    padding: 0;
+    max-height: 75px;
+    object-fit: scale-down;
+    box-shadow: none;
+}
+
+.tip_box_content {
+    padding: 1.5rem;
+    align-content: center;
+    background-color: var(--surface-color);
+    color: var(--primary-text-color);
+    
+    line-height: 1.7;
+    margin: 0;
+}
+
+.citation {
+    font-style: italic;
+}
+
+.tip_box_end {
+    padding-left: 1.5rem;
+}
+
+.tip_box_title {
+    font-size: large;
+    font-weight: bolder;
+}
+
+.border-definition {
+    border-left: 3px solid white;
+}
+
+.border-warning {
+    border-left: 3px solid yellow;
+}
+
+.border-challenge {
+    border-left: 3px solid blue; 
+}
+
+.border-good-practice {
+    border-left: 3px solid green; 
+}
 
 @media (orientation: portrait) {
 
     .container {
         max-width: 90%;
+    }
+
+    header h1 {
+        font-size: 3rem;
     }
 
     .extras-list .item {

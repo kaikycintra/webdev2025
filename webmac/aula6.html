@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Aula 6: Introdução ao SQL</title>
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs/themes/prism-okaidia.min.css">    
+        <link rel="stylesheet" href="../styles.css">
+
+    </head>
+
+    <body class="container">
+        <h1>Aula 6: Introdução ao SQL</h1>
+        
+        <h2>Conteúdos</h2>
+        <ul>
+            <li><a href="#introduction">Introdução</a></li>
+            <li><a href="#databases">Bancos de Dados</a>
+                <ul>
+                    <li><a href="#relational-databases">Bancos de Dados Relacionais</a></li>
+                    <li><a href="#column-types">Tipos de Coluna</a></li>
+                </ul>
+            </li>
+            <li><a href="#sql">SQL</a></li>
+            <li><a href="#tables">Tabelas</a>
+                <ul>
+                    <li><a href="#select">SELECT</a></li>
+                    <li><a href="#working-with-sql-in-the-terminal">Trabalhando com SQL no Terminal</a></li>
+                    <li><a href="#functions">Funções</a></li>
+                    <li><a href="#update">UPDATE</a></li>
+                    <li><a href="#delete">DELETE</a></li>
+                    <li><a href="#other-clauses">Outras Cláusulas</a></li>
+                </ul>
+            </li>
+            <li><a href="#joining-tables">Unindo Tabelas</a>
+                <ul>
+                    <li><a href="#join-query">Consulta JOIN</a></li>
+                    <li><a href="#indexing">Indexação</a></li>
+                    <li><a href="#sql-vulnerabilities">Vulnerabilidades SQL</a></li>
+                </ul>
+            </li>
+        </ul>
+
+        <h2 id="introduction">Introdução</h2>
+
+        <p>
+            Quando estamos falando de Bancos de Dados, o primeiro termo que nos surge à mente,
+            principalmente quando não estamos familiarizados com o assunto, é o SQL.
+        </p>
+
+        <p>
+            A questão é que SQL, também conhecido como Structured Query Language, é uma linguagem usada
+            para gerenciar, manipular e consultar dados em um <a href="#databases">Banco de Dados</a>.
+        </p>
+        <p>
+            E por isso, é importante aprendermos primeiro o que é um Banco de Dados antes do SQL.
+        </p>
+        <p>
+            Ou seja, aprenderemos primeiro quem é o estranho com quem iremos conversar, e depois, aprenderemos como conversar com ele.
+        </p>
+
+        <h2 id="databases">Bancos de dados</h2>
+
+        <div class="tip_box definition">
+            <div class="topLayer">
+                <img class="mini-icon" src="https://cdn-icons-png.flaticon.com/512/8653/8653193.png" alt="Ícone de definição">
+                <p class="tip_box_title">Definição</p>
+            </div>
+            <p class="tip_box_content  citation border-definition">
+                “Um <strong> banco de dados</strong> é uma coleção de dados relacionados”
+            </p>
+            <p class="tip_box_end">Fonte: “Sistemas de Bancos de Dados” (7ª edição), Elmasri e Navathe. Pearson, 2016.</p>
+        </div>
+
+        <p>
+            Mas quando olhamos para esta definição, isso parece um pouco genérico demais não concorda? 
+            Até mesmo os autores do livro afirmam isso, mas existe uma razão, além desta definição, o seu uso
+            cotidiano é bem mais restrito e envolve a existência de mais propriedades como:
+        </p>
+
+        <ul>
+            <li>Representar algum aspecto do mundo real (ou minimundo)</li>
+            <li>Ser uma <strong>coleção lógica e coerente de dados</strong> com alguma <strong>significância</strong></li>
+            <li>Projetado, construído e populado com dados para uma finalidade específica.</li>
+        </ul>
+        
+        <div class="tip_box caution">
+            <div class="topLayer">
+                <img class="mini-icon" src="https://cdn-icons-png.flaticon.com/512/1768/1768400.png" alt="Ícone de cuidado">
+                <p class="tip_box_title">Cuidado!</p>
+            </div>
+
+            <p class="tip_box_content border-warning">
+                Segundo esta definição, você pode ser levado a afirmar que uma Planilha do Excel
+                corresponde a um Banco de Dados, entretanto, este costuma ser um ponto bastante discutido
+                que varia de autor para autor.
+                <br><br>
+                Por exemplo, pelos autores de “Sistemas de Bancos de Dados”, dados armazenados no Excel seguindo as
+                propriedades mencionadas anteriormente, correspondem a um Banco de Dados.
+                <br><br>
+                Por outro lado, você não teria dificuldade em encontrar por aí pessoas que afirmam ferozmente que 
+                o Excel não é / não deveria ser, um banco de dados, seja por diferenças na quantidade, permissão e metodologias de acesso/manipulação dos dados.
+            </p>
+        </div>
+
+        <h3>Exemplos de Banco de Dados:</h3>
+
+        <ul>
+            <li>Um conjunto de contas do Instagram e suas fotos</li>
+            <li>Registros de alunos de uma escola de cabeleireiros</li>
+            <li>Contas de clientes de uma Financeira</li>
+            <li>Conjunto de questões do ENEM</li>
+            <li>Histórico de sites visitados</li>
+            <li>E por aí vai...</li>
+        </ul>
+
+        <h2 id="relational-databases">Bancos de Dados Relacionais</h2>
+
+        <div class="tip_box definition">
+            <div class="topLayer">
+                <img class="mini-icon" src="https://cdn-icons-png.flaticon.com/512/8653/8653193.png" alt="Ícone de definição">
+                <p class="tip_box_title">Definição</p>
+            </div>
+            <p class="tip_box_content  citation border-definition">
+                “Um banco de dados relacional é um tipo de banco de dados que organiza seus dados em linhas e colunas que, 
+                coletivamente, formam uma tabela em que os <strong>pontos de dados estão relacionados entre si</strong>.”
+            </p>
+            <p class="tip_box_end">Fonte: “Bancos de dados Relacionais”, IBM Think.</p>
+        </div>
+
+        <p>Em que reforçamos a parte de que <strong>os dados estão relacionados</strong>, ou seja, através de uma informação, podemos chegar em várias outras.</p>
+
+        <p>
+            Para facilitar, vamos tomar o seguinte exemplo, que também servirá 
+            como contexto para nosso estudo de caso e desafio ao final desta, e da próxima aula:
+        </p>
+
+        <div class="tip_box challenge">
+            <div class="topLayer">
+                <img class="mini-icon" src="../static/webmac/aula6-7/icon-target.png" alt="Ícone de Desafio">
+                <p class="tip_box_title">Introdução ao desafio da Aula</p>
+            </div>
+            <p class="tip_box_content  border-challenge">
+                Suponha que você é o mais novo programador contratado do serviço de entregas do Kiwi, como esta empresa
+                é pequena e não dispõe de uma infraestrutura robusta, foi solicitado a você, o recém contratado por ela,
+                que armazenasse informações sobre todos produtos entregues, clientes, e endereços de entrega de cada pedido.
+            </p>
+            <p class="tip_box_end"><strong>Questão:</strong> Como você faria isso?</p>
+        </div>
+
+        <p>A parte mais importante para fazermos inicialmente é modelar o nosso problema.</p>
+
+        <p>Precisamos armazenar informações do produto, que podem incluir:</p>
+
+        <ul>
+            <li>Nome do produto;</li>
+            <li>Vendedor;</li>
+            <li>País de Origem;</li>
+            <li>Número de Série</li>
+            <li>Entre outras coisas...</li>
+        </ul>
+
+        <p>E seguindo a mesma lógica, nosso cliente e seu respectivo endereço, podem ter inúmeras outras informações relevantes para nosso entregador.</p>
+
+        <p>A solução mais simples para isso é, para cada pedido, armazenar todas essas informações numa linha.</p>
+        <p>Isso ficaria mais ou menos dessa forma:</p>
+
+        <p><img src="../static/webmac/aula6-7/new_tables/new_basic_table.png" alt="exemplo de estrutura da tabela"></p>
+
+        <p>Isso parece resolver o problema, pois cada pedido tem todas as informações que o entregador poderia precisar saber.</p>
+        <p>
+            Então vamos tentar adicionar alguns pedidos, por exemplo, suponha que o entregador deva entregar peixes comprados de uma certa loja
+            para um certo cliente, chamemos este cliente de João, sendo assim, nossa tabela se parecerá com isso após a adição da compra de João:
+        </p>
+
+        <p><img src="../static/webmac/aula6-7/new_tables/new_1_entry_table.png" alt="exemplo de estrutura da tabela com 1 entrada"></p>
+
+        <p>
+            Por enquanto, ainda está tudo certo, mas vamos supor que agora, uma outra cliente,
+            suponhamos, Joana, esteja interessada em comprar os mesmos Peixes que João, então ela fará o mesmo pedido, só que para seu endereço.
+        </p>
+
+        <p>Após seu pedido, o Banco de Dados do Serviço de Entregas do Kiwi se parecerá com isso:</p>
+
+        <p><img src="../static/webmac/aula6-7/new_tables/new_2_entry_table.png" alt="exemplo de estrutura da tabela com 2 entradas"></p>
+
+        <p>
+            E neste momento, acredito que você já tenha percebido o tamanho desperdício de espaço
+            que estamos fazendo, certo?
+        </p>
+
+        <p> Praticamente, temos duas linhas idênticas uma ao lado da outra, e isso está desperdiçando espaço,
+            isso porque já sabemos quais as informações do vendedor de peixes, logo, estamos repetindo os mesmos dados sem necessidade!!!
+        </p>
+
+        <p>
+            Esse tipo de repetição é um sinal clássico de que os dados precisam ser reorganizados. O processo de dividir as informações
+            em tabelas menores, conectadas por chaves (por exemplo, um <code>produto_id</code> ou <code>cliente_id</code>), é conhecido como
+            <strong>normalização</strong>.
+        </p>
+
+        <p>
+            Além de economizar espaço, a normalização ajuda a evitar <strong>anomalias</strong> (problemas de inserção, atualização e remoção).
+            Por exemplo: se o telefone do vendedor mudar, você não quer ter que editar dezenas de linhas repetidas para manter o banco consistente.
+        </p>
+
+        <p>
+            <strong>A questão principal é:</strong> Como podemos melhorar isso?
+        </p>
+
+        <p>
+            <strong>E a resposta é:</strong> Usando os pontos de relação entre tabelas!!!
+        </p>
+
+        <p>Para fins de exemplo, nossa tabela, utilizando desta característica dos Bancos Relacionais se tornaria algo similar a isto:</p>
+
+        <p><img src="../static/webmac/aula6-7/new_tables/new_sql_table_example.png" alt="exemplo de estrutura da tabela com acesso estrangeiro"></p>
+
+        <div class="tip_box caution">
+            <div class="topLayer">
+                <img class="mini-icon" src="https://cdn-icons-png.flaticon.com/512/8832/8832119.png" alt="Ícone de correto">
+                <p class="tip_box_title">Boa Prática</p>
+            </div>
+
+            <p class="tip_box_content border-good-practice">
+                Quando estamos lidando com SQL, use snake_case para os nomes das propriedades representadas.
+            </p>
+        </div>
+
+        <p>
+            Em que cada ID, tem uma correspondência <strong>ÚNICA</strong> em outra tabela 
+            com todas as informações necessárias sobre o dado elemento que procuramos.
+        </p>
+
+        <h3>Chaves Primárias e Estrangeiras</h3>
+
+        <p>
+            Para que essa correspondência funcione de forma confiável, usamos <strong>chaves</strong>.
+            Em bancos relacionais, elas são a base das relações entre tabelas.
+        </p>
+
+        <p>
+            <strong>Chave primária (PRIMARY KEY)</strong> é a coluna (ou conjunto de colunas) que identifica
+            cada linha de forma <strong>única</strong> dentro de uma tabela. Na prática, ela não deve se repetir e
+            geralmente não pode ser nula. É comum usar um número incremental, como um <code>id</code>.
+        </p>
+
+        <p>
+            <strong>Chave estrangeira (FOREIGN KEY)</strong> é uma coluna em uma tabela que aponta para a chave primária
+            (ou um valor <code>UNIQUE</code>) de outra tabela. É assim que dizemos “este pedido pertence a este cliente”
+            ou “esta matrícula pertence a este usuário”, evitando copiar os mesmos dados várias vezes.
+        </p>
+
+        <p>
+            Em outras palavras: a chave primária é o <strong>identificador</strong>, e a chave estrangeira é o
+            <strong>link</strong> entre tabelas.
+        </p>
+        <p>
+            Agora que conhecemos, o que são os Bancos de Dados Relacionais, ou seja, sabemos quem é o estranho.
+            Estamos prontos para aprender a conversar com ele. O que significa, que estamos finalmente prontos para aprender sobre SQL!
+        </p>
+
+        <!-- Fiz leves alterações nas notas de aula do Ryan, mas mantive quase tudo desta parte em diante. -->
+        <h2 id="sql">SQL</h2>
+        <p><a href="https://www.w3schools.com/sql/">SQL</a>, ou Structured Query Language, é uma linguagem de programação que nos permite atualizar e consultar bancos de dados.</p>
+        <p><img src="../static/webmac/aula6-7/logo_sql.png" alt="Logo SQL"></p>
+
+        <p>Para ilustrar como trabalhar com SQL, usaremos o exemplo de um 
+    site de aulas, que armazena dados do curso, usuários, entre outras 
+    coisas. Um exemplo de tabela que iremos ver está a seguir:</p>
+
+        <p><img src="../static/webmac/aula6-7/users.png" alt="usuários"></p>
+
+        <p>Existem vários sistemas de gerenciamento de banco de dados 
+    relacionais diferentes que são comumente usados para armazenar 
+    informações e que podem interagir facilmente com comandos SQL:</p>
+        <ul>
+            <li><a href="https://www.mysql.com/">MySQL</a></li>
+            <li><a href="https://www.postgresql.org/">PostgreSQL</a></li>
+            <li><a href="https://www.sqlite.org/index.html">SQLite</a></li>
+            <li>...</li>
+        </ul>
+        <p>Os dois primeiros, MySQL e PostgreSQL, são sistemas de 
+    gerenciamento de banco de dados mais robustos que normalmente são 
+    executados em servidores separados daqueles que executam um site. 
+    SQLite, por outro lado, é um sistema mais leve que pode armazenar todos 
+    os seus dados em um único arquivo.</p>
+    <p>Usaremos SQLite ao longo deste curso, pois é um banco leve e fácil de testar localmente.</p>
+
+        <h3 id="column-types">Tipos de Coluna</h3>
+        <p>Assim como trabalhamos com vários tipos de variáveis em Python, SQLite tem <a href="https://www.sqlite.org/datatype3.html">tipos</a>
+    que representam diferentes formas de informação. Outros sistemas de 
+    gerenciamento podem ter tipos de dados diferentes, mas todos são 
+    bastante semelhantes aos do SQLite:</p>
+        <ul>
+            <li><code>TEXT</code>: Para strings de texto (Ex. nome de uma pessoa)</li>
+            <li><code>NUMERIC</code>: Uma forma mais geral de dados numéricos (Ex. Uma data ou valor booleano)</li>
+            <li><code>INTEGER</code>: Qualquer número não decimal (Ex. idade de uma pessoa)</li>
+            <li><code>REAL</code>: Qualquer número real (Ex. peso de uma pessoa)</li>
+            <li><code>BLOB</code> (Binary Large Object): Qualquer outro dado binário que possamos querer armazenar em nosso banco de dados (Ex. uma imagem)</li>
+        </ul>
+
+        <h2 id="tables">Tabelas</h2>
+        <p>Agora, para realmente começar a usar SQL para interagir com um banco de dados, vamos começar criando uma nova tabela. Como exemplo, iremos criar uma tabela de usuários simples, o comando para criar uma nova tabela segue abaixo:</p>
+        
+        <pre><code class="language-sql">CREATE TABLE users(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    username TEXT UNIQUE NOT NULL,
+    email TEXT UNIQUE NOT NULL,
+    password_hash TEXT NOT NULL
+);</code></pre>
+
+        <p>No comando acima, estamos criando uma nova tabela que decidimos chamar de <code>users</code>, e adicionamos quatro colunas a esta tabela:</p>
+        <ol>
+            <li><code>id</code>: Muitas vezes é útil ter um número que nos permita identificar exclusivamente cada linha em uma tabela. Aqui especificamos que <code>id</code>, é um inteiro e também que é nossa <strong>Chave Primária</strong>. Além disso, especificamos o <code>AUTOINCREMENT</code>, o que significa que não precisaremos fornecer um <code>id</code> toda vez que adicionarmos à tabela, pois isso será feito automaticamente.</li>
+            <li><code>username</code>: Aqui especificamos que este será um campo de texto, e ao escrever <code>NOT NULL</code> exigimos que ele tenha um valor. Ademais, ao escrever <code>UNIQUE</code>, exigimos que este valor seja único naquela coluna.</li>
+            <li><code>email</code>: Novamente especificamos que este será um campo de texto e impedimos que seja nulo.</li>
+            <li><code>password_hash</code>: Por último, especificamos que a senha seja armazenada como texto, e que não seja nula.</li>
+        </ol>
+
+        <div class="tip_box caution">
+            <div class="topLayer">
+                <img class="mini-icon" src="https://cdn-icons-png.flaticon.com/512/8832/8832119.png" alt="Ícone de correto">
+                <p class="tip_box_title">Boa Prática</p>
+            </div>
+
+            <p class="tip_box_content border-good-practice">
+                Em bancos de dados, <strong>não devemos guardar uma senha em texto puro!</strong> Como exemplo aqui, usamos uma senha com hash. Mas há diferentes maneiras de tratar senhas.
+            </p>
+        </div>
+
+        <p>Acabamos de ver as restrições <code>NOT NULL</code>, <code>UNIQUE</code> e reforçamos a <code>PRIMARY KEY</code> ao criar uma coluna, mas existem várias outras <a href="https://www.tutorialspoint.com/sqlite/sqlite_constraints.htm">restrições</a> disponíveis para nós:</p>
+        <ul>
+            <li><code>CHECK</code>: Garante que certas restrições sejam atendidas antes de permitir que uma linha seja adicionada/modificada</li>
+            <li><code>DEFAULT</code>: Fornece um valor padrão se nenhum valor for fornecido</li>
+            <li><code>NOT NULL</code>: Garante que um valor seja fornecido</li>
+            <li><code>PRIMARY KEY</code>: Indica que esta é a principal forma de buscar uma linha no banco de dados</li>
+            <li><code>UNIQUE</code>: Garante que duas linhas não tenham o mesmo valor nessa coluna.</li>
+            <li>...</li>
+        </ul>
+
+        <p>Agora que vimos como criar uma tabela, vamos ver como podemos adicionar linhas a ela. Em SQL, fazemos isso usando o comando <code>INSERT</code>:</p>
+        
+        <pre><code class="language-sql">INSERT INTO users
+    (username, email, password_hash)
+    VALUES ('fulano_dev', 'fulano@codelab.br', '2b$12');</code></pre>
+
+        <p>No comando acima, especificamos o nome da tabela em que desejamos
+    inserir, depois fornecemos uma lista dos nomes das colunas sobre as 
+    quais forneceremos informações e, em seguida, especificamos os <code>VALUES</code> que gostaríamos de preencher nessa linha da tabela, garantindo que os <code>VALUES</code> venham na mesma ordem que nossa lista correspondente de colunas. Observe que não precisamos fornecer um valor para <code>id</code> porque ele é incrementado automaticamente.</p>
+
+        <h3 id="select">SELECT</h3>
+        <p>Depois que uma tabela é preenchida com algumas linhas, 
+    provavelmente queremos uma maneira de acessar os dados dentro dessa 
+    tabela. Fazemos isso usando a consulta <a href="https://www.w3schools.com/sql/sql_select.asp">SELECT</a> do SQL. A consulta <code>SELECT</code> mais simples em nossa tabela de usuários pode ser mais ou menos assim:</p>
+        
+        <pre><code class="language-sql">SELECT * FROM users;</code></pre>
+
+        <p>O comando acima (*) recupera todos os dados da nossa tabela de usuários</p>
+        <p><img src="../static/webmac/aula6-7/todos.png" alt="todos"></p>
+
+        <p>Pode ser o caso, porém, que não precisamos realmente de todas as 
+    colunas do banco de dados, apenas username e email. Para acessar apenas 
+    essas colunas, podemos substituir o * pelos nomes das colunas que 
+    gostaríamos de acessar. A consulta a seguir retorna todos os usernames e
+    emails.</p>
+
+        <pre><code class="language-sql">SELECT username, email FROM users;</code></pre>
+
+        <p><img src="../static/webmac/aula6-7/2cols.png" alt="Apenas duas colunas"></p>
+
+        <p>À medida que nossas tabelas ficam cada vez maiores, também 
+    queremos reduzir quais linhas nossa consulta retorna. Fazemos isso 
+    adicionando um <a href="https://www.w3schools.com/sql/sql_where.asp">WHERE</a> seguido por alguma condição. Por exemplo, o comando a seguir seleciona apenas a linha com um <code>id</code> de <code>3</code>:</p>
+
+        <pre><code class="language-sql">SELECT * FROM users WHERE id = 3;</code></pre>
+
+        <p><img src="../static/webmac/aula6-7/1row.png" alt="apenas uma linha"></p>
+
+        <h3 id="working-with-sql-in-the-terminal">Trabalhando com SQL no Terminal</h3>
+        <p>Agora que conhecemos alguns comandos básicos de SQL, vamos 
+    testá-los no terminal! Para trabalhar com SQLite em seu computador, você
+    deve primeiro <a href="https://www.sqlite.org/download.html">baixar o SQLite</a>. (Não usaremos em aula, mas você também pode <a href="https://sqlitebrowser.org/dl/">baixar o DB Browser</a> para uma maneira mais amigável de executar consultas SQL.)</p>
+        <p>Podemos começar criando um arquivo para nosso banco de dados criando manualmente um novo arquivo (por exemplo, <code>users.db</code>). Agora, se executarmos <code>sqlite3 users.db</code> no terminal, seremos levados a um prompt SQLite onde podemos executar comandos SQL:</p>
+        
+        <pre><code class="language-sql"># Entrando no Prompt SQLite
+
+    sqlite3 users.db
+    SQLite version 3.49.1 2025-02-18 13:38:58
+    Enter ".help" for usage hints.
+
+    # Criando uma nova Tabela
+    sqlite&gt; CREATE TABLE users(
+    ...&gt;     id INTEGER PRIMARY KEY AUTOINCREMENT,
+    ...&gt;     username TEXT UNIQUE NOT NULL,
+    ...&gt;     email TEXT UNIQUE NOT NULL,
+    ...&gt;     password_hash TEXT NOT NULL
+    ...&gt; );
+
+    # Listando todas as tabelas atuais (Apenas users por enquanto)
+    sqlite&gt; .tables
+    users
+
+    # Consultando tudo dentro de users (Que está vazio agora)
+    sqlite&gt; SELECT * FROM users;
+
+    # Adicionando um usuário
+    sqlite&gt; INSERT INTO users
+    ...&gt;     (username, email, password_hash)
+    ...&gt;     VALUES ('fulano_dev', 'fulano@codelab.br', '2b$12');
+
+    # Verificando por novas informações, que agora podemos ver
+    sqlite&gt; SELECT * FROM users;
+    1|fulano_dev|fulano@codelab.br|2b$12
+
+    # Adicionando mais alguns usuários
+    sqlite&gt; INSERT INTO users (username, email, password_hash) VALUES ('ciclano_dev', 'ciclano@codelab.br', 'a31lW');
+    sqlite&gt; INSERT INTO users (username, email, password_hash) VALUES ('beltrano_dev', 'beltrano@codelab.br', 'Wxn96p3');
+    sqlite&gt; INSERT INTO users (username, email, password_hash) VALUES ('alano_dev', 'alano@codelab.br', '3OXePa');
+
+    # Consultando essas novas informações
+    sqlite&gt; SELECT * FROM users;
+    1|fulano_dev|fulano@codelab.br|2b$12
+    2|ciclano_dev|ciclano@codelab.br|a31lW
+    3|beltrano_dev|beltrano@codelab.br|Wxn96p3
+    4|alano_dev|alano@codelab.br|3OXePa
+
+    # Alterando as configurações para tornar a saída mais legível
+    sqlite&gt; .mode columns
+    sqlite&gt; .headers yes
+
+    # Consultando todas as informações novamente
+    sqlite&gt; SELECT * FROM users;
+    id  username      email                password_hash
+    --  ------------  -------------------  -------------
+    1   fulano_dev    fulano@codelab.br    2b$12        
+    2   ciclano_dev   ciclano@codelab.br   a31lW        
+    3   beltrano_dev  beltrano@codelab.br  Wxn96p3      
+    4   alano_dev     alano@codelab.br     3OXePa       
+
+    # Procurando apenas por um usuário com email ciclano@codelab.br
+    sqlite&gt; SELECT * FROM users WHERE email = 'ciclano@codelab.br';
+    id  username     email               password_hash
+    --  -----------  ------------------  -------------
+    2   ciclano_dev  ciclano@codelab.br  a31lW</code></pre>
+
+        <p>Também podemos usar mais do que apenas igualdade para filtrar 
+    usuários. Para valores inteiros e reais, podemos usar maior que ou menor
+    que:</p>
+
+        <pre><code class="language-sql">SELECT * FROM users WHERE id > 1;</code></pre>
+
+        <p><img src="../static/webmac/aula6-7/500.png" alt="id maior que 1"></p>
+
+        <p>E também podemos usar outra lógica (<a href="https://www.w3schools.com/sql/sql_and_or.asp">AND, OR</a>) como em Python:</p>
+
+        <pre><code class="language-sql">SELECT * FROM users WHERE id > 1 AND email = 'ciclano@codelab.br';</code></pre>
+
+        <p><img src="../static/webmac/aula6-7/2andemail.png" alt="> 1 e email"></p>
+
+        <pre><code class="language-sql">SELECT * FROM users WHERE id > 3 OR email = 'fulano@codelab.br';</code></pre>
+
+        <p><img src="../static/webmac/aula6-7/3oremail.png" alt="> 3 ou email"></p>
+
+        <p>Também podemos usar a palavra-chave <a href="https://www.w3schools.com/sql/sql_in.asp">IN</a> para ver se um pedaço de dados é uma de várias opções:</p>
+
+        <pre><code class="language-sql">SELECT * FROM users WHERE username IN ('fulano_dev', 'ciclano_dev');</code></pre>
+
+        <p><img src="../static/webmac/aula6-7/in.png" alt="em"></p>
+
+        <p>Podemos também pesquisar padrões de texto usando a palavra-chave <a href="https://www.w3schools.com/sql/sql_like.asp">LIKE</a>. A consulta abaixo encontra todos os resultados cujo <code>username</code> contém um <code>f</code>, usando <code>%</code> como caractere curinga.</p>
+
+        <pre><code class="language-sql">SELECT * FROM users WHERE username LIKE '%f%';</code></pre>
+
+        <p><img src="../static/webmac/aula6-7/like.png" alt="username tem um 'f'"></p>
+
+        <h3 id="functions">Funções</h3>
+        <p>Também há várias funções SQL que podemos aplicar aos resultados 
+    de uma consulta. Elas podem ser úteis se não precisarmos de todos os 
+    dados retornados por uma consulta, mas apenas de algumas estatísticas 
+    resumidas dos dados.</p>
+        <ul>
+            <li><a href="https://www.w3schools.com/sql/sql_count_avg_sum.asp">AVG</a></li>
+            <li><a href="https://www.w3schools.com/sql/sql_count_avg_sum.asp">COUNT</a></li>
+            <li><a href="https://www.w3schools.com/sql/sql_min_max.asp">MAX</a></li>
+            <li><a href="https://www.w3schools.com/sql/sql_min_max.asp">MIN</a></li>
+            <li><a href="https://www.w3schools.com/sql/sql_count_avg_sum.asp">SUM</a></li>
+            <li>...</li>
+        </ul>
+
+        <h3 id="update">UPDATE</h3>
+        <p>Agora vimos como adicionar e pesquisar tabelas, mas também 
+    podemos querer atualizar linhas de uma tabela que já existem. Fazemos 
+    isso usando o comando <a href="https://www.w3schools.com/sql/sql_update.asp">UPDATE</a>
+    como mostrado abaixo. Como você pode ter adivinhado ao ler isso em voz 
+    alta, o comando encontra o usuário "alano_dev" e define seu email como 
+    alano2@codelab.br .</p>
+        
+        <pre><code class="language-sql">UPDATE users
+    SET email = 'alano2@codelab.br'
+    WHERE username = 'alano_dev';</code></pre>
+
+        <h3 id="delete">DELETE</h3>
+        <p>Também podemos querer a capacidade de excluir linhas do nosso banco de dados, e podemos fazer isso usando o comando <a href="https://www.w3schools.com/sql/sql_delete.asp">DELETE</a>.</p>
+        
+        <pre><code class="language-sql">DELETE FROM users WHERE username = 'alano_dev';</code></pre>
+
+        <h3 id="other-clauses">Outras Cláusulas</h3>
+        <p>Existem várias cláusulas adicionais que podemos usar para controlar as consultas que nos retornam</p>
+        <ul>
+            <li><a href="https://www.w3schools.com/sql/sql_limit.asp">LIMIT</a>: Limita o número de resultados retornados por uma consulta</li>
+            <li><a href="https://www.w3schools.com/sql/sql_orderby.asp">ORDER BY</a>: Ordena os resultados com base em uma coluna especificada</li>
+            <li><a href="https://www.w3schools.com/sql/sql_groupby.asp">GROUP BY</a>: Agrupa resultados por uma coluna especificada</li>
+            <li><a href="https://www.w3schools.com/sql/sql_having.asp">HAVING</a>: Permite restrições adicionais com base no número de resultados</li>
+        </ul>
+
+        <h2 id="joining-tables">Unindo Tabelas</h2>
+        <p>Até agora, trabalhamos apenas com uma tabela por vez, mas muitos 
+    bancos de dados na prática são preenchidos por várias tabelas que se 
+    relacionam de alguma forma. Como exemplo, no CodeClass, além da tabela 
+    de usuários, podemos ter uma tabela de cursos, mostrando cada curso 
+    disponível. Então, poderíamos relacionar as duas tabelas.</p>
+        <p>A tabela de cursos pode ser mais ou menos assim</p>
+
+        <p><img src="../static/webmac/aula6-7/cursos.png" alt="Tabela Cursos"></p>
+        <p>Dessa forma, podemos relacionar os usuários com cursos. 
+    Entretanto, um usuário pode estar inscrito em vários cursos, então se 
+    tivéssemos que relacionar os usuários com seus cursos, teríamos que 
+    criar várias colunas na tabela <code>users</code>, o que não é intuitivo. Assim, podemos criar mais uma tabela <code>enrollments</code>, que armazena as matrículas dos usuários. Ela se parece como:</p>
+        <img src="../static/webmac/aula6-7/enrollments.png"alt="table enrollments">
+        <p>Agora temos uma tabela enrollments, onde cada matrícula está 
+    relacionada a um usuário e a um curso. Como estamos usando a coluna <code>id</code> da tabela de usuários para preencher <code>user_id</code> e <code>id</code> da tabela de cursos para preencher <code>course_id</code>, chamamos esses valores de <a href="https://www.w3schools.com/sql/sql_foreignkey.asp">Chaves Estrangeiras</a>.</p>
+        <p>A relação entre <code>users</code> e <code>courses</code> é conhecida como <strong>Muitos para muitos</strong>.</p>
+        <p>A tabela de matrículas é conhecida como uma <strong>tabela de associação</strong>, pois associa as tabelas <code>users</code> e <code>courses</code>.</p>
+        <p>Dessa forma, criamos diferentes tabelas que irão nos proporcionar uma melhor organização.</p>
+
+        <h3 id="join-query">Consulta JOIN</h3>
+        <p>Embora nossos dados agora estejam armazenados de forma mais 
+    eficiente, parece que pode ser mais difícil consultar nossos dados. 
+    Felizmente, SQL tem uma consulta <a href="https://www.w3schools.com/sql/sql_join.asp">JOIN</a> onde podemos combinar duas tabelas para os propósitos de outra consulta.</p>
+        <p>Por exemplo, digamos que queremos listar todos os cursos de um usuário, então:</p>
+        
+        <pre><code class="language-sql">SELECT courses.title
+    FROM courses
+    JOIN enrollments ON courses.id = enrollments.course_id
+    WHERE enrollments.user_id = 1;</code></pre>
+        
+        <p>Aqui, o que fizemos foi selecionar os títulos dos cursos em que o usuário de id <code>1</code> está inscrito.</p>
+        <p>Para juntar as tabelas de curso e matrículas, procuramos linhas em <code>enrollments</code> onde <code>courses.id = enrollments.course_id</code>, o que conecta os cursos às matrículas.</p>
+        <p>Acabamos de usar algo chamado <a href="https://www.w3schools.com/sql/sql_join_inner.asp">INNER JOIN</a>,
+    o que significa que estamos ignorando linhas que não têm 
+    correspondências entre as tabelas, mas existem outros tipos de junções, 
+    incluindo <a href="https://www.w3schools.com/sql/sql_join_left.asp"><strong>LEFT JOIN</strong></a>, <a href="https://www.w3schools.com/sql/sql_join_right.asp"><strong>RIGHT JOIN</strong></a> e <a href="https://www.w3schools.com/sql/sql_join_full.asp"><strong>FULL OUTER JOIN</strong></a>, que não discutiremos aqui em detalhes.</p>
+
+        <h3 id="indexing">Indexação</h3>
+        <p>Uma maneira de tornar nossas consultas mais eficientes ao lidar 
+    com tabelas grandes é criar um índice semelhante ao índice que você pode
+    ver no final de um livro didático. Por exemplo, se sabemos que 
+    frequentemente procuraremos usuários por username, poderíamos criar um 
+    índice de username usando o comando:</p>
+        
+        <pre><code class="language-sql">CREATE INDEX user_username_index ON users (username);</code></pre>
+
+        <h3 id="sql-vulnerabilities">Vulnerabilidades SQL</h3>
+        <p>Agora que sabemos o básico de usar SQL para trabalhar com dados, é
+    importante destacar as principais vulnerabilidades associadas ao uso de
+    SQL. Começaremos com <a href="https://www.w3schools.com/sql/sql_injection.asp">Injeção SQL</a>.</p>
+        <p>Um ataque de injeção SQL é quando um usuário malicioso insere 
+    código SQL como entrada em um site para contornar as medidas de 
+    segurança do site. Por exemplo, digamos que nossa tabela de usuários 
+    seja mais simples (com username e password), e então um formulário de 
+    login na página inicial de um site. Podemos procurar o usuário usando 
+    uma consulta como:</p>
+        
+        <pre><code class="language-sql">SELECT * FROM users
+    WHERE username = '&lt;username&gt;' AND password = '&lt;password&gt;';</code></pre>
+
+        <p>Um usuário chamado Harry pode acessar este site e digitar <code>harry</code> como nome de usuário e <code>12345</code> como senha, caso em que a consulta seria assim:</p>
+        
+        <pre><code class="language-sql">SELECT * FROM users
+    WHERE username = 'harry' AND password = '12345';</code></pre>
+
+        <p>Um hacker, por outro lado, pode digitar <code>harry' -- </code> como nome de usuário e nada como senha.</p>
+        <p>Acontece que <code>--</code> representa um comentário em SQL, então a consulta ficaria assim:</p>
+        
+        <pre><code class="language-sql">SELECT * FROM users
+    WHERE username = 'harry' -- ' AND password = '12345'
+    ;</code></pre>
+
+        <p>Porque nesta consulta a verificação de senha foi comentada, o 
+    hacker pode fazer login na conta de Harry sem saber sua senha. Para 
+    resolver este problema, podemos usar:</p>
+        <ul>
+            <li>Caracteres de escape para garantir que o SQL trate a entrada como texto simples e não como código SQL.</li>
+            <li>Uma camada de abstração sobre o SQL que inclui sua própria 
+    sequência de escape, para que não precisemos escrever consultas SQL nós 
+    mesmos.</li>
+        </ul>
+
+        <p class="tip_box_citation">
+            A outra principal vulnerabilidade quando se trata de SQL é conhecida como <a href="https://searchstorage.techtarget.com/definition/race-condition#:~:text=A%20race%20condition%20is%20an,sequence%20to%20be%20done%20correctly.">Condição de Corrida</a>.
+        </p>
+        <p>
+                Uma condição de corrida é uma situação que ocorre quando várias 
+    consultas a um banco de dados ocorrem simultaneamente. Quando essas não 
+    são tratadas adequadamente, podem surgir problemas nos momentos precisos
+    em que os bancos de dados são atualizados. Por exemplo, digamos que eu 
+    tenha $150 na minha conta bancária. Uma condição de corrida pode ocorrer
+    se eu fizer login na minha conta bancária tanto no meu telefone quanto 
+    no meu laptop e tentar sacar $100 em cada dispositivo. Se os 
+    desenvolvedores de software do banco não lidaram com condições de 
+    corrida corretamente, então eu posso conseguir sacar $200 de uma conta 
+    com apenas $150. Uma solução potencial para este problema seria bloquear
+    o banco de dados. Poderíamos não permitir nenhuma outra interação com o
+    banco de dados até que uma transação seja concluída. No exemplo do 
+    banco, depois de navegar para a página "Fazer um Saque" no meu 
+    computador, o banco pode não me permitir navegar para essa página no meu
+    telefone.
+            </p>
+
+        <p>Isso é tudo para esta aula!</p> 
+
+        <div class="tip_box challenge">
+            <div class="topLayer">
+                <img class="mini-icon" src="../static/webmac/aula6-7/icon-target.png" alt="Ícone de Desafio">
+                <p class="tip_box_title">Desafio da Aula</p>
+            </div>
+            <p class="tip_box_content  border-challenge">
+                Agora que você já está mais acostumado com Banco de Dados e com SQL,
+                está finalmente pronto para atender ao pedido do Serviço de Entregas do Kiwi!
+            </p>
+            <div class="tip_box_end">
+
+                <p><strong>Tarefa:</strong></p>
+                    
+                <p>
+                    Modele e inicie um banco de dados RELACIONAL usando SQLite que será utilizado pela empresa.
+                    Este banco precisará conter informações sobre:
+                </p>
+                
+                <ul>
+                    <li>ID do Pedido</li>
+                    <li>Data de entrega</li>
+                    <li>Entregador Responsável</li>
+                    <li>Número de tentativas de entrega</li>
+                    <li>Avaliação da Entrega</li>
+                    <li>Status da entrega</li>
+                    <li>Nome do Cliente</li>
+                    <li>Informações de contato</li>
+                    <li>Endereço de Entrega - OBS: O endereço deve estar subdividido em rua, bairro, CEP, etc...</li>
+                    <li>Produto</li>
+                    <li>Fabricante</li>
+                    <li>Vendedor</li>
+                    <li>Contato do Vendedor</li>
+                </ul>
+
+                <p>Adicione a este banco pelo menos 3 pedidos de clientes, sendo que dois deles devem ser o mesmo produto.</p>
+            </div>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/prismjs/prism.min.js" defer></script>
+        <script src="https://cdn.jsdelivr.net/npm/prismjs/plugins/autoloader/prism-autoloader.min.js" defer></script>
+
+    </body>
+
+</html>
