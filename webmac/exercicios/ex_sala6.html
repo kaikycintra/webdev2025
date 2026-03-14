@@ -1,266 +1,149 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Exercícios de Sala - Introdução ao SQL</title>
-    <style>
-        :root {
-            --background-color: #292827;
-            --surface-color: #363636;
-            --primary-text-color: #e0e0e0;
-            --accent-color-1: #ff690a;
-            --accent-color-2: #ff690a;
-            --border-color: #444;
-            --code-bg: #404040; /* Fundo para blocos de código */
-        }
 
-        body {
-            font-family: 'Roboto', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-            line-height: 1.7;
-            background-color: var(--background-color);
-            color: var(--primary-text-color);
-            margin: 0 auto;
-            max-width: 800px;
-            padding: 2rem 1.5rem;
-            box-sizing: border-box;
-        }
+    <head>
 
-        h1 {
-            color: var(--accent-color-1);
-            border-bottom: 2px solid var(--border-color);
-            padding-bottom: 0.8rem;
-            margin-bottom: 1.5rem;
-        }
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Exercícios de Sala - Introdução ao SQL</title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs/themes/prism-okaidia.min.css">
+        <link rel="stylesheet" href="../../styles.css">
 
-        .tip_box {
-            margin: 2rem 0;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-            border: 1px solid var(--surface-color);
-            flex-direction: row;
-        }
 
-        .topLayer {
-            display: grid; 
-            grid-template-columns: 10% 1fr; 
-            gap: 10px; 
-            padding: none;
-            padding-left: 25px; 
-            margin: none;
-            align-items: center;
-            max-height: 200px;
-        }
+    </head>
 
-        .mini-icon {
-            align-items: center;
-            justify-content: center;
-            margin: 0;
-            padding: 0;
-            max-height: 75px;
-            object-fit: scale-down;
-        }
+    <body class="container">
 
-        .tip_box_title {
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: var(--accent-color-1);
-        }
+        <h2>Exercício Prático: Introdução ao SQL</h2>
 
-        .tip_box_content {
-            padding: 1.5rem;
-            align-content: center;
-            background-color: var(--surface-color);
-            color: var(--primary-text-color);
-            border-left: 3px solid #2f7cf6;
-            line-height: 1.7;
-            margin: 0;
-        }
+        <div class="tip_box challenge">
+            <div class="topLayer">
+                <img class="mini-icon" src="../../static/webmac/aula6-7/icon-target.png" alt="Ícone de Desafio">
+                <p class="tip_box_title">Exercício de Sala</p>
+            </div>
+            <p class="tip_box_content">
+                Agora que você já está mais acostumado com Banco de Dados e com SQL,
+                está finalmente pronto para atender ao pedido do Serviço de Entregas do Kiwi!
+            </p>
+            <div class="tip_box_end">
+                <p><strong>Tarefa:</strong></p>
 
-        .tip_box_end {
-            padding-left: 1.5rem;
-        }
+                <p>
+                    O script abaixo é um template para a criação de diversas tabelas de um banco de dados relacional
+                    que servirá o serviço de entregas do Kiwi.
+                </p>
 
-        a {
-            color: var(--accent-color-1);
-            transition: color 0.2s ease-in-out;
-        }
+                <p>
+                    Apenas por referência, a tabela de endereços e de pedidos já está criada, e você poderá se basear nelas para terminar seu trabalho.
+                </p>
 
-        pre {
-            background-color: var(--code-bg);
-            padding: 1rem;
-            border-radius: 8px;
-            overflow-x: auto;
-            margin-top: 1.5rem;
-            margin-bottom: 1.5rem;
-            position: relative;
-            font-family: 'Roboto Mono', monospace;
-            font-size: 0.95em;
-            line-height: 1.4;
-            color: var(--primary-text-color);
-            border: 1px solid var(--border-color);
-        }
+                <pre><code class="language-sql">CREATE TABLE entregador (
+        Insira seus comandos aqui!
+    );
 
-        pre code {
-            background-color: transparent;
-            color: inherit;
-            padding: 0;
-        }
+    CREATE TABLE cliente (
+        Insira seus comandos aqui!
+    );
 
-        code {
-            background-color: var(--code-bg);
-            color: var(--accent-color-2);
-            padding: 0.2em 0.4em;
-            border-radius: 4px;
-            font-family: 'Roboto Mono', monospace;
-            font-size: 0.9em;
-        }
+    CREATE TABLE endereco (
+        endereco_id INTEGER PRIMARY KEY,
+        rua TEXT NOT NULL,
+        numero TEXT NOT NULL,
+        bairro TEXT NOT NULL,
+        cidade TEXT NOT NULL,
+        cep TEXT NOT NULL
+    );
 
-        @media (max-width: 480px) {
-            body {
-                padding: 1rem 0.8rem;
-            }
-            
-            .topLayer {
-                grid-template-columns: 50px 1fr;
-                padding-left: 15px;
-            }
+    CREATE TABLE vendedor (
+        Insira seus comandos aqui!
+    );
 
-            .mini-icon {
-                max-height: 40px;
-            }
-        }
-    </style>
-</head>
-<body>
-    <h1>Exercício Prático: Introdução ao SQL</h1>
-    <p><a href="../Aula6.html">Voltar para Aula 6</a></p>
+    CREATE TABLE fabricante (
+        Insira seus comandos aqui!
+    );
 
-    <div class="tip_box challenge">
-        <div class="topLayer">
-            <img class="mini-icon" src="../images/icon-target.png" alt="Ícone de Desafio">
-            <p class="tip_box_title">Exercício de Sala</p>
+    CREATE TABLE produto (
+        Insira seus comandos aqui!
+    );
+
+    CREATE TABLE pedido (
+        pedido_id INTEGER PRIMARY KEY,
+        
+        status_entrega TEXT NOT NULL,
+        
+        entregador_id INTEGER NOT NULL,
+        cliente_id INTEGER NOT NULL,
+        vendedor_id INTEGER NOT NULL,
+        produto_id INTEGER NOT NULL,
+
+        FOREIGN KEY (entregador_id) REFERENCES entregador(entregador_id),
+        FOREIGN KEY (cliente_id) REFERENCES cliente(cliente_id),
+        FOREIGN KEY (vendedor_id) REFERENCES vendedor(vendedor_id),
+        FOREIGN KEY (produto_id) REFERENCES produto(produto_id)
+    );</code></pre>
+
+                <p>
+                    Seu trabalho é completá-lo para que sejam adicionadas, as seguintes informações:
+                </p>
+
+                <ul>
+                    <li>
+                        Entregador
+                        <ol>
+                            <li>ID do entregador - <code>entregador_id</code> - <code>(INTEGER)</code></li>
+                            <li>Nome do entregador responsável - <code>nome</code> - <code>(TEXT)</code></li>
+                            <li>Contato do entregador responsável - <code>contato</code> - <code>(TEXT)</code></li>
+                        </ol>
+                    </li>
+                    <li>
+                        Cliente
+                        <ol>
+                            <li>ID do cliente - <code>cliente_id</code> - <code>(INTEGER)</code></li>
+                            <li>Nome do cliente - <code>nome</code> - <code>(TEXT)</code></li>
+                            <li>Informações de contato do cliente - <code>contato</code> - <code>(TEXT)</code></li>
+                            <li>Endereço do cliente - <code>endereco_id</code> - <code>(INTEGER)</code></li>
+                        </ol>
+                    </li>
+                    <li>
+                        Vendedor
+                        <ol>
+                            <li>ID do vendedor - <code>vendedor_id</code> - <code>(INTEGER)</code></li>
+                            <li>Nome do vendedor - <code>nome</code> - <code>(TEXT)</code></li>
+                            <li>Contato do vendedor - <code>contato</code> - <code>(TEXT)</code></li>
+                        </ol>
+                    </li>
+                    <li>
+                        Fabricante
+                        <ol>
+                            <li>ID do fabricante - <code>fabricante_id</code> - <code>(INTEGER)</code></li>
+                            <li>Nome do fabricante - <code>nome</code> - <code>(TEXT)</code></li>
+                        </ol>
+                    </li>
+                    <li>
+                        Produto
+                        <ol>
+                            <li>ID do produto - <code>pedido_id</code> - <code>(INTEGER)</code></li>
+                            <li>Nome do produto - <code>nome</code> - <code>(TEXT)</code></li>
+                            <li>ID apontando para um fabricante - <code>fabricante_id</code> - <code>(INTEGER)</code></li>
+                            ->Considere que cada pedido entregará exclusivamente um produto<br>
+                            (Ou seja, é apenas uma <code>FOREIGN_KEY</code> apontando para um <code>produto(produto_id)</code>)</li>
+                        </ol>
+                    </li>
+                </ul>
+
+                <p><strong>Sugestão:</strong></p>
+                <p>Você pode testar seu script em <a href="https://sqliteonline.com/">sqliteonline.com</a></p>
+                <p>E poderá ver graficamente as relações copiando e colando seu script em <a href="https://www.drawdb.app/">https://www.drawdb.app/</a></p>
+
+                <p>Para este exercício, você deverá apenas entregar o conjunto de comandos em um arquivo .sql,
+                    e o diagrama gerado destas relações que você obteve de <a href="https://www.drawdb.app/">https://www.drawdb.app/</a>
+                </p>
+            </div>
         </div>
-        <p class="tip_box_content">
-            Agora que você já está mais acostumado com Banco de Dados e com SQL,
-            está finalmente pronto para atender ao pedido do Serviço de Entregas do Kiwi!
-        </p>
-        <div class="tip_box_end">
-            <p><strong>Tarefa:</strong></p>
 
-            <p>
-                O script abaixo é um template para a criação de diversas tabelas de um banco de dados relacional
-                que servirá o serviço de entregas do Kiwi.
-            </p>
+        <script src="https://cdn.jsdelivr.net/npm/prismjs/prism.min.js" defer></script>
+        <script src="https://cdn.jsdelivr.net/npm/prismjs/plugins/autoloader/prism-autoloader.min.js" defer></script>
 
-            <p>
-                Apenas por referência, a tabela de endereços e de pedidos já está criada, e você poderá se basear nelas para terminar seu trabalho.
-            </p>
+    </body>
 
-            <pre><code>CREATE TABLE entregador (
-    Insira seus comandos aqui!
-);
-
-CREATE TABLE cliente (
-    Insira seus comandos aqui!
-);
-
-CREATE TABLE endereco (
-    endereco_id INTEGER PRIMARY KEY,
-    rua TEXT NOT NULL,
-    numero TEXT NOT NULL,
-    bairro TEXT NOT NULL,
-    cidade TEXT NOT NULL,
-    cep TEXT NOT NULL
-);
-
-CREATE TABLE vendedor (
-    Insira seus comandos aqui!
-);
-
-CREATE TABLE fabricante (
-    Insira seus comandos aqui!
-);
-
-CREATE TABLE produto (
-    Insira seus comandos aqui!
-);
-
-CREATE TABLE pedido (
-    pedido_id INTEGER PRIMARY KEY,
-    
-    status_entrega TEXT NOT NULL,
-    
-    entregador_id INTEGER NOT NULL,
-    cliente_id INTEGER NOT NULL,
-    vendedor_id INTEGER NOT NULL,
-    produto_id INTEGER NOT NULL,
-
-    FOREIGN KEY (entregador_id) REFERENCES entregador(entregador_id),
-    FOREIGN KEY (cliente_id) REFERENCES cliente(cliente_id),
-    FOREIGN KEY (vendedor_id) REFERENCES vendedor(vendedor_id),
-    FOREIGN KEY (produto_id) REFERENCES produto(produto_id)
-);</code></pre>
-
-            <p>
-                Seu trabalho é completá-lo para que sejam adicionadas, as seguintes informações:
-            </p>
-
-            <ul>
-                <li>
-                    Entregador
-                    <ol>
-                        <li>ID do entregador - <code>entregador_id</code> - <code>(INTEGER)</code></li>
-                        <li>Nome do entregador responsável - <code>nome</code> - <code>(TEXT)</code></li>
-                        <li>Contato do entregador responsável - <code>contato</code> - <code>(TEXT)</code></li>
-                    </ol>
-                </li>
-                <li>
-                    Cliente
-                    <ol>
-                        <li>ID do cliente - <code>cliente_id</code> - <code>(INTEGER)</code></li>
-                        <li>Nome do cliente - <code>nome</code> - <code>(TEXT)</code></li>
-                        <li>Informações de contato do cliente - <code>contato</code> - <code>(TEXT)</code></li>
-                        <li>Endereço do cliente - <code>endereco_id</code> - <code>(INTEGER)</code></li>
-                    </ol>
-                </li>
-                <li>
-                    Vendedor
-                    <ol>
-                        <li>ID do vendedor - <code>vendedor_id</code> - <code>(INTEGER)</code></li>
-                        <li>Nome do vendedor - <code>nome</code> - <code>(TEXT)</code></li>
-                        <li>Contato do vendedor - <code>contato</code> - <code>(TEXT)</code></li>
-                    </ol>
-                </li>
-                <li>
-                    Fabricante
-                    <ol>
-                        <li>ID do fabricante - <code>fabricante_id</code> - <code>(INTEGER)</code></li>
-                        <li>Nome do fabricante - <code>nome</code> - <code>(TEXT)</code></li>
-                    </ol>
-                </li>
-                <li>
-                    Produto
-                    <ol>
-                        <li>ID do produto - <code>pedido_id</code> - <code>(INTEGER)</code></li>
-                        <li>Nome do produto - <code>nome</code> - <code>(TEXT)</code></li>
-                        <li>ID apontando para um fabricante - <code>fabricante_id</code> - <code>(INTEGER)</code></li>
-                        ->Considere que cada pedido entregará exclusivamente um produto<br>
-                        (Ou seja, é apenas uma <code>FOREIGN_KEY</code> apontando para um <code>produto(produto_id)</code>)</li>
-                    </ol>
-                </li>
-            </ul>
-
-            <p><strong>Sugestão:</strong></p>
-            <p>Você pode testar seu script em <a href="https://sqliteonline.com/">sqliteonline.com</a></p>
-            <p>E poderá ver graficamente as relações copiando e colando seu script em <a href="https://www.drawdb.app/">https://www.drawdb.app/</a></p>
-
-            <p>Para este exercício, você deverá apenas entregar o conjunto de comandos em um arquivo .sql,
-                e o diagrama gerado destas relações que você obteve de <a href="https://www.drawdb.app/">https://www.drawdb.app/</a>
-            </p>
-        </div>
-    </div>
-
-</body>
 </html>
