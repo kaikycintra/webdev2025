@@ -239,6 +239,11 @@ nav.extras-list {
     transform: translateY(-2px);
 }
 
+.extras-list .unavailable {
+    color: var(--disabled-text-color);
+    cursor: not-allowed;
+}
+
 .note {
         background-color: var(--note-bg);
         border-left: 5px solid var(--note-border);
