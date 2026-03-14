@@ -94,8 +94,7 @@ from fastapi.staticfiles import StaticFiles
 app = FastAPI()
 
 # Monta a pasta "static" na rota "/static"
-app.mount("/static", StaticFiles(directory="static"), name="static")
-        </code></pre>
+app.mount("/static", StaticFiles(directory="static"), name="static")</code></pre>
 
         <h3>Templating com Jinja2</h3>
         <p>
@@ -113,11 +112,10 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
         <p>
             Como o Jinja é uma biblioteca à parte, devemos instalá-lo com o pip:
         </p>
-        <pre><code class="language-bash">
-source &lt;nome_do_seu _ambiente_virtual&gt;/bin/activate # para linux
+        <pre><code class="language-bash">source &lt;nome_do_seu _ambiente_virtual&gt;/bin/activate # para linux
 echo jinja2 >> requirements.txt
-pip install -r requirements.txt
-        </code></pre>
+pip install -r requirements.txt</code></pre>
+
         <p class="note">
             É sempre bom lembrar de ativar o ambiente
             virtual e adicionar a dependência aos requisitos do nosso projeto!
@@ -134,8 +132,7 @@ from fastapi.templating import Jinja2Templates
 app = FastAPI()
 
 # Sintaxe recomendada: diretório como primeiro argumento posicional
-templates = Jinja2Templates(directory="templates")
-        </code></pre>
+templates = Jinja2Templates(directory="templates")</code></pre>
 
         <h3>2. Desvios Condicionais</h3>
         <p>Permite renderizar blocos de HTML apenas se uma condição for verdadeira (ex: verificar se um usuário é admin).</p>
@@ -148,8 +145,7 @@ def ver_perfil(request: Request, logado: bool = False):
     user = {"nome": "Rodrigo", "admin": True} if logado else None
     return templates.TemplateResponse(
         request=request, name="perfil.html", context={"user": user}
-    )
-        </code></pre>
+    )</code></pre>
 
         <strong>Template:</strong>
         <pre><code class="language-html">&lt;!-- Arquivo perfil.html --&gt;
@@ -161,8 +157,7 @@ def ver_perfil(request: Request, logado: bool = False):
     {% endif %}
 {% else %}
     &lt;p&gt;Por favor, faça login para acessar seu perfil.&lt;/p&gt;
-{% endif %}
-        </code></pre>
+{% endif %}</code></pre>
 
         <h3>3. For loop</h3>
         <p>Usado para percorrer listas, dicionários ou qualquer objeto iterável vindo do Python.</p>
@@ -175,8 +170,7 @@ def listar_posts(request: Request):
     db_posts = ["FastAPI com Jinja2", "Arquitetura REST", "HATEOAS na prática"]
     return templates.TemplateResponse(
         request=request, name="blog.html", context={"posts": db_posts}
-    )
-        </code></pre>
+    )</code></pre>
 
         <strong>Template:</strong>
         <pre><code class="language-html">&lt;!-- Arquivo blog.html --&gt;
@@ -187,8 +181,7 @@ def listar_posts(request: Request):
 {% else %}
     &lt;li&gt;Nenhum artigo publicado ainda.&lt;/li&gt;
 {% endfor %}
-&lt;/ul&gt;
-        </code></pre>
+&lt;/ul&gt;</code></pre>
 
         <h3>4. Herança de Templates (Extends/Block)</h3>
         <p>
@@ -207,8 +200,7 @@ def listar_posts(request: Request):
         
         &lt;footer&gt;Rodapé Padrão - 2024&lt;/footer&gt;
     &lt;/body&gt;
-&lt;/html&gt;
-        </code></pre>
+&lt;/html&gt;</code></pre>
 
         <strong>Filho:</strong>
         <pre><code class="language-html">&lt;!-- Arquivo home.html --&gt;
@@ -218,8 +210,7 @@ def listar_posts(request: Request):
 {% block conteudo %}
     &lt;h2&gt;Início&lt;/h2&gt;
     &lt;p&gt;Este conteúdo preenche o bloco 'conteudo' definido no layout.html.&lt;/p&gt;
-{% endblock %}
-        </code></pre>
+{% endblock %}</code></pre>
 
         <h2 id="js-requests">Fazendo requests</h2>
         <p>
@@ -251,8 +242,7 @@ usuarios_db = []
 @app.post("/usuarios")
 def criar_usuario(user: Usuario):
     usuarios_db.append(user.dict())
-    return {"usuario": user.nome}
-        </code></pre>
+    return {"usuario": user.nome}</code></pre>
 
         <h3>2. O Front-end</h3>
         <p>
@@ -264,8 +254,7 @@ def criar_usuario(user: Usuario):
             <li><strong>Body:</strong> Onde transformamos o objeto JS em uma string JSON usando <code>JSON.stringify()</code>.</li>
         </ul>
 
-        <pre><code class="language-javascript">
-async function enviarUsuario() {
+        <pre><code class="language-javascript">async function enviarUsuario() {
     const dados = {
         nome: document.getElementById('nome').value,
         bio: document.getElementById('bio').value
@@ -285,20 +274,17 @@ async function enviarUsuario() {
     } else {
         alert("Erro ao enviar!");
     }
-}
-        </code></pre>
+}</code></pre>
 
         <h3>3. Formulário HTML</h3>
         <p>
             Note que o botão usa <code>type="button"</code> e chama nossa função, em vez de um <code>type="submit"</code> tradicional que recarregaria a página.
         </p>
-        <pre><code class="language-html">
-&lt;form&gt;
+        <pre><code class="language-html">&lt;form&gt;
     &lt;input type="text" id="nome" placeholder="Nome"&gt;
     &lt;input type="text" id="bio" placeholder="Bio"&gt;
     &lt;button type="button" onclick="enviarUsuario()"&gt;Salvar via JS&lt;/button&gt;
-&lt;/form&gt;
-        </code></pre>
+&lt;/form&gt;</code></pre>
 
         <p class="note">
             <strong>Ponto de atenção:</strong> Quando usamos <code>fetch</code>, o back-end geralmente responde com JSON. Se você quiser atualizar a tela após o envio, precisará usar o JavaScript para manipular o DOM (ex: adicionar um novo <code>&lt;li&gt;</code> na lista).
@@ -319,8 +305,7 @@ async function enviarUsuario() {
         <h3>Exemplo: Logger de Performance</h3>
         <p>No exemplo abaixo, usamos o <code>call_next</code>, que é uma função que "passa a bola" para a próxima etapa (seja outro middleware ou a rota final).</p>
 
-        <pre><code class="language-python">
-import time
+        <pre><code class="language-python">import time
 import logging
 
 # Configuração básica de log para aparecer no terminal
@@ -343,8 +328,7 @@ response.headers["X-Process-Time"] = str(process_time)
 
 logger.info(f"Rota: {request.url.path} | Tempo: {process_time:.4f}s")
 
-return response
-        </code></pre>
+return response</code></pre>
 
     <h2 id="dependencies">Injeção de Dependências (Depends)</h2>
         <p>
@@ -413,8 +397,7 @@ def show_profile(request: Request, user: dict = Depends(get_active_user)):
         request=request, 
         name="profile.html", 
         context={"username": user["username"], "bio": user["bio"]}
-    )
-        </code></pre>
+    )</code></pre>
 
         <p class="note">
             <strong>Aviso de Segurança:</strong> Em aplicações reais, nunca guardamos o nome de usuário puro em um cookie (isso permitiria que qualquer um trocasse o nome no navegador e fingisse ser outra pessoa). Usamos <strong>Tokens Assinados (JWT)</strong> ou IDs de sessão aleatórios. Para saber mais, veja a seção de 

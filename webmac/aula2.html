@@ -48,14 +48,11 @@
         <p>Muitas linguagens de programação rodam lá no servidor, mas o <strong>JavaScript nos permitirá executar código no lado do cliente (diretamente no navegador)</strong>. Isso significa que, depois que a página carrega, podemos criar interações, animações e lógicas sem precisar ficar pedindo novas informações ao servidor a todo momento. É isso que permite que nossos sites se tornem interativos e rápidos.</p>
         <p>Para adicionar JavaScript à nossa página, podemos adicionar um par de tags <code>&lt;script&gt;</code> em algum lugar do nosso HTML. Usamos as tags <code>&lt;script&gt;</code> para sinalizar ao navegador que qualquer coisa escrita entre elas é um código JavaScript que queremos executar. Nosso primeiro programa pode se parecer com isso:</p>
         
-        <pre><code class="language-javascript">
-alert('Olá, MA0350!');
-        </code></pre>
+        <pre><code class="language-javascript">alert('Olá, MA0350!');</code></pre>
 
         <p>A função <code>alert</code> em JavaScript exibe uma mensagem ao usuário que pode então ser dispensada. Para mostrar onde isso se encaixaria em um documento HTML real, aqui está um exemplo de uma página simples com algum JavaScript:</p>
         
-        <pre><code class="language-html">
-&lt;!DOCTYPE html&gt;
+        <pre><code class="language-html">&lt;!DOCTYPE html&gt;
 &lt;html lang="pt"&gt;
     &lt;head&gt;
         &lt;title&gt;Olá&lt;/title&gt;
@@ -66,8 +63,7 @@ alert('Olá, MA0350!');
     &lt;body&gt;
         &lt;h1&gt;Olá!&lt;/h1&gt;
     &lt;/body&gt;
-&lt;/html&gt;
-        </code></pre>
+&lt;/html&gt;</code></pre>
 
         <h2 id="events">Eventos</h2>
 
@@ -76,17 +72,13 @@ alert('Olá, MA0350!');
         <p>Um evento pode ser quase qualquer coisa incluindo um botão sendo clicado, o cursor sendo movido, uma resposta sendo digitada ou uma página sendo carregada. Quase tudo que um usuário faz para interagir com uma página web pode ser considerado um evento. Em JavaScript, usamos <a href="https://www.w3schools.com/js/js_htmldom_eventlistener.asp">Ouvintes de Evento</a> que esperam por certos eventos ocorrerem e então executam algum código.</p>
         <p>Vamos começar transformando nosso JavaScript de antes em uma <a href="https://www.w3schools.com/js/js_functions.asp">função</a> chamada <code>ola</code>:</p>
         
-        <pre><code class="language-javascript">
-function ola() {
+        <pre><code class="language-javascript">function ola() {
     alert('Olá, mundo!')
-}
-        </code></pre>
+}</code></pre>
 
         <p>Agora, vamos fazer com que esta função seja executada quando um botão for clicado. Para isso, criaremos um botão HTML em nossa página com um atributo <code>onclick</code>, que dá ao navegador instruções sobre o que deve acontecer quando o botão é clicado:</p>
         
-        <pre><code class="language-html">
-&lt;button onclick="ola()"&gt;Clique Aqui&lt;/button&gt;
-        </code></pre>
+        <pre><code class="language-html">&lt;button onclick="ola()"&gt;Clique Aqui&lt;/button&gt;</code></pre>
 
         <p>Estas mudanças nos permitem esperar para executar partes do nosso código JavaScript até que certo evento ocorra.</p>
 
@@ -114,8 +106,7 @@ function ola() {
 
         <p>Para um exemplo de como podemos usar uma variável, vamos ver uma página que mantém um contador:</p>
         
-        <pre><code class="language-html">
-&lt;!DOCTYPE html&gt;
+        <pre><code class="language-html">&lt;!DOCTYPE html&gt;
 &lt;html lang="pt"&gt;
     &lt;head&gt;
         &lt;title&gt;Contador&lt;/title&gt;
@@ -131,8 +122,7 @@ function ola() {
         &lt;h1&gt;Olá!&lt;/h1&gt;
         &lt;button onclick="contar()"&gt;Contar&lt;/button&gt;
     &lt;/body&gt;
-&lt;/html&gt;
-        </code></pre>
+&lt;/html&gt;</code></pre>
 
         <h2 id="loopsandconditionals">Loops e Condicionais</h2>
 
@@ -147,8 +137,7 @@ function ola() {
             <li><code>===</code> (Igualdade estrita): Compara tanto o <strong>valor</strong> quanto o <strong>tipo primitivo</strong>. A boa prática é sempre utilizar este operador para evitar bugs silenciosos.</li>
         </ul>
 
-        <pre><code class="language-javascript">
-let numero = 10;
+        <pre><code class="language-javascript">let numero = 10;
 let texto = "10";
 
 // Evite usar a igualdade solta (==)
@@ -161,15 +150,13 @@ if (numero === texto) {
     console.log("Isso NÃO será impresso, pois os tipos diferem (Number vs String).");
 } else {
     console.log("Isso será impresso, pois o JavaScript validou corretamente!");
-}
-        </code></pre>
+}</code></pre>
 
         <h3 id="loops">Laços de Repetição (Loops)</h3>
 
         <p>Os laços <code>while</code>, <code>do...while</code> e o clássico <code>for</code> também operam como em C. A principal recomendação aqui é utilizar a palavra-chave <code>let</code> na declaração da variável iteradora dentro do <code>for</code>. Isso garante que a variável tenha um escopo de bloco e não exista fora do laço.</p>
 
-        <pre><code class="language-javascript">
-// Exemplo de laço FOR iterando e usando condicional
+        <pre><code class="language-javascript">// Exemplo de laço FOR iterando e usando condicional
 for (let i = 0; i &lt;= 10; i++) {
     // Imprimindo apenas os números pares
     if (i % 2 === 0) {
@@ -183,8 +170,7 @@ let contagem = 3;
 while (contagem > 0) {
     console.log(`Contagem regressiva: ${contagem}`);
     contagem--;
-}
-        </code></pre>
+}</code></pre>
 
         <h2 id="queryselector">querySelector</h2>
 
@@ -198,8 +184,7 @@ while (contagem > 0) {
 
         <p>Assim como em Python, também podemos aproveitar <a href="https://www.w3schools.com/js/js_if_else.asp">condições</a> em JavaScript. Por exemplo, digamos que ao invés de sempre mudar nosso cabeçalho para <code>Adeus!</code>, queremos alternar entre <code>Olá!</code> e <code>Adeus!</code>. Nossa página poderia então se parecer com a abaixo. Note que em JavaScript, usamos <code>===</code> como uma comparação mais forte entre dois itens que também verifica que os objetos são do mesmo tipo. Geralmente queremos usar <code>===</code> sempre que possível.</p>
         
-        <pre><code class="language-html">
-&lt;!DOCTYPE html&gt;
+        <pre><code class="language-html">&lt;!DOCTYPE html&gt;
 &lt;html lang="pt"&gt;
     &lt;head&gt;
         &lt;title&gt;Contador&lt;/title&gt;
@@ -219,15 +204,13 @@ while (contagem > 0) {
         &lt;h1&gt;Olá!&lt;/h1&gt;
         &lt;button onclick="ola()"&gt;Clique Aqui&lt;/button&gt;
     &lt;/body&gt;
-&lt;/html&gt;
-        </code></pre>
+&lt;/html&gt;</code></pre>
 
         <h2 id="dom-manipulation">Manipulação da DOM (Básico)</h2>
 
         <p>Vamos usar essa ideia de manipulação da DOM para melhorar nossa página de contador:</p>
 
-        <pre><code class="language-html">
-&lt;!DOCTYPE html&gt;
+        <pre><code class="language-html">&lt;!DOCTYPE html&gt;
 &lt;html lang="pt"&gt;
     &lt;head&gt;
         &lt;title&gt;Contador&lt;/title&gt;
@@ -243,21 +226,18 @@ while (contagem > 0) {
         &lt;h1&gt;0&lt;/h1&gt;
         &lt;button onclick="contar()"&gt;Contar&lt;/button&gt;
     &lt;/body&gt;
-&lt;/html&gt;
-        </code></pre>
+&lt;/html&gt;</code></pre>
 
         <p>Podemos tornar esta página ainda mais interessante exibindo um alerta toda vez que o contador chegar a um múltiplo de dez. Neste alerta, vamos formatar uma string para personalizar a mensagem, o que em JavaScript podemos fazer usando <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals">template literals</a>. Template literals requerem que haja crases (<code>`</code>) em torno de toda a expressão e um $ e chaves em torno de qualquer substituição. Por exemplo, vamos mudar nossa função contar:</p>
         
-        <pre><code class="language-javascript">
-function contar() {
+        <pre><code class="language-javascript">function contar() {
     contador++;
     document.querySelector('h1').innerHTML = contador;
         
     if (contador % 10 === 0) {
         alert(`Contagem está agora em ${contador}`)
     }
-}
-        </code></pre>
+}</code></pre>
 
         <p><em>Na próxima aula, aprenderemos a melhorar o design dessa página removendo os eventos de dentro do HTML e separando nosso JavaScript em arquivos dedicados!</em></p>
 

@@ -137,11 +137,9 @@
             Uma forma básica de organizá-las é através de um arquivo requirements.txt
         </p>
 
-        <pre><code class="language-bash">
-touch requirements.txt                     # cria o arquivo com dependências
+        <pre><code class="language-bash">touch requirements.txt                     # cria o arquivo com dependências
 echo fastapi[standard] > requirements.txt  # adiciona o pacote do fastapi no arquivo
-pip install -r requirements.txt            # instala dependências listadas no arquivo
-        </code></pre>
+pip install -r requirements.txt            # instala dependências listadas no arquivo</code></pre>
 
         <h2>Ambiente virtual de Python (sem pip)</h2>
         <p>
@@ -152,12 +150,10 @@ pip install -r requirements.txt            # instala dependências listadas no a
             Sempre leia código que você vai executar no terminal, e verifique endereços web e projetos
             utilizados. O arquivo python usado abaixo é especialmente suspeito por conta da execução de um blob binário.
         </div>
-        <pre><code class="language-bash">
-python3 -m venv --without-pip .venv
+        <pre><code class="language-bash">python3 -m venv --without-pip .venv
 source .venv/bin/activate
 wget https://bootstrap.pypa.io/get-pip.py && python3 get-pip.py
-pip install fastapi[standard]
-        </code></pre>
+pip install fastapi[standard]</code></pre>
 
         <h2>Rodando o FastAPI</h2>
 
@@ -170,8 +166,8 @@ app = FastAPI()
 
 @app.get("/")
 async def root():
-    return {"message": "Hello World"}
-        </code></pre>
+    return {"message": "Hello World"}</code></pre>
+
         <p>
             O arquivo acima declara um back-end extremamente simples. Ele tem apenas uma rota (ou URL), acessável pelo método GET.
             O código da rota (ou endpoint) retorna um dicionário que é transformado pelo FastAPI em um JSON, que pode ser
@@ -205,8 +201,8 @@ usuarios = ['Yuri', 'Rodrigo', 'Hugo']
 
 @app.get("/users/{index}")
 async def users(index):
-    return {"nome": usuarios[index]}
-        </code></pre>
+    return {"nome": usuarios[index]}</code></pre>
+
         <p>
             Temos agora uma API que pode consultar usuários guardados no servidor de aplicação. Para consultar um usuário,
             abrimos o navegador e entramos em <code>localhost:8000/users/{index}</code>, sendo index um número de 0 a 2 (para acessar a lista
@@ -232,8 +228,7 @@ usuarios = ['Yuri', 'Rodrigo', 'Hugo']
 
 @app.get("/users/{index}")
 async def users(index: int):
-    return {"nome": usuarios[index]}
-        </code></pre>
+    return {"nome": usuarios[index]}</code></pre>
 
         <p>
             Agora o FastAPI sabe como interpretar a variável index e faz o cast automatico para o seu tipo.
@@ -263,8 +258,7 @@ print(get_full_name("john", "doe"))
 def get_full_name(first_name: str, last_name: str):
     full_name = first_name.title() + " " + last_name.title()
     return full_name
-print(get_full_name("john", "doe"))
-        </code></pre>
+print(get_full_name("john", "doe"))</code></pre>
 
         <p>Os tipos básicos usados em anotação incluem:</p>
         <ul>
@@ -276,12 +270,10 @@ print(get_full_name("john", "doe"))
         <p>
             Importando o módulo <code>typing</code> conseguimos usar outros tipos em anotações, como o <code>Any</code>
         </p>
-        <pre><code class="language-python">
-from typing import Any
+        <pre><code class="language-python">from typing import Any
 
 def some_function(data: Any):
-    print(data)
-        </code></pre>
+    print(data)</code></pre>
 
         <p>
             Podemos também usar tipos genéricos, que aceitam outros tipos dentro:
@@ -292,8 +284,7 @@ def some_function(data: Any):
             <li><code>set</code></li>
             <li><code>dict</code></li>
         </ul>
-        <pre><code class="language-python">
-def process_items_list(items: list[str]):
+        <pre><code class="language-python">def process_items_list(items: list[str]):
     for item in items:
         print(item.capitalize())
 
@@ -303,22 +294,19 @@ def process_items_tuple(items_t: tuple[int, int, str], items_s: set[bytes]):
 def process_items_dict(prices: dict[str, float]):
     for item_name, item_price in prices.items():
         print(item_name)
-        print(item_price)
-        </code></pre>
+        print(item_price)</code></pre>
 
         <p>
             Caso uma variável possa ter mais de um tipo podemos declarar uma união de tipos:
         </p>
-        <pre><code class="language-python">
-def process_item(item: int | str):
+        <pre><code class="language-python">def process_item(item: int | str):
     print(item)
 
 def say_hi(name: str | None = None): # Aqui indicamos que name pode ser None
     if name is not None:
         print(f"Hey {name}!")
     else:
-        print("Hello World")
-        </code></pre>
+        print("Hello World")</code></pre>
 
         <p>
             Por fim, podemos declarar uma classe como o tipo de uma variável. Isso é especialmente útil
@@ -331,8 +319,7 @@ class Person:
         self.name = name
 
 def get_person_name(one_person: Person):
-    return one_person.name
-        </code></pre>
+    return one_person.name</code></pre>
         
         <p>
             Geralmente o comportamento do código não muda quando adicionamos type hints. O FastAPI, entretanto,
@@ -340,8 +327,8 @@ def get_person_name(one_person: Person):
             nas anotações de tipos. Com o Pydantic declaramos classes que serão instanciadas com valores externos
             que serão validados e convertidos automaticamente, como no exemplo abaixo:
         </p>
-        <pre><code class="language-python">
-from datetime import datetime
+
+        <pre><code class="language-python">from datetime import datetime
 from pydantic import BaseModel
 
 class User(BaseModel):
@@ -361,8 +348,7 @@ user = User(**external_data)
 print(user)
 # > User id=123 name='John Doe' signup_ts=datetime.datetime(2017, 6, 1, 12, 22) friends=[1, 2, 3]
 print(user.id)
-# > 123
-        </code></pre>
+# > 123</code></pre>
 
         <h2>Query parameters</h2>
         <p>
@@ -380,8 +366,7 @@ fake_items_db = [{"item_name": "Foo"}, {"item_name": "Bar"}, {"item_name": "Baz"
 
 @app.get("/items/")
 async def read_item(skip: int = 0, limit: int = 10):
-    return fake_items_db[skip : skip + limit]
-        </code></pre>
+    return fake_items_db[skip : skip + limit]</code></pre>
 
         <p>
             No endereço <code>http://127.0.0.1:8000/items/?skip=0&limit=10</code> os parâmetros são <code>skip</code> com valor
@@ -395,6 +380,7 @@ async def read_item(skip: int = 0, limit: int = 10):
             torna obrigatório.</strong>
         </p>
         <pre><code class="language-python"># Arquivo main.py
+
 from fastapi import FastAPI
 
 app = FastAPI()
@@ -402,8 +388,7 @@ app = FastAPI()
 @app.get("/items/{item_id}")
 async def read_user_item(item_id: str, needy: str):
     item = {"item_id": item_id, "needy": needy}
-    return item
-        </code></pre>
+    return item</code></pre>
 
         <h2>Corpo do request</h2>
         <p>
@@ -426,8 +411,7 @@ app = FastAPI()
 
 @app.post("/items/")
 async def create_item(item: Item):  # adicionamos a type hynt com a classe que criamos para instanciar um item
-    return item
-        </code></pre>
+    return item</code></pre>
 
         <p>
             Automaticamente o FastAPI fará
@@ -465,8 +449,7 @@ async def read_items():
             &lth1&gtLook ma! HTML!&lt/h1&gt
         &lt/body&gt
     &lt/html&gt
-    """
-        </code></pre>
+    """</code></pre>
 
         <h2>Concorrência e async/await</h2>
         <p>
@@ -483,12 +466,10 @@ async def read_items():
             <code>await</code> é associado à comunicação com componentes externos ao código ou processos demorados.
         </p>
         
-        <pre><code class="language-python">
-@app.get('/')
+        <pre><code class="language-python">@app.get('/')
 async def read_results():
     results = await some_library()
-    return results
-        </code></pre>
+    return results</code></pre>
         
         <p>
             Declarar funções com o <code>async</code> permite que o FastAPI otimize o servidor de aplicação para
@@ -510,8 +491,7 @@ async def read_results():
         <p>
             Abaixo está a página que vai ser enviada através da API e vai renderizar as respostas dos outros requests:
         </p>
-        <pre><code class="language-html">
-&lt!DOCTYPE html&gt
+        <pre><code class="language-html">&lt!DOCTYPE html&gt
 &lthtml lang="en"&gt
 &lthead&gt
     &ltmeta charset="UTF-8"&gt
@@ -662,8 +642,7 @@ async def read_results():
         &ltdiv id="json-insert"&gt&lt/div&gt
     &lt/div&gt
 &lt/body&gt
-&lt/html&gt
-        </code></pre>
+&lt/html&gt</code></pre>
         
         <!-- Prism.js JS -->
         <script src="https://cdn.jsdelivr.net/npm/prismjs/prism.min.js" defer></script>

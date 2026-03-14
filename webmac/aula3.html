@@ -44,12 +44,10 @@
         <p>Porém, esta mudança sozinha pode gerar um erro no console do navegador, pois o código JavaScript pode rodar antes do botão ter sido renderizado na tela:</p>
         <p>Para contornar isso, usamos a função <a href="https://www.w3schools.com/jsref/met_document_addeventlistener.asp">addEventListener</a>. Ela espera a página carregar (<code>DOMContentLoaded</code>) antes de executar o código:</p>
         
-        <pre><code class="language-javascript">
-document.addEventListener('DOMContentLoaded', function() {
+        <pre><code class="language-javascript">document.addEventListener('DOMContentLoaded', function() {
     // Agora é seguro buscar o botão
     document.querySelector('button').onclick = contar;
-});
-        </code></pre>
+});</code></pre>
 
         <h2 id="external-files">Arquivos Separados (.js)</h2>
 
@@ -64,14 +62,12 @@ document.addEventListener('DOMContentLoaded', function() {
         <p>Com JavaScript, também podemos mudar a estilização de uma página! Usamos atributos <code>data-ALGO</code> no HTML para guardar informações, e lemos isso via <code>dataset</code> no JS.</p>
         <pre><code class="language-html">&lt;button data-cor="red"&gt;Vermelho&lt;/button&gt;</code></pre>
         
-        <pre><code class="language-javascript">
-// Pegando todos os botões e mudando a cor do texto com base no data-cor
+        <pre><code class="language-javascript">// Pegando todos os botões e mudando a cor do texto com base no data-cor
 document.querySelectorAll('button').forEach(function(botao) {
     botao.onclick = function() {
         document.querySelector("#ola").style.color = botao.dataset.cor;
     }
-});
-        </code></pre>
+});</code></pre>
 
         <h3 id="console">Console do JavaScript</h3>
         
@@ -83,15 +79,13 @@ document.querySelectorAll('button').forEach(function(botao) {
         
         <p>O JavaScript moderno nos permite encurtar funções usando a sintaxe <strong>Arrow Function</strong> (<code>=&gt;</code>):</p>
         
-        <pre><code class="language-javascript">
-document.addEventListener('DOMContentLoaded', () =&gt; {
+        <pre><code class="language-javascript">document.addEventListener('DOMContentLoaded', () =&gt; {
     document.querySelectorAll('button').forEach(botao =&gt; {
         botao.onclick = () =&gt; {
             document.querySelector("#ola").style.color = botao.dataset.cor;
         }
     });
-});
-        </code></pre>
+});</code></pre>
         
         <p>Além do <code>onclick</code>, podemos ouvir <a href="https://www.w3schools.com/js/js_events.asp">inúmeros eventos</a> como <code>onchange</code> (útil para menus dropdown <code>&lt;select&gt;</code>), <code>onmouseover</code>, <code>onkeyup</code>, entre outros.</p>
 
@@ -99,8 +93,7 @@ document.addEventListener('DOMContentLoaded', () =&gt; {
 
         <p>Vamos juntar tudo criando uma lista de tarefas. Precisaremos ler um input, habilitar/desabilitar um botão (<code>disabled</code>) e criar novos elementos HTML (<code>createElement</code> e <code>append</code>).</p>
         
-        <pre><code class="language-javascript">
-document.addEventListener('DOMContentLoaded', () =&gt; {
+        <pre><code class="language-javascript">document.addEventListener('DOMContentLoaded', () =&gt; {
     const submit = document.querySelector('#submit');
     const novaTarefa = document.querySelector('#tarefa');
     submit.disabled = true;
@@ -126,23 +119,20 @@ document.addEventListener('DOMContentLoaded', () =&gt; {
 
         return false; // Previne a página de recarregar
     }
-});
-        </code></pre>
+});</code></pre>
 
         <h2 id="intervals">Intervalos</h2>
 
         <p>Podemos configurar funções para rodar repetidamente usando <code>setInterval</code>, que recebe a função a ser executada e o tempo (em milissegundos).</p>
         
-        <pre><code class="language-javascript">
-function contar() {
+        <pre><code class="language-javascript">function contar() {
     contador++;
     document.querySelector('h1').innerHTML = contador;
 }
 
 document.addEventListener('DOMContentLoaded', () =&gt; {
     setInterval(contar, 1000); // Roda a cada 1 segundo
-});
-        </code></pre>
+});</code></pre>
 
         <h2 id="local-storage">Local Storage (Salvando Dados)</h2>
 
@@ -153,8 +143,7 @@ document.addEventListener('DOMContentLoaded', () =&gt; {
             <li><code>localStorage.setItem(chave, valor)</code>: Salva um novo valor.</li>
         </ul>
         
-        <pre><code class="language-javascript">
-if (!localStorage.getItem('contador')) {
+        <pre><code class="language-javascript">if (!localStorage.getItem('contador')) {
     localStorage.setItem('contador', 0);
 }
             
@@ -168,8 +157,7 @@ function contar() {
 document.addEventListener('DOMContentLoaded', () =&gt; {
     document.querySelector('h1').innerHTML = localStorage.getItem('contador');
     document.querySelector('button').onclick = contar;
-});
-        </code></pre>
+});</code></pre>
 
         <p>Isso é tudo para nossa jornada nos fundamentos do JavaScript! Agora nossos sites ganharam memória e vida própria.</p>
 
