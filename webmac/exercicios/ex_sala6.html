@@ -9,7 +9,6 @@
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs/themes/prism-okaidia.min.css">
         <link rel="stylesheet" href="../../styles.css">
 
-
     </head>
 
     <body class="container">
@@ -37,50 +36,50 @@
                     Apenas por referência, a tabela de endereços e de pedidos já está criada, e você poderá se basear nelas para terminar seu trabalho.
                 </p>
 
-                <pre><code class="language-sql">CREATE TABLE entregador (
-        Insira seus comandos aqui!
-    );
+                <pre><code class="language-sql" style="margin-right: auto;">CREATE TABLE entregador (
+    Insira seus comandos aqui!
+);
 
-    CREATE TABLE cliente (
-        Insira seus comandos aqui!
-    );
+CREATE TABLE cliente (
+    Insira seus comandos aqui!
+);
 
-    CREATE TABLE endereco (
-        endereco_id INTEGER PRIMARY KEY,
-        rua TEXT NOT NULL,
-        numero TEXT NOT NULL,
-        bairro TEXT NOT NULL,
-        cidade TEXT NOT NULL,
-        cep TEXT NOT NULL
-    );
+CREATE TABLE endereco (
+    endereco_id INTEGER PRIMARY KEY,
+    rua TEXT NOT NULL,
+    numero TEXT NOT NULL,
+    bairro TEXT NOT NULL,
+    cidade TEXT NOT NULL,
+    cep TEXT NOT NULL
+);
 
-    CREATE TABLE vendedor (
-        Insira seus comandos aqui!
-    );
+CREATE TABLE vendedor (
+    Insira seus comandos aqui!
+);
 
-    CREATE TABLE fabricante (
-        Insira seus comandos aqui!
-    );
+CREATE TABLE fabricante (
+    Insira seus comandos aqui!
+);
 
-    CREATE TABLE produto (
-        Insira seus comandos aqui!
-    );
+CREATE TABLE produto (
+    Insira seus comandos aqui!
+);
 
-    CREATE TABLE pedido (
-        pedido_id INTEGER PRIMARY KEY,
-        
-        status_entrega TEXT NOT NULL,
-        
-        entregador_id INTEGER NOT NULL,
-        cliente_id INTEGER NOT NULL,
-        vendedor_id INTEGER NOT NULL,
-        produto_id INTEGER NOT NULL,
+CREATE TABLE pedido (
+    pedido_id INTEGER PRIMARY KEY,
+    
+    status_entrega TEXT NOT NULL,
+    
+    entregador_id INTEGER NOT NULL,
+    cliente_id INTEGER NOT NULL,
+    vendedor_id INTEGER NOT NULL,
+    produto_id INTEGER NOT NULL,
 
-        FOREIGN KEY (entregador_id) REFERENCES entregador(entregador_id),
-        FOREIGN KEY (cliente_id) REFERENCES cliente(cliente_id),
-        FOREIGN KEY (vendedor_id) REFERENCES vendedor(vendedor_id),
-        FOREIGN KEY (produto_id) REFERENCES produto(produto_id)
-    );</code></pre>
+    FOREIGN KEY (entregador_id) REFERENCES entregador(entregador_id),
+    FOREIGN KEY (cliente_id) REFERENCES cliente(cliente_id),
+    FOREIGN KEY (vendedor_id) REFERENCES vendedor(vendedor_id),
+    FOREIGN KEY (produto_id) REFERENCES produto(produto_id)
+);</code></pre>
 
                 <p>
                     Seu trabalho é completá-lo para que sejam adicionadas, as seguintes informações:
