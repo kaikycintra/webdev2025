@@ -7,7 +7,9 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Exercício de Sala - API de Alunos e Tarefas</title>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs/themes/prism-okaidia.min.css">
+        
         <style>
+
             :root {
                 --background-color: #292827; /* Nova cor de fundo */
                 --surface-color: #363636; /* Um pouco mais claro que o fundo para contraste */
@@ -160,6 +162,7 @@
                     max-height: 40px;
                 }
             }
+
         </style>
 
     </head>
@@ -197,51 +200,48 @@
         <div class="question_box">
             <p class="question_title">1. Modelagem com SQLModel</p>
             <p>Estruture os modelos e o relacionamento no banco de dados</p>
-            <p>Você deverá modelar 2 tabelas, cada uma com os seguintes parâmetros:</p>
+            <p>Você deverá modelar apenas 1 tabela, com os seguintes parâmetros:</p>
             <ul>
                 <li>Tabela de alunos:
                     <ul>
-                        <li>ID do aluno</li>
                         <li>nome</li>
                         <li>idade</li>
-                    </ul>
-                </li>
-                <li>Tabela de tarefas:
-                    <ul>
-                        <li>ID da tarefa</li>
-                        <li>nome da tarefa</li>
-                        <li>duração para fazer</li>
-                        <li>Chave estrangeira apontando para um aluno</li>
+                        <li>Acesso direto as tarefas - Veja as Dicas para descobrir como fazer isso</li>
                     </ul>
                 </li>
             </ul>
-            <p>Para facilitar, a propriedade do ID já foi implementada, e abaixo, segue um template do código que você deverá completar:</p>
-            <pre><code class="language-python">from typing import List
-# Use o List caso você opte por estabelecer a relação opcional entre aluno e tarefa
+            <p>Para facilitar, a propriedade do ID já foi implementada em uma tabela, e na outra, a tarefa já está totalmente implementada, segue um template do código que você deverá completar:</p>
+            <pre><code class="language-python">from typing import List 
+# Este import será importante em algum lugar...
+# Dica: Olhe as outras dicas : D
+
 
 from sqlmodel import Field, Relationship, SQLModel
 
 
 class Aluno(SQLModel, table=True):
-    id: int | None = Field(default=None, primary_key=True)
+    nusp: int | None = Field(default=None, primary_key=True)
     # Implemente aqui os registros para o nome e idade do aluno.
     
-    # Opcionalmente, você poderá criar uma propriedade 
-    # de uma lista de tarefas para este aluno.
-    # Caso faça isso, você poderá construir a sua API de forma simplificada
-    # retornando uma propriedade, ao invés de ter que estruturar uma consulta SQL.
+    #Atente-se a como a tarefa referência os alunos.
+    # 
+    # É só uma tarefa, ou são várias tarefas? 
+    # Pelo modelo de Tarefa, devemos preparar algo a mais
+    # para que possamos pegar o aluno pela tarefa?
     
+    # A dica está nos imports.
 
 
 class Tarefa(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
-    # Implemente aqui os registros para: 
-    # - nome; 
-    # - duração 
-    # - chave estrangeira para acesso ao aluno.
+    nome: str
+    duracao: int
+    aluno_nusp: int = Field(foreign_key="aluno.nusp")
 
-    # Opcionalmente, você poderá atribuir uma relação 
-    # que insira esta tarefa na lista de tarefas do aluno.</code></pre>
+    aluno: Aluno = Relationship(back_populates="tarefas")
+    # Dica numero 2: 
+    # "tarefas" deve ser o nome do atributo 
+    # que representa a relação no modelo Aluno</code></pre>
         </div>
 
         <div class="question_box">
@@ -251,19 +251,17 @@ class Tarefa(SQLModel, table=True):
                 <li>POST:
                     <ul>
                         <li>Adicionar alunos</li>
-                        <li>Adicionar tarefas</li>
                     </ul>
                 </li>
                 <li>GET:
                     <ul>
                         <li>Listar TODOS os alunos</li>
-                        <li>Listar TODAS as tarefas</li>
                         <li>Listar TODAS as tarefas de um aluno em específico</li>
                     </ul>
                 </li>
             </ul>
             <p>
-                Para adiantar a configuração básica tome o template abaixo com a estrutura básica já feita:
+                Para adiantar a configuração básica, use o template abaixo com a estrutura básica já feita, e algumas outras funções que poderão ser usadas como referência:
             </p>
             <pre><code class="language-python">from fastapi import FastAPI
 from sqlmodel import Session, select, SQLModel, create_engine
@@ -295,9 +293,10 @@ def criar_aluno(aluno: Aluno):
 @app.post("/tarefas")
 def criar_tarefa(tarefa: Tarefa):
     with Session(engine) as session:
-        # Implemente aqui os comandos para adicionar, salvar e depois
-        # como resposta da API: 
-        # retorne o objeto tarefa da forma em que ela foi salva no banco de dados.
+        session.add(tarefa)
+        session.commit()
+        session.refresh(tarefa)
+        return tarefa
 
 
 @app.get("/alunos")
@@ -311,22 +310,18 @@ def listar_alunos():
 @app.get("/tarefas")
 def listar_tarefas():
     with Session(engine) as session:
-        # Implemente aqui o comando para retornar: 
-        # A lista de TODAS as tarefas 
-        # cadastradas no banco de dados.
-        # Independente de quem seja o aluno.
+        return session.exec(select(Tarefa)).all()
 
-@app.get("/alunos/{aluno_id}/tarefas")
-def listar_tarefas_do_aluno(aluno_id: int):
+@app.get("/alunos/{aluno_nusp}/tarefas")
+def listar_tarefas_do_aluno(aluno_nusp: int):
     with Session(engine) as session:
         # Implemente aqui os comandos para retornar: 
         # A lista de tarefas associadas a um aluno.
 
-        # A depender da escolha de modelagem que você fez,
         # você pode fazer esta consulta tanto
         # através da estruturação de uma consulta normal SQL,
         # quanto simplesmente pegando o Aluno
-        # e retornando uma propriedade.</code></pre>
+        # e retornando a propriedade implementada anteriormente.</code></pre>
         </div>
 
         <p>
