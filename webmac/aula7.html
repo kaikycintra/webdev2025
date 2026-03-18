@@ -1,0 +1,1340 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+    
+    <head>
+
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Aula 7: Construindo uma API com dados</title>
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs/themes/prism-okaidia.min.css">    
+        <link rel="stylesheet" href="../styles.css">
+
+    </head>
+
+    <body class="container">
+
+        <h1>Aula 7: SQLModel e Integração com FastAPI</h1>
+
+        <h3><a href="../../index.html">Página inicial</a></h3>
+        
+        <h2>Conteúdos</h2>
+        <ul>
+            <li><a href="#introducao">Introdução</a></li>
+            <li><a href="#sql-model">SQLModel</a>
+                <ul>
+                    <li><a href="#como-usar-sqlmodel">Como usar o SQLModel?</a></li>
+                    <li><a href="#criando-tabelas-sqlmodel">Criando uma tabela</a>
+                        <ul>
+                            <li><a href="#exemplo-implementacao">Exemplo de implementação</a></li>
+                            <li><a href="#detalhes-implementacao">Detalhes de implementação</a></li>
+                            <li><a href="#inicializando-db">Inicializando o banco</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+            <li><a href="#relacoes">Relações entre dados</a>
+                <ul>
+                    <li><a href="#relacao-um-para-um">Relação Um para Um (1:1)</a></li>
+                    <li><a href="#relacao-um-para-muitos">Relação Um para Muitos (1:N)</a></li>
+                    <li><a href="#relacao-muitos-para-muitos">Relação Muitos para Muitos (N:M)</a></li>
+                </ul>
+            </li>
+            <li><a href="#integracao">Integração: FastAPI + SQLModel + SQLite</a>
+                <ul>
+                    <li><a href="#inicializando-api">Inicializando a API</a></li>
+                    <li><a href="#requisicoes-db">Criando requisições com banco</a></li>
+                    <li><a href="#rotas-post">Adicionando dados (POST)</a></li>
+                    <li><a href="#rotas-get">Obtendo dados (GET)</a></li>
+                    <li><a href="#rotas-patch">Atualizando dados (PATCH)</a></li>
+                    <li><a href="#rotas-delete">Apagando dados (DELETE)</a></li>
+                </ul>
+            </li>
+            <li><a href="#utilizacao">Usando APIs em páginas WEB</a>
+                <ul>
+                    <li><a href="#fetch-detalhes">Fetch em detalhes</a></li>
+                    <li><a href="#fetch-post">Exemplos com POST</a></li>
+                    <li><a href="#fetch-get">Exemplos com GET</a></li>
+                    <li><a href="#fetch-delete">Exemplos com DELETE</a></li>
+                    <li><a href="#fetch-patch">Exemplos com PATCH</a></li>
+                </ul>
+            </li>
+        </ul>
+        <ul>
+            <li><a href="#uso-resposta-api">Usando a resposta da API na página</a></li>
+            <ul>
+                <li><a href="#fetch-resultados">Resultados do Fetch</a></li>
+                <li><a href="#fetch-conversao">Conversão da resposta da API</a></li>
+                <li><a href="#fetch-exibicao">Exibindo as informações na página</a></li>
+            </ul>
+        </ul>
+        <li><a href="#paginas-fastapi-cors">Páginas no FastAPI e CORS</a></li>
+        <li><a href="#exercises">Exercícios</a></li>
+
+        <h2 id="introducao">Introdução</h2>
+
+        <p>Na aula passada, vimos mais sobre SQLite e sobre como podemos manipular nossos dados em um Banco de Dados Relacional.</p>
+
+        <p>Na aula anterior a essa, tivemos uma introdução ao FastAPI com alguns exemplos de como poderíamos receber requisições e, então, tomar ações a partir delas.</p>
+
+        <p>
+            Finalmente, na aula de hoje, iremos juntar tudo o que aprendemos para construir uma API
+            conectada a um banco de dados próprio. A API deverá receber diversas requisições e, então, 
+            tomar ações que podem envolver a criação, atualização, ou obtenção de dados de nosso banco.
+        </p>
+
+        <p>
+            Para facilitar nosso trabalho, existem diversas outras ferramentas e bibliotecas
+            que simplificam a manipulação do banco de dados, e aproximam da nossa visão
+            orientada a objetos que já estamos acostumados, uma delas, que veremos nesta aula é o <a href="#sql-model">SQLModel</a>
+        </p>
+
+        <h2 id="sql-model">SQLModel</h2>
+        <p>
+            <a href="https://sqlmodel.tiangolo.com">SQLModel</a> é uma biblioteca utilizada para interagir com Bases de Dados SQL
+            a partir de código em Python.
+        </p>
+        <p>
+            Na prática, o SQLModel cria uma <a href="#abstraction-definition">abstração</a> sobre o SQL que nos permite trabalhar com bancos de dados usando classes e objetos Python
+            em vez de consultas SQL diretas, possivelmente simplificando a construção e manutenção de nossa API.
+        </p>
+        
+        <div id="abstraction-definition" class="tip_box definition">
+            <div class="topLayer">
+                <img class="mini-icon" src="https://cdn-icons-png.flaticon.com/512/8653/8653193.png" alt="Ícone de definição">
+                <p class="tip_box_title">Definição</p>
+            </div>
+            <p class="tip_box_content  citation border-definition">
+                “Uma abstração é um conceito geral ou uma ideia ao invés de algo concreto e tangível.
+                Em computação, é uma versão simplificada de algo técnico, objetivando reduzir a complexidade
+                através da remoção de informações desnecessárias.”
+            </p>
+            <p class="tip_box_end">Fonte: <a href="https://techterms.com/definition/abstraction">TechTerms.com</a>, “Abstraction — Definition”.</p>
+        </div>
+
+        <h3 id="como-usar-sqlmodel">Como usar o SQLModel?</h3>
+
+        <p>
+            Vamos recapitular o que vimos da aula passada sobre SQL.
+        </p>
+
+        <p>O passo a passo para podermos manipular dados em um banco de dados é:</p>
+
+        <ol>
+            <li>Criar a tabela que representará os dados (o que costuma envolver):
+                <ul>
+                    <li>Definir os tipos de cada coluna</li>
+                    <li>Configurar propriedades das colunas (exemplo UNIQUE ou AUTOINCREMENT)</li>
+                    <li>Estabelecer, caso necessário, relação entre seus dados e outras tabelas.</li>
+                </ul>
+            </li>
+            <li>Povoar a tabela com os dados (o que costuma envolver):
+                <ul>
+                    <li>Fornecer as informações obrigatórias pedidas pela tabela</li>
+                    <li>Salvar no banco de dados</li>
+                </ul>
+            </li>
+            <li>Finalmente, fazer as consultas, atualizações e demais operações</li>
+        </ol>
+        
+        <p>Veremos em detalhes, como executar cada um destes passos a seguir.</p>
+
+        <h4 id="criando-tabelas-sqlmodel">Criando uma tabela com SQLModel</h4>
+
+        <p>
+            Desta parte em diante, como exemplo, continuaremos a trabalhar em
+            nossa API de cursos, mais especificamente, para entender melhor a
+            parte de relacionamentos entre tabelas, iremos por agora, definir
+            modelos que relacionem estudantes, aos cursos que eles estão matriculados.
+        </p>
+
+        <p>As informações básicas que um curso possui são:</p>
+
+        <ol>
+            <li>Nome do Curso</li>
+            <li>Código do Curso</li>
+            <li>Descrição do conteúdo</li>
+        </ol>
+
+        <p>E, as informações básicas que um aluno deve possuir são:</p>
+
+        <ol>
+            <li>Nome do Aluno</li>
+            <li>Email</li>
+            <!-- BIO removida para manter o exemplo introdutório mais simples -->
+        </ol>
+        
+        <p>Por simplicidade, não iremos abordar detalhes dos docentes.</p>
+
+        <p>Com os requisitos em mente, podemos finalmente modelar nossa tabela usando SQLModel.</p>
+
+        <div class="tip_box definition">
+            <div class="topLayer">
+                <img class="mini-icon" src="https://cdn-icons-png.flaticon.com/512/3891/3891935.png" alt="Ícone de Lâmpada">
+                <p class="tip_box_title">Verificação Rápida</p>
+            </div>
+            <p class="tip_box_content border-idea">
+                Anteriormente, definimos quais seriam as propriedades do aluno e do curso.
+                <br> 
+                Sabemos ainda que os alunos devem cursar um curso, ou seja, estabelecemos
+                também, uma relação entre ambos os elementos.
+                <br>
+                <strong>A pergunta que fica é:</strong>
+                <br>
+                Como poderíamos modelar a relação entre eles?
+                <br>
+                Alunos guardam informações sobre os cursos em que eles estão matriculados? Ou os cursos serão os responsáveis por guardar estas informações?
+            </p>
+            <p class="tip_box_end">
+                <strong>Sugestão:</strong> nem um, nem outro, podemos criar um outro objeto para abstrair a relação!
+                <br>
+                Similar ao que fizemos em MAC0444 (Baseados), com as relações entre indivíduos.
+            </p>
+        </div>
+
+        <p>
+            Para reforçar, lembre-se de que o SQLModel cria uma <a href="#abstraction-definition">abstração</a>
+            sobre as informações em nosso Banco de Dados através de <strong>Classes e Objetos</strong>.
+        </p>
+
+        <p>
+            Sabendo disso, podemos simplesmente criar 3 classes, uma para a Tabela de Alunos,
+            outra para a Tabela de Cursos, e uma última tabela que estabeleça a relação entre ambos.
+        </p>
+
+        
+        <h4 id="exemplo-implementacao">Exemplo de Implementação</h4>
+        
+        <pre><code class="language-python">from typing import List, Optional
+from sqlmodel import Field, Relationship, SQLModel
+
+class Matricula(SQLModel, table=True):
+    aluno_id: Optional[int] = Field(
+        default=None,
+        foreign_key="aluno.id",
+        primary_key=True,
+    )
+    curso_id: Optional[int] = Field(
+        default=None,
+        foreign_key="curso.id",
+        primary_key=True,
+    )
+
+class Aluno(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+
+    nome: str
+    email: str = Field(index=True, unique=True)
+
+    cursos: List["Curso"] = Relationship(
+        back_populates="alunos",
+        link_model=Matricula,
+    )
+    
+class Curso(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+
+    nome: str
+    codigo: str = Field(index=True, unique=True)
+    descricao: Optional[str] = None
+
+    alunos: List["Aluno"] = Relationship(
+        back_populates="cursos",
+        link_model=Matricula,
+    )</code></pre>
+
+            <h4 id="detalhes-implementacao">Detalhes de implementação</h4>
+
+            <p>
+                É muita informação de uma vez só para quem está vendo isso num primeiro momento, então vamos por partes:
+            </p>
+
+            <ul>
+                <li><code>Optional</code>:
+                    É um indicador de tipo que informa tanto para o programador, quanto para eventuais
+                    outros verificadores de tipo, que aquele parâmetro pode ser tanto de um tipo específico,
+                    neste caso, um inteiro (<code>int</code>), quanto pode ser <code>None</code>, no caso do Python.
+
+                    <br>
+
+                    Ele é frequentemente usado em campos como IDs, pois ao criar um objeto,
+                    o valor ainda não existe e será definido automaticamente pelo banco de dados.
+                </li>
+                <li><code>Field</code>: Corresponde a um campo da nossa tabela,
+                    é lá que especificamos informações úteis em nosso modelo como,
+                    se é algum tipo de chave, se é único, etc...
+                </li>
+                <li><code>Relationship</code>: Como o próprio nome sugere,
+                            é o que define a relação entre duas tabelas 
+                            (Essa parte é importante e veremos com mais detalhes em breve)
+                </li>
+                <li><code>primary_key</code> e <code>foreign_key</code>: 
+                    Configuram o conceito que vimos na última aula, se é um identificador próprio
+                    ou um apontador para outro dado de outra tabela respectivamente.
+                </li>
+                    <li><code>index</code>: Cria um índice no banco para acelerar consultas, especialmente com
+                        <code>WHERE</code> e <code>ORDER BY</code>. Dependendo do caso, índices também ajudam
+                        em <code>JOIN</code>, quando a junção envolve colunas indexadas.
+                    </li>
+                    <li>Mas e o <code>AUTOINCREMENT</code>?<br>
+                    Em SQLite, uma chave primária inteira normalmente recebe um valor automaticamente
+                    quando você insere uma linha sem informar o <code>id</code> (mecanismo de <code>rowid</code>).
+                    Na prática: deixe <code>id=None</code> no modelo e o valor aparecerá após o <code>commit()</code>
+                    (e você pode usar <code>refresh()</code> para recarregar o objeto).
+                    </li>
+            </ul>
+
+            <p>
+                E o último ponto que vale mencionar agora é que, você deve ter observado que na definição de todos os
+                modelos, herdamos o <code>SQLModel</code> e definimos <code>table=True</code>, 
+                sobre estes detalhes, iremos também por partes.
+            </p>
+
+            <ul>
+                <li><code>SQLModel</code>: é a classe-base de qualquer modelo de manipulação de dados usando SQLModel.
+                    Ao herdar dela, seu modelo passa a ter uma estrutura de dados bem definida e
+                    pode ser usada para manipular o banco.
+                </li>
+                <li><code>table=True</code>: indica que aquela classe deve ser tratada como uma tabela real no banco.
+                    Sem esse parâmetro, a classe pode ser usada apenas como esquema de dados (por exemplo, entrada/saída
+                    da API), mas não será criada como tabela pelo <code>SQLModel.metadata.create_all(...)</code> que veremos mais adiante.
+                </li>
+            </ul>
+
+            
+
+            <p>E com isso, seus modelos estão configurados e prontos para uso : )</p>
+            
+            <h4 id="inicializando-db">Inicializando o banco de dados</h4>
+
+            <p>Assim como fizemos no item anterior, vamos novamente pensar num passo a passo de como faríamos a inicialização sem considerar nenhuma biblioteca.</p>
+
+            <ol>
+                <li>Como o SQLite usa um arquivo para armazenar o banco, parece razoável que teremos que carregá-lo logo no começo.</li>
+
+                <li>Com o arquivo carregado, de alguma forma, caso o modelo não faça isso automaticamente, deveríamos garantir que as mesmas informações representadas no modelo, de fato existam no banco de dados.</li>
+
+            </ol>
+
+            <p>Utilizando o SQLModel, este procedimento corresponde aos passos de:</p>
+            <ol>
+                <li>Criar a engine</li>
+                <li>Criar as tabelas que, porventura, ainda não existam</li>
+            </ol>
+
+            <p>Que podemos descrever através do código a seguir:</p>
+
+            <pre><code class="language-python">from sqlmodel import SQLModel, create_engine, Session
+
+arquivo_sqlite = "aula7.db"
+url_sqlite = f"sqlite:///{arquivo_sqlite}"
+
+engine = create_engine(url_sqlite)
+
+def create_db_and_tables():
+    SQLModel.metadata.create_all(engine)</code></pre>
+
+        <div class="tip_box caution">
+            <div class="topLayer">
+                <img class="mini-icon" src="https://cdn-icons-png.flaticon.com/512/8832/8832119.png" alt="Ícone de correto">
+                <p class="tip_box_title">Boa Prática</p>
+            </div>
+
+            <p class="tip_box_content border-good-practice">
+                Um padrão comum é deixar a criação da <code>engine</code> e a dependência de sessão em um arquivo como <code>database.py</code>.
+                <br>
+                Além disso, em especial para projetos maiores, costumeiramente temos uma pasta dedicada aos modelos de dados, 
+                com arquivos exclusivos e dedicados a cada modelo.
+                <br>
+                Por simplicidade, estas linhas serão incluídas diretamente no <code>main.py</code>
+            </p>
+        </div>
+
+        <p>Novamente, detalhando cada um dos comandos utilizados aqui, temos:</p>
+
+        <ul>
+            <li><code>create_engine</code>: Cria o motor, ou o mecanismo, responsável por gerenciar as conexões e acessos ao banco de dados;</li>
+            <li><code>SQLModel.metadata.create_all</code>: Verifica todos os modelos criados e cria as tabelas correspondentes aos modelos que ainda não existem no banco.</li>
+            <li><code>Session</code>: Ainda não é utilizado por agora, mas será a interface que usaremos para nos comunicar com o banco de dados através do SQLModel</li>
+        </ul>
+
+        <p>
+            E com isso, finalmente fechamos a parte do SQLModel, para terminarmos a construção do nosso sistema de gerenciamento de cursos,
+            precisamos apenas configurar o FastAPI e definir rotas que manipulem o banco conforme forem necessárias.
+        </p>
+
+        <p>
+            Mas antes disso, ainda no assunto da modelagem, lembramos que a relação estabelecida neste exemplo é a <a href="#relacao-muitos-para-muitos">Relação Muitos para Muitos (N:M)</a>.
+            E existem algumas outras relações e padrões para implementação destas relações, veremos brevemente cada uma delas.
+        </p>
+
+        <h2 id="relacoes">Relações entre dados</h2>
+
+        <p>
+            Vimos na última aula, que uma das principais vantagens dos bancos de dados Relacionais,
+            é que podemos criar referências entre uma linha de uma tabela, com outra linha de outra tabela,
+            nos permitindo economizar espaço e simplificar informações repetidas em uma tabela.
+        </p>
+
+        <p>Ao todo, temos três tipos de relações principais:</p>
+        <ol>
+            <li>Um para um (1:1);</li>
+            <li>Um para muitos (1:N);</li>
+            <li>Muitos para muitos (N:M)</li>
+        </ol>
+
+        <p>
+            Em termos de modelagem, a diferença entre essas relações está em <strong>como a chave estrangeira é organizada</strong>
+            e em <strong>quantas ocorrências</strong> de um lado podem se ligar ao outro.
+        </p>
+
+        <p>A seguir, explicaremos cada uma destas relações em detalhes.</p>
+
+
+        <h3 id="relacao-um-para-um">Relação Um para Um (1:1)</h3>
+
+        <p>
+            Na relação 1:1, cada registro da tabela A se relaciona com no máximo um registro da tabela B,
+            e vice-versa. Um exemplo disso, pode ser a relação entre uma pessoa e seus documentos de identificação
+            como a relação entre <strong>Pessoa</strong> e <strong>RG</strong>:
+        </p>
+
+        <pre><code class="language-python">from typing import Optional
+from sqlmodel import Field, Relationship, SQLModel
+
+class Pessoa(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    nome: str
+
+    documento: Optional["RG"] = Relationship(back_populates="pessoa")
+
+
+class RG(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    rg: str = Field(unique=True)
+    pessoa_id: int = Field(foreign_key="pessoa.id", unique=True)
+
+    pessoa: Optional["Pessoa"] = Relationship(back_populates="documento")</code></pre>
+
+        <p>
+            Repare no <code>unique=True</code> em <code>pessoa_id</code> na tabela de RG
+            ele garante que cada pessoa não possa aparecer em mais de uma entrada da tabela de RGs.
+        </p>
+
+        <h3 id="relacao-um-para-muitos">Relação Um para Muitos (1:N)</h3>
+
+        <p>
+            Na Relação Um para Muitos (1:N), um registro da tabela principal se relaciona com vários registros da tabela dependente.
+            Um exemplo disso é a relação entre <strong>Estado</strong> e <strong>Cidade</strong>: um mesmo estado
+            pode possuir diversas cidades, mas cada cidade pertence a, no máximo, um único estado.
+        </p>
+
+        <pre><code class="language-python">from typing import List, Optional
+from sqlmodel import Field, Relationship, SQLModel
+
+class Estado(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    nome: str
+    sigla: str
+
+    cidades: List["Cidade"] = Relationship(back_populates="estado")
+
+
+class Cidade(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    nome: str
+    estado_id: int = Field(foreign_key="estado.id")
+
+    estado: Optional["Estado"] = Relationship(back_populates="cidades")</code></pre>
+
+        <p>
+            Nesse caso, a chave estrangeira fica na tabela do lado "muitos" (<code>Cidade</code>),
+            apontando para o lado "um" (<code>Estado</code>).
+        </p>
+
+        <h3 id="relacao-muitos-para-muitos">Relação Muitos para Muitos (N:M)</h3>
+
+        <p>
+            Na Relação Muitos para Muitos (N:M), vários registros de uma tabela podem se ligar a vários da outra.
+            Exemplo: um <strong>Aluno</strong> pode cursar várias <strong>Disciplinas</strong>,
+            e uma disciplina pode ter vários alunos.
+        </p>
+
+        <p>
+            Em SQLModel, representamos isso com uma <strong>tabela associativa</strong>
+            (também chamada de tabela de ligação, em SQLModel, é o link_model), contendo as chaves estrangeiras dos dois lados.
+        </p>
+
+        <pre><code class="language-python">from typing import List, Optional
+from sqlmodel import Field, Relationship, SQLModel
+
+class Matricula(SQLModel, table=True):
+    aluno_id: Optional[int] = Field(
+        default=None,
+        foreign_key="aluno.id",
+        primary_key=True,
+    )
+    disciplina_id: Optional[int] = Field(
+        default=None,
+        foreign_key="disciplina.id",
+        primary_key=True,
+    )
+
+
+class Aluno(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    nome: str
+
+    disciplinas: List["Disciplina"] = Relationship(
+        back_populates="alunos",
+        link_model=Matricula,
+    )
+
+
+class Disciplina(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    nome: str
+
+    alunos: List["Aluno"] = Relationship(
+        back_populates="disciplinas",
+        link_model=Matricula,
+    )</code></pre>
+
+        <p>
+            Esse padrão é o mais flexível quando precisamos registrar vínculos entre entidades
+            que se repetem dos dois lados.
+        </p>
+
+        <div class="tip_box caution">
+            <div class="topLayer">
+                <img class="mini-icon" src="https://cdn-icons-png.flaticon.com/512/8832/8832119.png" alt="Ícone de correto">
+                <p class="tip_box_title">Boa Prática</p>
+            </div>
+
+            <p class="tip_box_content border-good-practice">
+                No SQLModel, os relacionamentos funcionam da seguinte forma:
+                <br>
+                <strong>Um para Um (1:1)</strong> utiliza uma chave estrangeira com <code>unique=True</code>;
+                <br>
+                <strong>Um para Muitos (1:N)</strong> define a chave estrangeira no lado que possui vários registros;
+                <br>
+                E <strong>Muitos para Muitos (N:M)</strong> requer o uso de <code>link_model</code> por meio de uma tabela associativa.
+            </p>
+        </div>
+
+        <p>
+            E com isso, cobrimos todo o conhecimento necessário de SQLModel para começar a criar nossas APIs
+            utilizando o SQLModel como abstração para simplificar nosso projeto.
+        </p>
+
+        <h2 id="integracao">Integrando FastAPI + SQLModel + SQLite</h2>
+
+            <p>
+                Neste instante, já temos os modelos definidos e o código de inicialização
+                da nossa biblioteca de abstração de acesso ao banco de dados.
+            </p>
+
+            <p>
+                Para finalizar o sistema, basta preparar a API que nos permitirá acessar
+                e obter informações do banco de dados de estudantes.
+            </p>
+
+            <h3 id="inicializando-api">Inicializando a API</h3>
+
+            <p>
+                Além dos procedimentos de praxe para inicializar o FastAPI e definir as rotas,
+                precisamos garantir que a inicialização da API venha acompanhada da inicialização do SQLModel.
+            </p>
+
+            <p>
+                Para isso, podemos definir um evento de inicialização no FastAPI com
+                <code>@app.on_event("startup")</code> e, nele, executar a padronização dos modelos
+                com o banco de dados através da função <code>create_db_and_tables()</code>.
+            </p>
+
+            <p>Com isso, nosso código inicial da API com integração com o banco de dados ficaria da seguinte forma:</p>
+
+            <pre><code class="language-python">from fastapi import FastAPI
+from database import create_db_and_tables
+
+app = FastAPI()
+
+@app.on_event("startup")
+def on_startup() -> None:
+    create_db_and_tables()</code></pre>
+
+        <div class="tip_box caution">
+            <div class="topLayer">
+                <img class="mini-icon" src="https://cdn-icons-png.flaticon.com/512/1768/1768400.png" alt="Ícone de aviso">
+                <p class="tip_box_title">Observação</p>
+            </div>
+
+            <p class="tip_box_content border-warning">
+                Em versões recentes do FastAPI, <code>@app.on_event("startup")</code> pode ser considerado “legado”
+                em favor do padrão <code>lifespan</code>. Para fins didáticos, o exemplo continua válido e funciona,
+                mas vale a pena conhecer o <code>lifespan</code> quando estiver montando projetos maiores.
+                <br><br>O equivalente a esta versão com <code>lifespan</code> está dado abaixo:
+            </p>
+            <pre><code class="language-python">from contextlib import asynccontextmanager
+@asynccontextmanager
+async def initFunction(app: FastAPI):
+    # Executado antes da inicialização da API
+    create_db_and_tables()
+    yield
+    # Executado ao encerrar a API
+
+app = FastAPI(lifespan=initFunction)</code></pre>
+        </div>
+
+        <p>
+            E, daqui em diante, resta apenas configurar as requisições para realizar as operações do sistema,
+            envolvam elas o banco de dados ou não.
+        </p>
+
+        <h3 id="requisicoes-db">Criando requisições que envolvam o banco de dados</h3>
+
+            <p>Esta é a parte mais importante e o objetivo principal das últimas duas aulas. Também é a parte mais simples do processo, especialmente porque já vimos como o FastAPI funciona na semana passada.</p>
+
+        <p>Como exemplo, faremos com que nossa API aceite requisições para:</p>
+        <ul>
+            <li>criar alunos e cursos;</li>
+            <li>matricular alunos em cursos;</li>
+            <li>obter listas de alunos por curso;</li>
+            <li>consultar informações de cursos e alunos;</li>
+            <li>desfazer matrículas;</li>
+            <li>atualizar descrições de cursos.</li>
+        </ul>
+
+        <h4 id="rotas-post">Adicionando dados através da API</h4>
+
+        <p>
+            Para estas requisições, precisamos apenas ter uma instância que siga o modelo definido anteriormente
+            e, então, realizar operações de adição, registro e, eventualmente, atualização.
+        </p>
+
+        <p>Para exemplificar essas operações, temos o código abaixo:</p>
+
+        <pre><code class="language-python">@app.post("/alunos")
+def criar_aluno(aluno: Aluno):
+    with Session(engine) as session:
+        session.add(aluno)
+        session.commit()
+        session.refresh(aluno)
+        return aluno
+
+@app.post("/cursos")
+def criar_curso(curso: Curso):
+    with Session(engine) as session:
+        session.add(curso)
+        session.commit()
+        session.refresh(curso)
+        return curso
+
+@app.post("/matriculas")
+def matricular(aluno_id: int, curso_id: int):
+    with Session(engine) as session:
+        matricula = Matricula(
+            aluno_id=aluno_id,
+            curso_id=curso_id
+        )
+
+        session.add(matricula)
+        session.commit()
+
+        return matricula</code></pre>
+
+            <p>
+                Observe que esta seção de código passa a fazer uso dos modelos descritos
+                na seção de <a href="#criando-tabelas-sqlmodel">criação de tabelas com SQLModel</a>.
+                Com isso, precisamos importar esses modelos para poder modificá-los através da nossa API.
+                Ou seja, precisamos adicionar aos nossos imports:
+            </p>
+
+            <pre><code class="language-python">from models import Aluno, Curso, Matricula</code></pre>
+            
+            <p>Reforçando que, para propósitos deste exemplo, nossos 3 modelos estão em um arquivo chamado <code>models.py</code></p>
+            
+            <p>Entrando em detalhes com respeito aos comandos novos utilizados, temos:</p>
+
+            <ol>
+                <li><code>session.add</code>: Permite que preparemos um objeto para ser sincronizado com o banco de dados</li>
+                <li><code>session.refresh(objeto)</code>: Recarrega um <code>objeto</code> a partir do banco de dados com as informações que estão lá na hora.</li>
+                <li><code>session.get(Tabela, primary_key)</code>: Retorna uma informação de uma <code>Tabela</code> do banco de dados, dada sua <code>chave primária</code></li>
+                <li><code>session.commit()</code>: Registra todas as alterações feitas no banco de dados.</li>
+            </ol>
+
+            <p>
+                Você poderá testar o funcionamento do código e da API, 
+                acessando a página criada pelo <a href="http://127.0.0.1:8000/docs">FastAPI</a>
+                e, após criar alguns alunos e cursos por lá, poderá ver se as mudanças estão sendo refletidas no arquivo .db
+            </p>
+
+            <div class="tip_box caution">
+                <div class="topLayer">
+                    <img class="mini-icon" src="https://cdn-icons-png.flaticon.com/512/8832/8832119.png" alt="Ícone de correto">
+                    <p class="tip_box_title">Boa Prática</p>
+                </div>
+
+                <p class="tip_box_content border-good-practice">
+                    Durante os seus testes, especialmente os relacionados a matrícula, você deve ter reparado que é possível matricular
+                    alunos em cursos que não existem, para resolver este problema, é uma boa prática fazer a validação das suas operações
+                    antes de registrá-las e caso alguma coisa dê errado, retornar ao usuário uma mensagem de erro indicando o que aconteceu.
+                    <br><br>
+                    Neste exemplo, poderíamos, antes de fazer o <code>commit</code> da matrícula, adicionar as linhas:
+                    <br>
+                    <code>aluno = session.get(Aluno, aluno_id)</code>
+                    <br>
+                    <code>curso = session.get(Curso, curso_id)</code>
+                    <br>
+                    <code>if not aluno or not curso:</code>
+                    <br>
+                    <code>&nbsp;&nbsp;&nbsp;&nbsp;raise HTTPException(404, "Aluno ou curso não encontrado")</code>
+                    <br><br>
+                    Caso tenha tido curiosidade, o erro 404 é “Not Found” (não encontrado). Em alguns casos,
+                    você também pode preferir retornar 400 quando a requisição está mal formatada, ou os parâmetros são inválidos.
+                </p>
+            </div>
+
+            <h4 id="rotas-get">Obtendo dados através da API</h4>
+
+            <p>
+                Agora que temos como inserir informações, podemos ir para uma das operações mais simples
+                relacionadas ao banco de dados: a extração de informações.
+                Para isso, é importante saber quais informações existem, para então podermos buscá-las.
+            </p>
+            <p>
+                Como exemplo, iremos implementar requisições para obter informações de cursos específicos, informações de alunos específicos e, por último, obter a lista de alunos de algum curso. Segue o código de exemplo:
+            </p>
+
+            <pre><code class="language-python">@app.get("/cursos/{codigo}")
+def buscar_curso(codigo: str):
+    with Session(engine) as session:
+        query = select(Curso).where(Curso.codigo == codigo)
+        return session.exec(query).first()
+
+@app.get("/alunos")
+def buscar_alunos_por_nome(nome: Optional[str]):
+    with Session(engine) as session:
+        if nome:
+            query = select(Aluno).where(Aluno.nome.contains(nome))
+            return session.exec(query).all()
+
+        query = select(Aluno)
+        return session.exec(query).all()
+
+@app.get("/cursos/{codigo}/alunos")
+def alunos_do_curso(codigo: str):
+    with Session(engine) as session:
+        query = (
+            select(Aluno)
+            .join(Matricula, Matricula.aluno_id == Aluno.id)
+            .join(Curso, Matricula.curso_id == Curso.id)
+            .where(Curso.codigo == codigo)
+        )
+
+        return session.exec(query).all()</code></pre>
+
+            <p>Veja que agora, estamos fazendo uso do <code>select</code>, logo, precisamos também importar esta função,
+                com isso, nossa linha de imports do SQLModel estará da seguinte forma:
+            </p>
+            <pre><code class="language-python">from sqlmodel import SQLModel, create_engine, Session, select</code></pre>
+
+            <p>
+                Além da função <code>select</code>, estamos também fazendo uso de outros métodos cujo nome e funcionalidade
+                são parecidos com o SQL “puro”. Para revisão, vamos detalhar o que cada um faz:
+            </p>
+
+            <ol>
+                <li><code>select</code>: define “o que” estamos buscando (qual modelo/tabela, quais colunas etc.)</li>
+                <li><code>exec</code>: executa a query no banco e retorna um resultado que pode ser consumido com <code>first()</code> ou <code>all()</code></li>
+                <li><code>first</code> e <code>all</code>: retornam, respectivamente, o primeiro resultado (ou <code>None</code>) e a lista de todos os resultados</li>
+                <li><code>join</code>: Assim como vimos na aula anterior, é o que nos possibilita juntar informações de várias tabelas diferentes através das relações entre elas</li>
+                <li><code>where</code>: coloca condições sobre as informações que estamos buscando</li>
+            </ol>
+
+            <div class="tip_box caution">
+            <div class="topLayer">
+                <img class="mini-icon" src="https://cdn-icons-png.flaticon.com/512/1768/1768400.png" alt="Ícone de cuidado">
+                <p class="tip_box_title">Cuidado!</p>
+            </div>
+
+            <p class="tip_box_content border-warning">
+                Apesar de parecer contraintuitivo, não podemos retornar apenas o resultado da query com o <code>exec</code>
+                sem alguma das funções de seleção, independentemente da quantidade de resultados.
+                <br>Como já reforçado, <code>exec</code> retorna um resultado/objeto de iteração.
+                <br>Sem selecionar o dado final, a resposta da API poderia ficar parecida com o formato abaixo:
+            </p>
+            <pre><code class="language-json">{
+"_row_getter": null,
+"_memoized_keys": [
+    "_row_getter",
+    "_iterator_getter"
+],
+"_iterator_getter": {}
+}</code></pre>
+        </div>
+
+        <p>E com isso, cobrimos toda a parte fundamental da busca por informações no banco de dados utilizando nossa API : D</p>
+
+        <h4 id="rotas-patch">Atualizando dados através da API</h4>
+
+        <p>
+            Prosseguindo com as necessidades de nossa API de cursos, o próximo passo é permitir
+            a atualização da descrição do curso, seja por mudanças na ementa, no cronograma
+            ou por qualquer outra razão.
+        </p>
+
+        <p>
+            Assim como nos outros casos, a busca pelo curso será feita através do seu próprio código.
+            Então, de forma similar à requisição que busca as informações, iremos primeiro fazer a query para retornar o objeto do curso,
+            e então, alteraremos este objeto e enviaremos a atualização ao banco.
+        </p>
+
+        <p>A seguir, o código que realiza estas ações:</p>
+
+        <pre><code class="language-python">@app.patch("/cursos/{codigo}")
+def atualizar_descricao(codigo: str, descricao: str):
+    with Session(engine) as session:
+        query = select(Curso).where(Curso.codigo == codigo)
+        curso = session.exec(query).first()
+
+        if not curso:
+            raise HTTPException(404, "Curso não encontrado")
+
+        curso.descricao = descricao
+        session.add(curso)
+        session.commit()
+        session.refresh(curso)
+
+        return curso</code></pre>
+
+            <p>
+                Perceba que também utilizamos o <code>add</code> nesta requisição mesmo sem adicionar novas entradas ao banco,
+                isto porque, assim como mencionado antes, a função <code>add</code> é responsável apenas por marcar objetos para serem
+                <strong>sincronizados</strong> com o banco, o que pode incluir tanto a adição de dados, quanto atualização dos mesmos.
+                <br><br>
+                Como incluímos <code>HTTPException</code> no exemplo acima, lembre-se de importar também:
+                <br>
+                <pre><code class="language-python">from fastapi import HTTPException</code></pre>
+            </p>
+
+            <h4 id="rotas-delete">Apagando dados através da API</h4>
+
+            <p>
+                Para finalizar nossa API, a única requisição que devemos preparar é aquela que irá desfazer
+                a matrícula de alunos em cursos específicos.
+                Lembre-se: estamos utilizando uma tabela auxiliar para estabelecer a relação de matrícula entre alunos e cursos.
+                Consequentemente, ao apagarmos o dado que estabelece essa relação, o próprio sistema do SQLModel
+                se encarregará de atualizar as demais informações tanto para o aluno quanto para o curso.
+            </p>
+
+            <p>
+                Por simplicidade de uso, assim como viemos fazendo ao longo das últimas requisições,
+                iremos permitir que o usuário de nossa API busque um aluno através do seu nome e o curso através do seu código.
+                O código para esta operação se encontra a seguir:
+            </p>
+
+            <pre class="language-python"><code>@app.delete("/matriculas")
+def desfazer_matricula(nome_do_aluno: str, codigo_do_curso: str):
+    with Session(engine) as session:
+        curso = session.exec(select(Curso).where(Curso.codigo == codigo_do_curso)).first()
+        aluno = session.exec(select(Aluno).where(Aluno.nome == nome_do_aluno)).first()
+
+        if not curso or not aluno:
+            raise HTTPException(404, "Aluno ou curso não encontrado")
+        
+        query = select(Matricula).where(Matricula.aluno_id == aluno.id,
+                                        Matricula.curso_id == curso.id)
+        
+        matricula = session.exec(query).first()
+
+        if not matricula:
+            raise HTTPException(404, "Matrícula não encontrada")
+
+        session.delete(matricula)
+        session.commit()
+
+        return {"ok": True}</code></pre>
+
+            <div class="tip_box caution">
+            <div class="topLayer">
+                <img class="mini-icon" src="https://cdn-icons-png.flaticon.com/512/8832/8832119.png" alt="Ícone de correto">
+                <p class="tip_box_title">Boa Prática</p>
+            </div>
+
+            <p class="tip_box_content border-good-practice">
+                Para evitar que, após uma operação, tenhamos que verificar manualmente se ela foi realmente executada,
+                é comum estabelecer em nossas APIs métodos padronizados de feedback, seja ele positivo ou negativo,
+                como mencionamos no tratamento de erros.
+                <br>Neste exemplo, o <code>return {"ok": True}</code> corresponde à mensagem enviada ao usuário de que a exclusão foi feita com sucesso.
+            </p>
+        </div>
+
+        <h2 id="utilizacao">Usando APIs em páginas WEB</h2>
+
+            <p>
+                Até aqui, testamos nossa API principalmente pelo <code>/docs</code> do FastAPI.
+                Agora, vamos fazer uma página web simples consumir essa API usando JavaScript.
+            </p>
+
+            <p>
+                Para fazermos isso, nossa principal ferramenta será o método <a href="https://developer.mozilla.org/pt-BR/docs/Web/API/Fetch_API"><code>fetch</code></a> embutido no JavaScript,
+                este método recebe como parâmetros uma URL/Rota que nossa API entenda, e opcionalmente, dependendo
+                de qual operação desejamos fazer em nossa API, uma série de outros parâmetros para especificar o método,
+                o tipo de conteúdo que será enviado ou recebido, além é claro, do próprio conteúdo da requisição caso ele exista.
+            </p>
+
+            <p>
+                Por exemplo, para pedir a lista de alunos matriculados cadastrados através de nossa API,
+                poderíamos simplesmente usar o seguinte comando JavaScript:
+            </p>
+
+            <pre><code class="language-javascript">await fetch("/alunos")</code></pre>
+
+            <p>
+                Caso precise lembrar, estamos utilizando da definição de nossa API mostrada abaixo:
+            </p>
+
+            <pre><code class="language-python">@app.get("/alunos")
+def buscar_alunos_por_nome(nome: Optional[str]):
+    with Session(engine) as session:
+        if nome:
+            query = select(Aluno).where(Aluno.nome.contains(nome))
+            return session.exec(query).all()
+
+        query = select(Aluno)
+        return session.exec(query).all()</code></pre>
+
+            <p>Esta rota foi configurada quando explicamos <a href="#rotas-get">GET</a> anteriormente.</p>
+
+            <p>
+                Da forma como está, ao executarmos o fetch passando apenas a URL,
+                por padrão o comando executa o método <code>GET</code> com o corpo vazio, consequentemente,
+                <code>nome = null</code> e a API nos retornará uma lista de todos os alunos cadastrados.
+            </p>
+
+            <p>Ou seja, precisamos aprimorar ainda mais o uso deste comando para então podermos usar na página.</p>
+
+            <h3 id="fetch-detalhes">Fetch em detalhes</h3>
+
+            <p>
+                O <code>fetch</code> recebe dois argumentos principais: a <strong>URL</strong> da rota e um objeto de
+                <strong>configuração</strong> (opcional) com os parâmetros da requisição.
+            </p>
+
+            <ul>
+                <li><code>method</code>: define o método HTTP (<code>GET</code>, <code>POST</code>, <code>PATCH</code>, <code>DELETE</code>).</li>
+                <li><code>headers</code>: informa metadados da requisição (por exemplo, <code>Content-Type: application/json</code>).</li>
+                <li><code>body</code>: conteúdo enviado para a API, normalmente em JSON <strong>(não pode ser usado com <code>GET</code>)</strong>.</li>
+            </ul>
+            
+            <h4 id="fetch-post">Exemplos com o POST</h4>
+            
+            <p>Na prática, todos estes parâmetros podem ser usados, por exemplo, para fazer um <code>POST</code> em nossa API, como no exemplo abaixo:</p>
+
+
+            <pre><code class="language-javascript">await fetch("/alunos", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ nome: "gelano_dev", email: "gelano@codelab.br" })
+    });</code></pre>
+
+        <p>
+            Vale ressaltar que existem vários metadados possíveis de serem enviados através dos <code>headers</code>,
+            como por exemplo, podemos enviar metadados de autenticação, identificação de origem, especificação de formato, etc...
+        </p>
+
+        <p>Caso queira ver mais detalhes sobre <code>headers</code>, consulte a documentação oficial disponível em <a href="https://developer.mozilla.org/pt-BR/docs/Web/HTTP/Reference/Headers">https://developer.mozilla.org</a>.</p>
+
+        <p>Entretanto, estes exemplos já cobrem o básico que utilizaremos em nossa API.</p>
+
+        <p>Caso suba a API, acesse sua página de documentação e copie e cole este código, você irá acrescentar um novo aluno à base de dados.</p>
+
+        <h4 id="fetch-get">Mais exemplos com o GET</h4>
+
+        <p>
+            Na seção anterior, utilizamos a requisição para buscar por nome de aluno, mas não passamos
+            nome algum. Isso porque sabíamos que nossa API retornaria todos os nomes nessa situação. Mas, suponha agora
+            que queiramos buscar especificamente por <code>gelano_dev</code>: como faríamos isso, se não podemos passar dados pelo body?
+        </p>
+
+        <p>
+            Para operações GET, usualmente, passamos nossos parâmetros através da própria URL.
+        </p>
+        <p>
+            Por exemplo, se sabemos que o parâmetro solicitado pela API é o nome,
+            basta montar a rota da requisição GET no formato:
+        </p>
+        <pre><code class="language-javascript">await fetch("/alunos?nome=gelano_dev")</code></pre>
+            
+        <p>
+            E, com isso, especificamos que o parâmetro <code>nome</code> da função chamada pela API é <code>gelano_dev</code>.
+        </p>
+
+        <p>
+            Um outro exemplo disso, seria se fossemos buscar pelo código de um curso em específico,
+            caso precise lembrar, abaixo colocamos a definição da chamada de API para buscar o código de um curso.
+        </p>
+
+        <pre><code class="language-python">@app.get("/cursos/{codigo}")
+def buscar_curso(codigo: str):
+    with Session(engine) as session:
+        query = select(Curso).where(Curso.codigo == codigo)
+        return session.exec(query).first()</code></pre>
+
+        <p>Observe que, nesse caso, especificamos na própria rota onde a variável <code>codigo</code> é inserida.</p>
+
+        <p>
+            Isso muda ligeiramente a forma de montar o comando <code>fetch</code>.
+            No exemplo anterior, passamos o parâmetro pela estrutura <code>?nome=...</code>,
+            aqui passaremos o valor diretamente no caminho da rota, como se estivéssemos acessando uma página web.
+        </p>
+
+        <pre><code class="language-javascript">await fetch("/cursos/mac0350")</code></pre>
+
+        <div class="tip_box definition">
+            <div class="topLayer">
+                <img class="mini-icon" src="https://cdn-icons-png.flaticon.com/512/3891/3891935.png" alt="Ícone de Lâmpada">
+                <p class="tip_box_title">Conceito Rápido</p>
+            </div>
+            <p class="tip_box_content border-idea">
+                Quando nossa rota é do tipo <code>@app.get("/alunos")</code>, estamos usando o chamado <strong>Query Parameter</strong>,
+                que é quando passamos os parâmetros através do formato <code>?variavel=...</code>.
+                <br><br>
+                Quando nossa rota é do tipo <code>@app.get("/cursos/{codigo}")</code>, estamos usando o chamado <strong>Path Parameter</strong>,
+                em que o parâmetro é passado como se fosse o endereço de uma página web.
+            </p>
+            <p class="tip_box_end">
+                <strong>Reflexão:</strong> Quando usamos um, e quando usamos outro?
+            </p>
+        </div>
+
+            <div class="tip_box caution">
+            <div class="topLayer">
+                <img class="mini-icon" src="https://cdn-icons-png.flaticon.com/512/1768/1768400.png" alt="Ícone de cuidado">
+                <p class="tip_box_title">Cuidado!</p>
+            </div>
+
+            <p class="tip_box_content border-warning">
+                Quando, na API, definimos um parâmetro na rota como <strong>Path Parameter</strong>,
+                não podemos tentar passar esse mesmo dado no formato de <strong>Query Parameter</strong>, e vice-versa.
+                <br><br>
+                <strong>Pense bem na arquitetura de sua API antes de definir as rotas.</strong>
+            </p>
+        </div>
+
+        <h4 id="fetch-delete">Exemplos com o DELETE</h4>
+
+        <p>
+            Outro dos comandos comuns que segue esta mesma linha é o <code>DELETE</code>, sua utilização segue uma lógica similar
+            a uma mistura dos outros dois comandos anteriores, em que primeiro acessamos sua rota,
+            em seguida, passamos os parâmetros conforme a metodologia que definimos seja ela <strong>Query Parameter</strong> ou <strong>Path Parameter</strong> (assim como o <code>GET</code>).
+        </p>
+
+        <p>Por fim, especificamos o tipo de requisição (método) desejado, neste caso, <code>DELETE</code> (similar ao <code>POST</code>).</p>
+
+        <p>
+            Como exemplo, também veremos os dois tipos de <code>fetch</code> que podemos fazer.
+        </p>
+
+        <p>
+            Para fins de exemplificação, colocaremos abaixo duas novas requisições que seguem padrões diferentes, mas que fazem a exata mesma coisa.
+            Ambas removem um aluno do banco de dados, a diferença é que uma remove pelo nome, e a outra, pelo seu ID.
+        </p>
+
+        <pre><code class="language-python">@app.delete("/alunos")
+def deletar_aluno_por_nome(nome: str):
+    with Session(engine) as session:
+        aluno = session.exec(select(Aluno).where(Aluno.nome == nome)).first()
+        if not aluno:
+            raise HTTPException(404, "Aluno não encontrado")
+
+        matriculas = session.exec(
+            select(Matricula).where(Matricula.aluno_id == aluno.id)
+        ).all()
+
+        for matricula in matriculas:
+            session.delete(matricula)
+
+        session.delete(aluno)
+        session.commit()
+
+        return {"ok": True, "mensagem": "Aluno removido com sucesso"}
+
+@app.delete("/alunos/{aluno_id}")
+def deletar_aluno_por_id(aluno_id: int):
+    with Session(engine) as session:
+        aluno = session.get(Aluno, aluno_id)
+        if not aluno:
+            raise HTTPException(404, "Aluno não encontrado")
+
+        matriculas = session.exec(
+            select(Matricula).where(Matricula.aluno_id == aluno_id)
+        ).all()
+
+        for matricula in matriculas:
+            session.delete(matricula)
+
+        session.delete(aluno)
+        session.commit()
+
+        return {"ok": True, "mensagem": "Aluno removido com sucesso"}</code></pre>
+
+        <p>
+            E neste caso, observe que na primeira: <code>deletar_aluno_por_nome</code>, estamos no caso em que configuramos puramente por
+            <strong>Query Parameters</strong>, portanto, nosso comando de <code>fetch</code> seguirá o seguinte padrão:
+        </p>
+
+            <pre><code class="language-javascript">await fetch('/alunos?nome=gelano_dev', {
+        method: "DELETE"
+    })</code></pre>
+
+        <p>
+            A principal diferença em relação ao <code>GET</code> é que agora precisamos especificar
+            o método <code>DELETE</code>.
+        </p>
+
+        <p>
+            Analogamente, no segundo caso com <strong>Path Parameters</strong>,
+            a diferença em relação ao <code>GET</code> continua sendo a especificação do método <code>DELETE</code>.
+        </p>
+
+        <pre><code class="language-javascript">await fetch('/alunos/1', {
+        method: "DELETE"
+    })</code></pre>
+
+        <h4 id="fetch-patch">Exemplos com o PATCH</h4>
+
+        <p>
+            Por fim, seguindo uma lógica similar às anteriores, temos o <code>PATCH</code>.
+            A principal diferença dele para os demais, em especial para o <code>POST</code>,
+            é que normalmente não enviamos todos os parâmetros, já que nem sempre precisamos atualizar todos os campos de uma vez.
+        </p>
+
+        <p>
+            Em outras palavras: no <code>PATCH</code>, enviamos apenas o que realmente será alterado.
+            Se queremos mudar só o email, não precisamos reenviar nome, id e todos os outros campos.
+        </p>
+
+        <p>
+            Abaixo, um exemplo com <strong>Query Parameters</strong>, atualizando um aluno pelo nome exato:
+        </p>
+
+        <pre><code class="language-python">@app.patch("/alunos")
+def atualizar_aluno_por_nome_exato(
+    nome_exato: str,
+    nome_novo: Optional[str],
+    email_novo: Optional[str],
+):
+    with Session(engine) as session:
+        aluno = session.exec(select(Aluno).where(Aluno.nome == nome_exato)).first()
+        if not aluno:
+            raise HTTPException(404, "Aluno não encontrado")
+
+        if nome_novo is not None:
+            aluno.nome = nome_novo
+        if email_novo is not None:
+            aluno.email = email_novo
+
+        session.add(aluno)
+        session.commit()
+        session.refresh(aluno)
+
+        return aluno</code></pre>
+
+        <p>Nesse caso, a chamada com <code>fetch</code> fica assim:</p>
+
+        <pre><code class="language-javascript">await fetch('/alunos?nome_exato=gelano_dev&email_novo=gelano2@codelab.br', {
+        method: "PATCH"
+    })</code></pre>
+
+        <p>
+            Uma variação desse mesmo caso é enviar os campos de atualização no <code>body</code>
+            (em vez de passar tudo pela URL). A ideia é a mesma, apenas muda onde colocamos os dados.
+        </p>
+
+        <pre><code class="language-javascript">await fetch('/alunos', {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            nome_exato: "gelano_dev",
+            email_novo: "gelano2@codelab.br"
+        })
+    })</code></pre>
+
+        <p>
+            Já no caso de <strong>Path Parameter</strong>, podemos seguir exatamente o padrão da rota
+            já definida anteriormente na aula:
+        </p>
+
+        <pre><code class="language-python">@app.patch("/cursos/{codigo}")
+def atualizar_descricao(codigo: str, descricao: str):
+    with Session(engine) as session:
+        query = select(Curso).where(Curso.codigo == codigo)
+        curso = session.exec(query).first()
+
+        if not curso:
+            raise HTTPException(404, "Curso não encontrado")
+
+        curso.descricao = descricao
+        session.add(curso)
+        session.commit()
+        session.refresh(curso)
+
+        return curso</code></pre>
+
+        <p>Nesse cenário, o <code>fetch</code> correspondente pode ser:</p>
+
+        <pre><code class="language-javascript">await fetch('/cursos/mac0350?descricao=Curso%20atualizado', {
+        method: "PATCH"
+    })</code></pre>
+
+        <p>
+            Como alternativa, também podemos manter o <strong>Path Parameter</strong> para identificar o curso
+            e enviar o novo valor no <code>body</code> da requisição:
+        </p>
+
+        <pre><code class="language-javascript">await fetch('/cursos/mac0350', {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ descricao: "Curso atualizado" })
+    })</code></pre>
+
+        <p>
+            Esse formato costuma ser útil quando a atualização começa a envolver mais de um campo,
+            pois evita URLs muito longas.
+        </p>
+
+        <p>
+            Repare que a estrutura da URL muda conforme a rota definida na API,
+            mas em todos os casos a ideia do <code>PATCH</code> continua a mesma:
+            atualizar apenas os campos necessários.
+        </p>
+
+        <p>
+            Note também que neste caso, usamos <strong>Path Parameters</strong> junto com <strong>Query Parameters</strong>,
+            e na prática, essa combinação é possível até mesmo em outros métodos, e apenas depende da arquitetura da sua API.
+        </p>
+
+        <h3 id="uso-resposta-api">Usando a resposta da API na página</h3>
+
+        <p>
+            Até aqui, aprendemos a enviar requisições. O próximo passo é entender exatamente
+            <strong>o que o <code>fetch</code> retorna</strong> e como transformar isso em informação útil na interface.
+        </p>
+
+        <h4 id="fetch-resultados">Resultados do Fetch</h4>
+
+        <p>
+            Quando fazemos apenas:
+        </p>
+
+        <pre><code class="language-javascript">const resposta = await fetch('/alunos?nome=gelano_dev');</code></pre>
+
+        <p>
+            o valor de <code>resposta</code> não é ainda o aluno em si, e sim um objeto do tipo
+            <a href="https://developer.mozilla.org/pt-BR/docs/Web/API/Response"><code>Response</code></a>
+            (metadados da resposta HTTP), com informações como status, headers e corpo bruto.
+        </p>
+
+        <p>
+            Se tentarmos jogar esse objeto diretamente na tela, não teríamos a informação esperada.
+        </p>
+
+        <p><img src="../static/webmac/aula6-7/exemplo_fetch_sem_json.png" alt="Exemplo de saída da página usando apenas fetch sem converter a resposta"></p>
+
+        <h4 id="fetch-conversao">Conversão da resposta da API</h4>
+
+        <p>
+            Para acessar os dados reais, precisamos ler o corpo da resposta e convertê-lo para JSON,
+            usando <a href="https://developer.mozilla.org/pt-BR/docs/Web/API/Response/json"><code>response.json()</code></a>:
+        </p>
+
+        <pre><code class="language-javascript">const dados = await resposta.json();</code></pre>
+
+        <p>
+            O <code>json()</code> também é assíncrono, por isso usamos <code>await</code> de novo.
+            Em termos simples: o navegador ainda vai processar/ler o corpo da resposta,
+            então precisamos esperar esse passo terminar antes de acessar os campos.
+        </p>
+
+        <p>
+            Depois disso, <code>dados</code> passa a conter o conteúdo da API já convertido,
+            por exemplo uma lista de alunos.
+        </p>
+
+        <h4 id="fetch-exibicao">Exibindo as informações na página</h4>
+
+        <p>Agora, com os dados convertidos, o próximo passo é capturar cada informação e atribuí-la à posição correta na página.</p>
+
+        <pre><code class="language-javascript">const resposta = await fetch('/alunos?nome=gelano_dev');
+const dados = await resposta.json();
+
+const aluno = dados[0];
+
+document.getElementById('nomeAluno').innerText = aluno.nome;
+document.getElementById('idAluno').innerText = aluno.id;
+document.getElementById('emailAluno').innerText = aluno.email;</code></pre>
+
+        <p>Aplicando este código numa página com uma estrutura HTML conforme mostrada abaixo, teremos enfim uma visualização amigável dos dados para o usuário.</p>
+
+        <pre><code class="language-html">&lt;p&gt;&lt;strong&gt;Nome:&lt;/strong&gt; &lt;span id="nomeAluno"&gt;&lt;/span&gt;&lt;/p&gt;
+    &lt;p&gt;&lt;strong&gt;ID:&lt;/strong&gt; &lt;span id="idAluno"&gt;&lt;/span&gt;&lt;/p&gt;
+    &lt;p&gt;&lt;strong&gt;Email:&lt;/strong&gt; &lt;span id="emailAluno"&gt;&lt;/span&gt;&lt;/p&gt;</code></pre>
+
+        <p><img src="../static/webmac/aula6-7/exemplo_formatado_na_pagina.png" alt="Exemplo de dados extraidos da resposta JSON e exibidos na pagina"></p>
+
+        <h3 id="paginas-fastapi-cors">Páginas declaradas no FastAPI e CORS</h3>
+
+        <p>
+            Em projetos simples, é comum declarar no próprio FastAPI uma rota que devolve a página HTML,
+            por exemplo a rota <code>/</code>. Assim, backend e frontend rodam no mesmo servidor.
+        </p>
+
+        <pre><code class="language-python">from fastapi.responses import FileResponse
+
+@app.get("/")
+def pagina_inicial():
+    return FileResponse("./sua_pagina.html")</code></pre>
+        
+        <p>Lembre-se, nesta estrutura, <code>sua_pagina.html</code> deverá estar no mesmo diretório em que a sua API foi invocada, e não necessariamente onde o código de sua API está.</p>
+
+        <p>
+            Quando a página é servida pela mesma origem da API (mesmo protocolo, host e porta),
+            as chamadas com <code>fetch("/rota")</code> funcionam de forma direta.
+        </p>
+
+        <p>
+            Sobre <code>CORS</code>: ele é uma política de segurança do navegador para chamadas entre origens diferentes.
+            Em CORS, "origem" significa a combinação de <strong>protocolo + host + porta</strong>
+            (por exemplo, <code>http://127.0.0.1:8000</code>).
+        </p>
+
+        <p>
+            Então, se seu frontend estiver em <code>http://127.0.0.1:5500</code> e sua API em
+            <code>http://127.0.0.1:8000</code>, já são origens diferentes por causa da porta.
+            Nessa situação, o navegador pode bloquear as requisições até que você configure CORS na API.
+        </p>
+
+        <p>
+            No FastAPI, isso é feito com o middleware <a href="https://fastapi.tiangolo.com/tutorial/cors/">CORSMiddleware</a>, liberando apenas as origens necessárias.
+            Em desenvolvimento, às vezes usamos <code>"*"</code> para testes rápidos; em produção,
+            o ideal é restringir para os domínios reais da aplicação.
+        </p>
+
+        <p>Isso é tudo para esta aula ;)</p>
+
+        <h2 id="exercises">Exercícios</h2>
+        <ul>
+            <li><a href="exercicios/ex_sala7.html">Exercício de Sala</a></li>
+        </ul>
+
+        <script src="https://cdn.jsdelivr.net/npm/prismjs/prism.min.js" defer></script>
+        <script src="https://cdn.jsdelivr.net/npm/prismjs/plugins/autoloader/prism-autoloader.min.js" defer></script>
+
+    </body>
+
+</html>

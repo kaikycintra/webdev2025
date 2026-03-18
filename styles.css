@@ -320,6 +320,10 @@ nav.extras-list {
     margin: 0;
 }
 
+.tip_box pre {
+    margin: 1.5em;
+}
+
 .citation {
     font-style: italic;
 }
