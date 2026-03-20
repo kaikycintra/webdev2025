@@ -134,7 +134,7 @@
 
             <p>De forma básica, frameworks de front-end diferem de frameworks de back-end pois são voltados para o cliente ao invés do servidor. A principal funcionalidade desse tipo de framework é a atuaização da página com base nas mudanças dos dados.</p>
             <p>Um exemplo de sua funcionalidade client-side é o like das redes sociais. Em um framework de front-end, ao clicar no like, instantanemente é atualizado o ícone do like sem que seja preciso acionar o back-end ou atualizar toda a página.</p>
-            <p>Frameworks de back-end, como o ,<code>FastAPI</code> ou <code>Django</code>, utilizam Server-Side Rendering, ou seja, o servidor faz todo o processamento e envia o HTML completo para o browser. Já frameworks de front-end utilizam Client-Side Rendering: O servidor envia apenas um pouco de HTML e muito JavaScript para que o próprio browser possa construir a página a ser visualizada.</p>
+            <p>Frameworks de back-end, como o, <code>FastAPI</code> ou <code>Django</code>, utilizam Server-Side Rendering, ou seja, o servidor faz todo o processamento e envia o HTML completo para o browser. Já frameworks de front-end utilizam Client-Side Rendering: O servidor envia apenas um pouco de HTML e muito JavaScript para que o próprio browser possa construir a página a ser visualizada.</p>
             <p>Alguns frameworks de front-end conhecidos são: <code>React</code>, <code>Angular</code>, <code>Vue</code>, ...</p>
             <p>Muitos dos benefícios e malefícios dos frameworks de front-end quando comparados aos de back-end se assemelham a comparação de MPAs e SPAs. React e Angular são ótimos para criar SPAs, aplicações mais dinâmicas e com mais interatividade com o usuário, enquanto FastAPI e Django são melhores para aplicações que requerem muito processamento de dados.</p>
             <p>Atualmente, é comum que aplicações web utilizem ambos os tipos de frameworks, aproveitando os pontos positivos de cada um para que o produto final seja capaz de performar em situações mais gerais.</p>
@@ -208,7 +208,7 @@ export default ExemploRequisicao;</code></pre>
         &lt;p&gt;Bem vindo ao meu site!&lt;/p&gt;
         &lt;nav&gt;
             &lt;button hx-get="/home/pagina1"
-                    hx-target="main"
+                    hx-target="main"&gt;
                 Página 1
             &lt;/button&gt;
             &lt;button hx-get="/home/pagina2"
@@ -477,7 +477,7 @@ def atualizar_aluno(id: int = Form(...), novoNome: str = Form(...)):
             <ol>
                 <li>O <code>hx-get</code> faz um request para <code>/lista.</code></li>
                 <li>O <code>hx-target</code> indica que a resposta desse request deve ser inserida na div com id='lista'.</li>
-                <li>O <code>hx-trigger</code> indica o que dispara o request. No caso, o request será feito toda vez que o input mudar (<code>input changed</code>), ou seja ,toda vez que for adicionada ou removida uma letra da caixa de texto, sem precisar apertar o 'Enter'.</li>
+                <li>O <code>hx-trigger</code> indica o que dispara o request. No caso, o request será feito toda vez que o input mudar (<code>input changed</code>), ou seja, toda vez que for adicionada ou removida uma letra da caixa de texto, sem precisar apertar o 'Enter'.</li>
                 <ul>
                     <li>O complemento <code>delay:500ms</code> faz com que o request seja apenas disparado 500ms após o término da digitação. Isso previne uma mudança "epilética" da lista e faz com que nossa busca atue como esperado.</li>
                 </ul>
