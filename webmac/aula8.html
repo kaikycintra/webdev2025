@@ -5,7 +5,7 @@
 
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Aula 8: HTMX</title>
+        <title>Aula 8: Introdução ao HTMX</title>
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
@@ -91,7 +91,7 @@
 
         <div>
 
-            <h1>Aula 8: HTMX</h1>
+            <h1>Aula 8: Introdução ao HTMX</h1>
 
             <h3><a href="../../index.html">Página inicial</a></h3>
 
@@ -104,7 +104,7 @@
 
                 <li><a href="#Introducao">Introdução</a></li>
                 <li><a href="#crud">CRUD</a></li>
-                <li><a href="#rest">REST e HATEOAS</a></li>
+                <li><a href="#rest">REST</a></li>
                 <li><a href="#spa">MPA e SPA</a></li>
                 <li><a href="#ajax">AJAX</a></li>
                 <li><a href="#htmx">HTMX</a></li>
@@ -131,9 +131,16 @@
         </div>
 
         <div id="rest">
-            <h2>REST e HATEOAS</h2>
-            <p>REST (Representational State Transfer) é um estilo de arquitetura de software para APIs que se utiliza de hipermídia para que o cliente receba uma resposta que ele possa renderizar sem que tenha informações sobre a API.</p>
-            <p>Os conceitos fundamentais do REST que fazem com que ele se destaque são a Interface Uniforme e o HATEOAS (Hypermedia As The Engine Of Application State). Para explicar esses conceitos, considere o trecho de HTML abaixo:</p>
+            <h2>REST</h2>
+            <p>REST (Representational State Transfer) é um estilo de arquitetura de software para APIs que facilita a comunicação entre sistemas web. O conceito fundamental do REST, que faz com que ele se destaque, é a Interface Uniforme, que possui quatro características principais:</p>
+            <ol>
+                <li>Identificação de recursos</li>
+                <li>Manipulação de recursos por representação</li>
+                <li>Mensagens auto-descritivas</li>
+                <li>HATEOAS (Hypermedia as the engine of application state)</li>
+            </ol>
+            <p>Para explicar esses conceitos, considere o trecho de HTML abaixo:</p>
+
             <pre><code class="language-html">&lt;body&gt;
     &lt;section&gt;
         &lt;p&gt;
@@ -149,12 +156,20 @@
         &lt;/p&gt;
     &lt;/section&gt;
 &lt;/body&gt;</code></pre>
+
             <p>Suponha que este HTML é retornado pelo servidor ao acessar <code>www.exemplo.com/contatos/37</code>.</p>
-            <p>O primeiro aspecto do REST é a idéia de que recursos (nesse caso, o contato) podem ser encontrados na URL. Note que no HTML, retornado pelo servidor ao acessar a URL, existem links em tags <code>&lt;a&gt;</code> que indicam as operações que são aplicáveis ao contato 37.</p>
-            <p>O aspecto mais fundamental para a distinção do REST são as mensagens auto-descritivas. Note que o HTML e URL contém todas as informações necessárias para que o navegador/cliente saiba todas as informações sobre o contato e quais operações são aplicáveis a ele, e isso sem ter contato nenhum com a API ou o banco de dados.</p>
-            <p>O conceito de HATEOAS representa a utilização de hipermídia exemplificada acima, com ela sendo o intermediário entre o cliente e o servidor.</p>
-            <p>Atualmente, a arquitetura REST é muito popular, mas é muitas vezes referenciada erroneamente. É comum a associação de REST com APIs de JSON, duas coisas que não são iguais.</p>
-            <p>Leia mais sobre essa confusã<o></o> nesse <a href="https://htmx.org/essays/how-did-rest-come-to-mean-the-opposite-of-rest/">artigo</a> da própria ORG HTMX.</p>
+
+            <p>Vamos passar por cada característica e analisar o código acima:</p>
+
+            <ol>
+                <li><code>Identificação de recursos</code>: O primeiro aspecto do REST é a idéia de que recursos (nesse caso, o contato) podem ser encontrados na URL (Universal Resource Locator). Note tambpem que o HTML, retornado pelo servidor ao acessar a URL, contém links em tags <code>&lt;a&gt;</code> que indicam as operações que são aplicáveis ao nosso recurso (contato 37) e elas seguem o padrão convencional de hierarquia das URLs.</li>
+                <li><code>Manipulação de recursos por representação</code>: Isso apenas significa que é possível alterar nosso recurso por meio de representações (como páginas HTML) ao invés de precisar fazer consultas SQL, por exemplo.</li>
+                <li><code>Mensagens auto-descritivas</code>: Mesmo com o cliente (browser) não tendo nenhuma informação sobre o funcionamento da API ou o banco de dados, ele tem todas as informações sobre quais ações estão disponíveis para esse recurso e como renderizá-las.</li>
+                <li><code>HATEOAS</code>: Este último conceito se encaixa perfeitamente com o anterior: os clientes transitam entre os estados da aplicação interagindo com URLs encontradas no próprio hipertexto (por meio de formulários e links). Assim, no exemplo de HTML acima, a capacidade de editar, enviar por e-mail e arquivar o contato está codificada como âncoras no HTML. Se uma dessas ações não estivesse disponível, ou se uma nova se tornasse disponível, ela apareceria em um novo trecho de HTML após a atualização da página. Isso contrasta com uma abordagem de cliente robusto, onde, por exemplo, um armazenamento local pode ser sincronizado de forma assíncrona com um servidor back-end e, portanto, o HTML não atua como o mecanismo do estado do aplicativo, mas sim como uma linguagem de descrição de interface do usuário (um tanto instável).</li>
+            </ol>
+
+            <p>Atualmente, a arquitetura REST é muitas vezes referenciada erroneamente. É comum a associação de REST com APIs de JSON, duas coisas que não são iguais. Até mesmo pois JSON não é totalmente auto-descritivo, por exemplo.</p>
+            <p>Leia mais sobre essa confusão nesse <a href="https://htmx.org/essays/how-did-rest-come-to-mean-the-opposite-of-rest/">artigo</a> da própria ORG HTMX.</p>
         </div>
 
         <div id="spa">
@@ -402,8 +417,7 @@ from fastapi.templating import Jinja2Templates
 
 app = FastAPI()
 
-templates = Jinja2Templates(directory="Templates")
-partials = Jinja2Templates(directory="Templates/Partials")
+templates = Jinja2Templates(directory=["Templates", "Templates/Partials"])
 
 @app.get("/home",response_class=HTMLResponse)
 async def root(request: Request):
@@ -411,11 +425,11 @@ async def root(request: Request):
 
 @app.get("/home/pagina1", response_class=HTMLResponse)
 async def pag1(request: Request):
-    return partials.TemplateResponse(request, "Pagina1.html")
+    return templates.TemplateResponse(request, "Pagina1.html")
 
 @app.get("/home/pagina2", response_class=HTMLResponse)
 async def pag2(request: Request):
-    return partials.TemplateResponse(request, "Pagina2.html")</code></pre>
+    return templates.TemplateResponse(request, "Pagina2.html")</code></pre>
 
             <p>É possível realizar uma verificação sobre o tipo de request que está sendo feito, e isso nos possibilita separar requests HTMX dos demais. Dessa forma, quando detectarmos que o request para o conteúdo das páginas não é HTMX (foi um request feito diretamente pela URL), podemos pedir para que seja renderizada a página completa.</p>
             <p>Observe o código abaixo que contém essa verificação para ambas as páginas.</p>
@@ -426,13 +440,13 @@ async def pag2(request: Request):
 async def pag1(request: Request):
     if (not "HX-Request" in request.headers):
         return templates.TemplateResponse(request, "index.html")
-    return partials.TemplateResponse(request, "Pagina1.html")
+    return templates.TemplateResponse(request, "Pagina1.html")
 
 @app.get("/home/pagina2", response_class=HTMLResponse)
 async def pag2(request: Request):
     if (not "HX-Request" in request.headers):
         return templates.TemplateResponse(request, "index.html")
-    return partials.TemplateResponse(request, "Pagina2.html")</code></pre>
+    return templates.TemplateResponse(request, "Pagina2.html")</code></pre>
 
             <p>Agora, ao acessar as URLs <code>/home</code> e <code>/home/paginaX</code>, toda a página será sempre renderizada corretamente.</p>
             <p>O último problema que encontramos é que, ao acessar <code>/home/pagina2</code>, a página 1 que é renderizada. Por fim, podemos utilizar uma variável de contexto para indicar para o 'index.html' qual página deve ser renderizada.</p>
@@ -446,8 +460,7 @@ from fastapi.templating import Jinja2Templates
 
 app = FastAPI()
 
-templates = Jinja2Templates(directory="Templates")
-partials = Jinja2Templates(directory="Templates/Partials")
+templates = Jinja2Templates(directory=["Templates", "Templates/Partials"])
 
 @app.get("/home",response_class=HTMLResponse)
 async def root(request: Request):
@@ -457,13 +470,13 @@ async def root(request: Request):
 async def pag1(request: Request):
     if (not "HX-Request" in request.headers):
         return templates.TemplateResponse(request, "index.html", {"pagina": "/home/pagina1"})
-    return partials.TemplateResponse(request, "Pagina1.html")
+    return templates.TemplateResponse(request, "Pagina1.html")
 
 @app.get("/home/pagina2", response_class=HTMLResponse)
 async def pag2(request: Request):
     if (not "HX-Request" in request.headers):
         return templates.TemplateResponse(request, "index.html", {"pagina": "/home/pagina2"})
-    return partials.TemplateResponse(request, "Pagina2.html")</code></pre>
+    return templates.TemplateResponse(request, "Pagina2.html")</code></pre>
 
             <pre><code class="language-html">&lt;!-- Arquivo index.html --&gt;
 
