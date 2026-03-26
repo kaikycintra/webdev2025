@@ -4,7 +4,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Aula 9: HTMX parte 2</title>
+        <title>Aula 9: Integração com HTMX</title>
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
@@ -90,9 +90,9 @@
         
         <div>
 
-            <h1>Aula 9: HTMX parte 2</h1>
+            <h1>Aula 9: Integração de Front-end e Back-end com HTMX</h1>
 
-            <h3><a href="../../index.html">Página inicial</a></h3>
+            <h3><a href="../index.html">Página inicial</a></h3>
 
         </div>
 
@@ -148,7 +148,7 @@
             <p><code>HTMX</code> não é um framework de front-end, apenas uma biblioteca de JavaScript. A versão 1.0 do HTMX foi lançada em 2020, então ainda é uma tecnologia nova que está se desenvolvendo mais a cada dia.</p>
             <p>Nesse curso, optamos por ensinar HTMX ao invés de React, por exemplo, pois HTMX é notavelmente mais simples e fácil de utilizar do que qualquer framework de front-end. Veja abaixo um exemplo de código de <code>React</code>:</p>
 
-            <pre><code class="language-javascript">import React, { useState } from 'react';
+            <pre><code class="language-javascript">import React, { useState, useEffect } from 'react';
 
 const ExemploRequisicao = () => {
   const [conteudo, setConteudo] = useState(null);
@@ -157,10 +157,8 @@ const ExemploRequisicao = () => {
   const buscarDados = async (idPagina) => {
     setCarregando(true);
     try {
-      
       const response = await fetch(`https://localhost:8000/home/${idPagina}`);
       const data = await response.json();
-      
       setConteudo(data);
     } catch (error) {
       console.error("Erro ao buscar dados:", error);
@@ -170,28 +168,33 @@ const ExemploRequisicao = () => {
     }
   };
 
+  useEffect(() => {
+    buscarDados('pagina1');
+  }, []);
+
   return (
     &lt;div&gt;
       &lt;h1&gt;Meu Site&lt;/h1&gt;
-      &lt;p&gt;Bem vindo ao meu site!&lt;/p&gt;
       &lt;div&gt;
-        &lt;button onClick="{() => buscarDados('pagina1')}"&gt;
-          Página 1
-        &lt;/button&gt;
-        &lt;button onClick="{() => buscarDados('pagina2')}"&gt;
-          Página 2
-        &lt;/button&gt;
+        &lt;button onClick={() => buscarDados('pagina1')}&gt;Página 1&lt;/button&gt;
+        &lt;button onClick={() => buscarDados('pagina2')}&gt;Página 2&lt;/button&gt;
       &lt;/div&gt;
       &lt;hr/&gt;
-      &lt;div&gt;
+      
+      {carregando ? (
+        &lt;p>Carregando...&lt;/p&gt;
+      ) : conteudo ? (
         &lt;div&gt;
-        &lt;h2&gt;{conteudo.title}&lt;/h2&gt;
-        &lt;p&gt;{conteudo.body}&lt;/p&gt;
+          &lt;h2&gt;{conteudo.title}&lt;/h2&gt;
+          &lt;p&gt;{conteudo.body}&lt;/p&gt;
         &lt;/div&gt;
-      &lt;/div&gt;
+      ) : (
+        &lt;p&gt;Nenhum conteúdo disponível.&lt;/p&gt;
+      )}
     &lt;/div&gt;
-    );
+  );
 };
+
 export default ExemploRequisicao;</code></pre>
 
             <p>O código acima é uma adaptação do exemplo das páginas da aula passada. Veja abaixo o código utilizando <code>HTMX</code>:</p>
@@ -325,8 +328,7 @@ url_sqlite = f"sqlite:///{arquivo_sqlite}"
 
 engine = create_engine(url_sqlite)
 
-templates = Jinja2Templates(directory="Templates")
-partials = Jinja2Templates(directory="Templates/Partials")
+templates = Jinja2Templates(directory=["Templates", "Templates/Partials"])
 
 def create_db_and_tables():
     SQLModel.metadata.create_all(engine)
@@ -343,11 +345,11 @@ def busca(request: Request):
 @app.get("/lista", response_class=HTMLResponse)
 def lista(request: Request):
     alunos = buscar_alunos()
-    return partials.TemplateResponse(request, "lista.html", {"alunos": alunos})
+    return templates.TemplateResponse(request, "lista.html", {"alunos": alunos})
     
 @app.get("/editarAlunos")
 def novoAluno(request: Request):
-    return partials.TemplateResponse(request, "options.html")</code></pre>
+    return templates.TemplateResponse(request, "options.html")</code></pre>
 
             <p>Por fim, temos a <code>main.py</code>, que organiza os endpoints para os requests que queremos fazer.</p>
             <p>Com esse código inicial, o <code>index.html</code> será renderizado ao acessarmos <code>/busca</code> e, a partir dele, temos os botões de redirecionamento para a página da lista de alunos (que é renderizada por automático em primeiro acesso) e para a página de edição de alunos.</p>
@@ -500,7 +502,7 @@ def buscar_alunos(busca):
 @app.get("/lista", response_class=HTMLResponse)
 def lista(request: Request, busca: str | None=''):
     alunos = buscar_alunos(busca)
-    return partials.TemplateResponse(request, "lista.html", {"alunos": alunos})</code></pre>
+    return templates.TemplateResponse(request, "lista.html", {"alunos": alunos})</code></pre>
 
             <p>Ainda temos duas observações importantes para fazer.</p>
             <p>A primeira é que foi passado um <code>None=''</code> para a variável busca, pois o primeiro request de <code>/lista</code> renderiza a página completa e não terá um parâmetro no input (filtraremos os alunos pela string vazia, ou seja, serão retornados todos os alunos).</p>
