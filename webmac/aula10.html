@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aula 10: Docker</title>
+</head>
+
+    <style>
+        :root {
+            --background-color: #292827; /* Nova cor de fundo */
+            --surface-color: #363636; /* Um pouco mais claro que o fundo para contraste */
+            --primary-text-color: #e0e0e0;
+            --secondary-text-color: #a0a0a0;
+            --disabled-text-color: #666;
+            --accent-color-1: #ff690a; /* Laranja vibrante */
+            --accent-color-2: #ff690a; /* Laranja vibrante */
+            --border-color: #444; /* Borda mais escura */
+            --code-bg: #404040; /* Fundo para blocos de código */
+            --note-bg: #4a4a4a; /* Fundo para notas */
+            --note-border: var(--accent-color-2); /* Borda da nota */
+        }
+
+        body {
+            font-family: 'Roboto', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            line-height: 1.7;
+            background-color: var(--background-color);
+            color: var(--primary-text-color);
+            margin: 0;
+            padding: 0;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0rem 1.5rem;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+            box-sizing: border-box; /* Garante que padding não estoure a largura */
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            color: var(--accent-color-1);
+            font-weight: 700;
+            margin-top: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 1rem;
+        }
+
+        h2 {
+            font-size: 2.2rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.5rem;
+        }
+
+        h3 {
+            font-size: 1.8rem;
+        }
+
+        a {
+            color: var(--accent-color-2);
+            transition: color 0.2s ease-in-out;
+        }
+
+        a:hover {
+            color: var(--primary-text-color);
+            text-decoration: underline;
+        }
+
+        ul, ol {
+            padding-left: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        ul li, ol li {
+            margin-bottom: 0.5rem;
+        }
+
+        code {
+            background-color: var(--code-bg);
+            color: var(--accent-color-2);
+            padding: 0.2em 0.4em;
+            border-radius: 4px;
+            font-family: 'Roboto Mono', monospace;
+            font-size: 0.9em;
+        }
+
+        pre {
+            background-color: var(--code-bg);
+            padding: 1rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin-top: 1.5rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            font-family: 'Roboto Mono', monospace;
+            font-size: 0.95em;
+            line-height: 1.4;
+            color: var(--primary-text-color);
+            border: 1px solid var(--border-color);
+        }
+
+        pre code {
+            background-color: transparent;
+            color: inherit;
+            padding: 0;
+        }
+
+        .note {
+            background-color: var(--note-bg);
+            border-left: 5px solid var(--note-border);
+            padding: 1rem 1.5rem;
+            margin: 2rem 0;
+            border-radius: 8px;
+            color: var(--primary-text-color);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        .note p {
+            margin: 0;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 2rem 0;
+            background-color: var(--surface-color);
+            border-radius: 8px;
+            overflow: hidden; /* Para bordas arredondadas funcionarem com a borda interna */
+        }
+        th, td {
+            border: 1px solid var(--border-color);
+            padding: 12px 15px;
+            text-align: left;
+            vertical-align: top;
+        }
+        th {
+            background-color: var(--code-bg); /* Use cor de código para cabeçalho */
+            font-weight: 700;
+            color: var(--primary-text-color);
+        }
+        tr:nth-child(even) {
+            background-color: #2f2f2f; /* Cor alternativa para linhas pares */
+        }
+        tr:hover {
+            background-color: #3e3e3e; /* Destaque ao passar o mouse */
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block; /* Remove espaço extra abaixo da imagem */
+            margin: 2rem auto; /* Centraliza imagens e adiciona margem */
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1.5rem 1rem;
+            }
+            h1 {
+                font-size: 2.2rem;
+            }
+            h2 {
+                font-size: 1.8rem;
+            }
+            h3 {
+                font-size: 1.5rem;
+            }
+            body {
+                font-size: 0.95em;
+            }
+        }
+        @media (max-width: 480px) {
+            .container {
+                padding: 1rem 0.8rem;
+            }
+            h1 {
+                font-size: 1.8rem;
+            }
+            h2 {
+                font-size: 1.5rem;
+            }
+        }
+
+        /* Extras que coloquei para fazer as tipBoxes */
+
+        .tip_box {
+            margin: 2rem 0;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--surface-color);
+            flex-direction: row;
+        }
+
+        .topLayer {
+            display: grid; 
+            grid-template-columns: 10% 1fr; 
+            gap: 10px; 
+            padding: none;
+            padding-left: 25px; 
+            margin: none;
+            align-items: center;
+            max-height: 200px;
+        }
+
+        .tip_box_tab {
+            display: flex;
+            align-items: center;
+            padding: 1.2rem 1.5rem;
+            color: white;
+            font-weight: 700;
+            font-size: 1.1rem;
+            gap: 1rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .mini-icon {
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            padding: 0;
+            max-height: 75px;
+            object-fit: scale-down;
+        }
+
+        .tip_box_content {
+            padding: 1.5rem;
+            align-content: center;
+            background-color: var(--surface-color);
+            color: var(--primary-text-color);
+            
+            line-height: 1.7;
+            margin: 0;
+        }
+
+        .citation {
+            font-style: italic;
+        }
+
+        .tip_box_end {
+            padding-left: 1.5rem;
+        }
+
+        .tip_box_title {
+            font-size: large;
+            font-weight: bolder;
+        }
+
+        .border-definition {
+            border-left: 3px solid white;
+        }
+
+        .border-warning {
+            border-left: 3px solid yellow;
+        }
+
+        .border-challenge {
+           border-left: 3px solid blue; 
+        }
+
+        .border-good-practice {
+            border-left: 3px solid green; 
+        }
+    </style>
+<body>
+
+<h1>Introdução ao Docker</h1>
+
+<h2>Conteúdos</h2>
+
+<ul>
+  <li><a href="#introducao">Introdução</a></li>
+  <li><a href="#containers">Containers</a></li>
+  <li><a href="#imagens">Imagens</a></li>
+  <li><a href="#construindo-e-rodando">Construindo e rodando nosso primeiro container com Dockerfile</a></li>
+  <li><a href="#docker-compose">Introdução ao Docker Compose</a></li>
+  <li><a href="#desafio">Desafio proposto</a></li>
+</ul>
+
+<!-- Seção Introdução -->
+<h2 id="introducao">Introdução</h2>
+<p>
+  À esse ponto, você tem todas as ferramentas necessárias para construir web apps simples e completos. 
+  Hoje, iremos trabalhar com uma ferramenta essencial em engenharia de software, conhecida como <strong>Docker</strong>.
+</p>
+
+<!-- imagem 1: placeholder -->
+<img src="../static/webmac/aula10/docker_logo.png"> 
+
+    <div id="abstraction-definition" class="tip_box definition">
+        <div class="topLayer">
+            <img class="mini-icon" src="https://cdn-icons-png.flaticon.com/512/8653/8653193.png" alt="Ícone de definição">
+            <p class="tip_box_title">Definição</p>
+        </div>
+        <p class="tip_box_content  citation border-definition">
+            “O Docker é um conjunto de produtos que utiliza virtualização em nível de sistema operacional para distribuir software em pacotes chamados contêineres.
+O Docker automatiza a implantação de aplicativos em contêineres leves, permitindo que eles sejam executados de forma consistente em diferentes ambientes de computação.”
+        </p>
+        <p class="tip_box_end">Fonte: <a href="https://en.wikipedia.org/wiki/Docker_(software)">Wikipedia</a></p>
+    </div>
+
+<p>Como analogia, podemos pensar no transporte de produtos antes dos anos 60. Nessa época, os itens era carregados e descarregados de forma manual de um meio de transporte para outro, em diferentes pacotes, diferentes tamanhos, ou mesmo de forma solta. E então, contêineres de transporte foram criados, o que fez com que o carregamento de mercadorias e itens entre navios, trens e caminhões se tornasse mais fácil. A ideia do Docker é a mesma (note a logo de Docker, uma baleia com contêineres): simplificar o envio e implantação de códigos, apps e etc, com uso consistente em qualquer plataforma.</p>
+
+<p>Quase qualquer plataforma... desde que esteja rodando um Kernel Linux.</p>
+
+<img src="../static/webmac/aula10/container.png">
+
+<p>
+	No mundo de desenvolvimento de software, em times de múltiplos desenvolvedores, problemas podem ocorrer devido à configuração da máquina de uma pessoa ser diferente da máquina de outra pessoa - geralmente ligado à clássica frase "mas funciona na minha máquina"-. Como exemplo, você pode ter uma versão diferente de Python, ou pacotes adicionais (sistema de banco de dados, servidor proxy, etc), que permitem a aplicação rodar tranquilamente no seu computador, enquanto em outras máquinas irá falhar.
+</p>
+
+<img src="../static/webmac/aula10/works.png">
+
+<p>
+  Para evitar esses problemas, o Docker surge como uma ferramenta que permite desenvolvedores a isolar as aplicações em uma sandbox (chamados **containers** ou **contêineres**) que rodam no sistema hospedeiro. Uma vantagem do Docker é que nos permite empacotar a aplicação com todas as suas dependências em uma unidade padronizada, para desenvolvimento e envio.
+  Ao contrário de máquinas virtuais, containers não possuem uma sobrecarga alta, isto é, são extremamente leves em comparação à máquinas virtuais enquanto "servem" o mesmo propósito em algumas coisas, o que torna o uso do sistema e dos recursos mais eficiente.
+</p>
+
+
+<h2 id="containers">Containers</h2>
+<p>
+  Como dito, o método para isolar aplicações era de se usar VMs. Em contrapartida, o custo desse método é a sobrecarga computacional para virtualização de hardware que possibilita a existência do SO visitante.
+</p>
+
+
+<img src="../static/webmac/aula10/docker_vm.png">
+
+<p>
+  Os containers, em comparação, possuem uma abordagem diferente. São **processos de sistema** (como qualquer outro processo) que recebem algumas configurações especiais. Alguns desses mecanismos são do Kernel Linux, como:
+</p>
+<ul>
+  <li><strong>Namespaces</strong>: permitem limitar o quê um processo pode ver no sistema (Process ID, Rede, usuário, etc).</li>
+  <li><strong>Cgroups</strong>: gerenciam, limitam e isolam recursos de sistema (CPU, memória, disco, etc) para um grupo de processos.</li>
+</ul>
+<p>
+  Com esses mecanismos e alguns outros, os containers operam dentro de limites bem-definidos. E como esses processos estão isolados do sistema por meio de <strong>OS-level virtualization</strong>, cria-se uma ilusão de que a aplicação está rodando em um sistema totalmente independente, embora compartilhe os recursos com o sistema hospedeiro.
+</p>
+<p>
+  A vantagem de ter um ambiente isolado do sistema é que, além de ser possível compartilhar seu aplicativo/ambiente de desenvolvimento com outras pessoas - evitando o clássico erro de "funciona na minha máquina..." - também possibilita o deployment dessas aplicações de forma mais fácil e consistente, independente se o ambiente alvo é um data center privado, um servidor em cloud, ou mesmo o notebook do seu colega.
+</p>
+
+    <div class="tip_box caution">
+        <div class="topLayer">
+            <img class="mini-icon" src="https://cdn-icons-png.flaticon.com/512/1768/1768400.png" alt="Ícone de aviso">
+            <p class="tip_box_title">Observação</p>
+        </div>
+
+        <p class="tip_box_content border-warning">
+Os containers não são exclusivos ao Docker, e nem criados pelo Docker. O propósito do Docker é ser uma interface simples para o gerenciamento desses containers. 
+  Outras alternativas existem, como <strong>podman</strong>, <strong>cri-o</strong>, etc.
+        </p>
+    </div>
+
+<!-- Seção Imagens -->
+<h2 id="imagens">Imagens</h2>
+<p>
+  Vendo que os containers são processos isolados, como exatamente definimos os pacotes, arquivos e binários para usar nele? Como compartilhamos esses ambientes?
+</p>
+<p>
+  É aqui que as <strong>imagens de container</strong> se tornam essenciais. Uma imagem de container é como um blueprint, um pacote padronizado que inclui os arquivos, binários, bibliotecas e configurações para rodar um container. Como exemplo, uma imagem de um web app Python irá incluir o ambiente de runtime Python, o código do web app, e suas dependências/bibliotecas. Há alguns conceitos importantes sobre imagens:
+</p>
+<ul>
+	<li><strong>Imagens são imutáveis</strong>. Ao serem criadas, não podem ser modificadas (ou refatoradas). Só é possível criar novas imagens, ou adicionar mudanças em camadas acima.</li>
+	<li><strong>Imagens são compostas de camadas empilhadas.</strong> Algo interessante a se notar é que se for necessário mudar a imagem (adicionar pacotes, etc), o Docker utiliza <strong>Layer Caching</strong> para não precisar reconstruir a imagem inteira.</li>
+</ul>
+<p>
+  Ao desenvolver projetos, interagimos com imagens de duas formas: <strong>Usando imagens prontas online</strong> ou <strong>criando imagens</strong>.
+</p>
+<ul>
+  <li>No primeiro caso, em geral, utilizamos uma imagem base, tal como Python, para rodar um app de forma isolada, ou para ser a base da nossa imagem de aplicativo (o que nos deixa focar no app ao invés do Python). Essas imagens podem ser encontradas em <strong>serviços de registro</strong> como <strong>Docker Hub</strong> ou <strong>Azure Container Registry</strong>.</li>
+  <li>No segundo caso, a partir de uma imagem pronta, adicionamos o código do nosso aplicativo. A configuração da imagem é feita por meio do <strong>Dockerfile</strong>, um arquivo usado para guiar o construtor de imagem nos comandos a rodar, arquivos a copiar, etc. Dessa forma, estendemos a imagem base para criar nossa própria imagem, a que o container se baseará para rodar. Feito isso, podemos publicar nossas imagens nesses registros para compartilhamento e deployment fácil em qualquer lugar.</li>
+</ul>
+
+<img src="../static/webmac/aula10/dockerfile.png">
+
+<p>Com essa base em mente, vamos colocar em prática o uso de Docker e containerização com o nosso aplicativo!</p>
+
+<h2 id="construindo-e-rodando">Construindo e rodando nosso primeiro container com Dockerfile</h2>
+<p>
+Antes de mais nada, tenha o Docker instalado em seu sistema. <a href="https://www.docker.com/get-started/">Na documentação oficial do Docker</a> temos instruções de como instalar a depender do seu OS, método de instalação preferido, entre outras coisas. Tenha em mente que essa aula irá usar Docker via terminal, então caso tenha interesse no <strong>Docker Desktop</strong>, terá que aprender por fora.
+</p>
+<p>Além do Docker, será necessário baixar o <code>docker-compose</code> e, possivelmente, o <code>docker-buildx</code>. O primeiro é uma ferramenta para gerenciamento de aplicações multi-container, enquanto o segundo é um motor substituto para a construção de imagens de container.</p>
+<p>
+  Na raiz de seu projeto Python, iremos criar o arquivo Docker, nomeado de <code>Dockerfile</code>. Nesse arquivo, iremos providenciar as instruções de como criar uma imagem e quais arquivos, bibliotecas a incluir no container. Aqui está um exemplo de como o arquivo se parece:
+</p>
+
+<pre><code>FROM python:3.14-slim
+
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONBUFFERED=1
+
+WORKDIR /code
+
+COPY requirements.txt ./
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY . ./
+
+CMD ["fastapi", "dev", "main.py", "--host", "0.0.0.0"]</code></pre>
+
+<p>Vamos ver o que cada um desses comandos acima faz:</p>
+<ul>
+  <li><code>FROM python:3.14-slim</code>: definimos a base para nossa imagem como sendo uma imagem padrão leve (<code>slim</code>) em que o Python 3.14 está instalado. Isto é comum, para que evitemos ter que redefinir o setup básico para cada imagem.</li>
+  <li><code>ENV PYTHONDONTWRITEBYTECODE=1</code> e <code>ENV PYTHONBUFFERED=1</code>: são variáveis de ambiente comumente utilizadas em containers rodando aplicações Python, e controlam algumas ações do interpretador Python em ambientes containerizados.</li>
+  <li><code>WORKDIR /code</code>: definimos o diretório onde rodaremos o comando (quase como dar <code>cd diretorio_meu_projeto</code> no terminal).</li>
+  <li><code>COPY requirements.txt ./</code>: Assumindo que você tenha passado as dependências do seu app Python para um <code>requirements.txt</code>, isso irá copiar esse arquivo para o diretório de trabalho do container.</li>
+  <li><code>RUN pip install --no-cache-dir -r requirements.txt</code>: aqui, baseado no arquivo anterior, iremos instalar as dependências do arquivo.</li>
+  <li><code>COPY . ./</code>: nessa parte, copiamos os arquivos da raiz do projeto <code>.</code> para o diretório de trabalho <code>./</code>.</li>
+  <li><code>CMD ["fastapi", "dev", "main.py", "--host", "0.0.0.0"]</code>: especificamos o comando que deve ser rodado ao iniciar o container. Neste caso, iremos iniciar um servidor de desenvolvimento (disponível no pacote <code>fastapi[standard]</code> do pip).</li>
+</ul>
+
+    <div class="tip_box caution">
+        <div class="topLayer">
+            <img class="mini-icon" src="https://cdn-icons-png.flaticon.com/512/1768/1768400.png" alt="Ícone de aviso">
+            <p class="tip_box_title">Observação</p>
+        </div>
+
+        <p class="tip_box_content border-warning">
+Copiar o <code>requirements.txt</code> antes do projeto em si nos traz algumas otimizações relacionadas à <strong>Layer caching</strong>. 
+  Se mudarmos o código fonte <code>main.py</code>, as dependências não terão que ser reinstaladas na imagem, graças à esse caching por camadas! 
+  Também existem outras otimizações, sinta-se livre para pesquisar pela documentação do Docker.
+
+        </p>
+    </div>
+
+<p>Agora que possuimos essa imagem, podemos construir nossa imagem. O comando utilizado para criar a imagem é o <code>docker build</code>, que se baseia em um <code>Dockerfile</code>. Para criar a imagem, rode na raiz do projeto:</p>
+
+<pre><code>>> docker build -t app .</code></pre>
+
+<p>Isso irá iniciar o processo de construção da imagem. A flag <code>-t</code> é usada para nomear a imagem.</p>
+
+<img src="../static/webmac/aula10/building_image.png">
+
+<p>Rodando <code>docker images</code>, podemos ver nossa imagem listada:</p>
+
+<img src="../static/webmac/aula10/listing_images.png">
+
+<p>Finalmente, para iniciar nosso app em um container baseado na imagem construída, utilizamos o <code>docker run</code>:</p>
+
+<pre><code>>> docker run --name app_container -p 8000:8000 app:latest</code></pre>
+
+<p>Note que, acessando http://127.0.0.1:8000/, acessamos o site através da porta 8000 do container, que está exposta.</p>
+
+<img src="../static/webmac/aula10/accessing_container.png">
+
+<h2 id="docker-compose">Introdução ao Docker Compose</h2>
+    <div class="tip_box caution">
+        <div class="topLayer">
+            <img class="mini-icon" src="https://cdn-icons-png.flaticon.com/512/1768/1768400.png" alt="Ícone de aviso">
+            <p class="tip_box_title">Observação</p>
+        </div>
+
+        <p class="tip_box_content border-warning">
+			A seção a seguir aborda alguns conceitos e programas que não foram e nem serão cobrados nesta fase da disciplina, como PostgreSQL, Redis, etc. Serve mais como uma parte expositiva, e como uma preparação para um dos exercícios.
+        </p>
+    </div>
+
+
+<p>
+  Mesmo que nosso web app esteja quase pronto, em ambientes reais, ele nunca será "apenas" um script em python. Geralmente, precisa de:
+</p>
+<ul>
+  <li>Um Banco de Dados mais robusto, como PostgreSQL, MongoDB</li>
+  <li>Um Cache, como Redis</li>
+  <li>Entre outros serviços</li>
+</ul>
+<p>
+  O problema clássico "funciona na minha máquina" também poderia ocorrer com esses sistemas, o que nos leva à querer containerizar os mesmos. 
+  Ainda assim, parece meio ineficiente obter várias imagens para essas aplicações, criar uma rede compartilhada que conecte os containers de forma manual, e lembrar das variáveis de ambiente toda vez que iniciarmos o desenvolvimento no projeto. Para isso, temos uma ferramenta adicional que irá nos ajudar: 
+  <strong>Docker Compose</strong>.
+</p>
+
+    <div id="abstraction-definition" class="tip_box definition">
+        <div class="topLayer">
+            <img class="mini-icon" src="https://cdn-icons-png.flaticon.com/512/8653/8653193.png" alt="Ícone de definição">
+            <p class="tip_box_title">Definição</p>
+        </div>
+        <p class="tip_box_content  citation border-definition">
+            “O Docker Compose é uma ferramenta para definir e executar aplicações com múltiplos contêineres. É a chave para uma experiência de desenvolvimento e implantação simplificada e eficiente.
+
+O Compose simplifica o controle de aplicações, facilitando o gerenciamento de serviços, redes e volumes em um único arquivo de configuração YAML. Em seguida, com um único comando, você cria e inicia todos os serviços a partir do seu arquivo de configuração.”
+        </p>
+		<p class="tip_box_end">Fonte: <a href="https://docs.docker.com/compose/">Docker Docs</a></p>
+    </div>
+
+<p>
+  Note que em um app completo, é intuitivo precisar de vários containers para rodar a aplicação, então, ao invés de rodar vários comandos no terminal para poder conectar esses containers, utilizamos um arquivo <strong>YAML</strong> chamado <code>docker-compose.yml</code> que permitirá a configuração de todos os serviços.
+</p>
+<p>
+  Para um exemplo um pouco mais complexo, considere o seguinte <code>main.py</code> em FastAPI:
+</p>
+
+<pre><code>from fastapi import FastAPI
+from redis import Redis
+import os
+
+app = FastAPI()
+
+redis_host = os.getenv("REDIS_HOST", "localhost")
+cache = Redis(host=redis_host, port=6379, decode_responses=True)
+
+@app.get("/")
+def index():
+    hits = cache.incr("visitor_count")
+    return {
+        "message": "Olá visitante!",
+        "total_visitors": hits
+    }</code></pre>
+
+<ul>
+  <li>Aqui, iremos utilizar o Redis, um sistema de caching. De forma bem simples, ele armazena pares Chave-Valor no sistema, e é útil para consultas que precisam ser rápidas (pois são armazenadas na RAM). É amplamente utilizado em ambientes reais de produção. Não se esqueça de instalar a lib <code>redis</code> em sua venv!</li>
+  <li>A lógica do aplicativo é simples: implementar uma rota que incrementa o valor da chave <code>visitor_count</code> dentro do serviço Redis a cada vez que é acessada.</li>
+  <li>Note que, se estivéssemos rodando Redis diretamente na nossa máquina, nós nos conectaríamos à porta do serviço via <code>localhost</code> ou <code>127.0.0.1</code>. Nesse caso, ao usar Docker Compose, ele irá nos possibilitar <strong>nomear</strong> o serviço Redis, e poderemos nos conectar utilizando esse nome ao invés do IP do container. Se o IP mudar, o Docker Compose cuidará disso, e o aplicativo não irá quebrar.</li>
+</ul>
+
+<p>Para o Dockerfile, não iremos mudar nada, o que definimos anteriormente funcionará bem.</p>
+<p>Finalmente, para o <code>docker-compose.yml</code>, iremos definir dois serviços: um para o nosso código, e um para uma imagem Redis:</p>
+
+<pre><code>services:
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - REDIS_HOST=redis
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:7-alpine</code></pre>
+
+<ul>
+  <li>No arquivo acima, especificamos que iremos rodar dois serviços, nomeados <code>web</code> e <code>redis</code>. O primeiro cuidará do container do nosso servidor FastAPI, enquanto o segundo irá definir um container rodando Redis.</li>
+  <li>Ademais, para o container de servidor, definimos que a imagem seja construída baseada no Dockerfile presente na raiz do projeto (<code>build: .</code>), que tenha a porta 8000 exposta para o nosso computador, e definimos uma variável de ambiente <code>REDIS_HOST</code>, usada para o servidor se conectar ao container Redis. Além disso, o serviço web dependerá do serviço redis, com <code>depends_on: ...</code>.</li>
+</ul>
+
+<p>Por fim, para rodar o sistema por completo, usamos o comando <code>docker compose up</code>. Isso irá fazer a etapa de build da imagem, além de configurar os containers corretamente:</p>
+
+<p>"Exemplos do sistema rodando"</p>
+
+<img src="../static/webmac/aula10/docker_composeup.png">
+
+<p>E ao acessar o site, podemos ver a variável <code>total_visitors</code> incrementando à cada vez que visitamos, significando que os containers estão se comunicando corretamente.</p>
+
+<img src="../static/webmac/aula10/docker_composeup2.png">
+
+<p>
+  Para desconectar dos logs do Docker Compose, aperte a tecla <code>d</code> no terminal, ou, alternativamente, adicione a flag <code>-d</code> ao rodar <code>docker compose up</code> para voltar ao seu terminal após o início do app. Para parar os containers, utilize <code>docker compose down</code> na raiz do projeto.
+</p>
+<p>
+  No dia-a-dia, são utilizados vários outros comandos além de <code>docker run</code>, <code>docker build</code> ou <code>docker compose up</code>. Alguns dos mais úteis são:
+</p>
+<ul>
+  <li><code>docker ps</code> ou <code>docker container ls</code>: lista os containers ativos.</li>
+  <li><code>docker stop &lt;container_name&gt;</code>: para um container ativo.</li>
+  <li><code>docker start &lt;container_name&gt;</code>: inicia um container parado.</li>
+  <li><code>docker logs -f &lt;container_name&gt;</code>: imprime o log de um container.</li>
+  <li><code>docker exec -it &lt;container_name&gt; sh</code>: abre um terminal iterativo dentro do container com o shell <code>sh</code>. É possível abrir com <code>bash</code> caso a imagem base suporte.</li>
+  <li><code>docker rm &lt;container_name&gt;</code>: remove um container parado.</li>
+  <li><code>docker pull &lt;image_name&gt;</code>: baixa uma imagem de um registry como Docker Hub.</li>
+  <li><code>docker images</code>: lista as imagens.</li>
+  <li><code>docker rmi &lt;image_name&gt;</code>: remove uma imagem.</li>
+  <li><code>docker system prune</code>: remove dados não-utilizados, como containers parados, imagens paradas, redes, entre outras coisas. Extremamente útil para limpar o espaço de disco, visto que o uso de Docker pode ocupar um grande espaço no disco em casos de construir imagens repetidamente. (Nota: a flag <code>--volumes</code> também removerá volumes, enquanto a flag "nuclear" <code>--all</code> irá LIMPAR TUDO, use isso SOMENTE se souber o que está fazendo).</li>
+  <li><code>docker stats</code>: verifica o uso de recursos (CPU, memória) dos containers.</li>
+</ul>
+<p>
+  Há muito mais a ser explorado com Docker, Docker Compose e as ferramentas correlatas, principalmente quando utilizado em conjunto com banco de dados como PostgreSQL, MySQL, entre outros, ou serviços/aplicações diferentes. Ainda assim, esperamos que essa aula tenha servido bem para entender melhor o que é essa ferramenta, e os conceitos por trás dela :)
+</p>
+
+<h2 id="desafio">Desafios proposto</h2>
+<ol>
+  <li>
+    Containerize sua aplicação Python com FastAPI, criando um Dockerfile. Caso seu projeto utilize programas externos como Redis, ou um banco de dados diferente do visto em aula, configure um arquivo <code>docker-compose.yml</code> para comunicação entre os serviços.
+  </li>
+  <li>
+    Baseando-se no <code>main.py</code> proposto nesta aula, copie o seguinte <code>Dockerfile</code>
+    <pre><code>FROM python:latest
+RUN apt-get update && apt-get install -y gcc git vim
+
+COPY . /app
+WORKDIR /app
+
+RUN pip install -r requirements.txt
+
+ENV REDIS_HOST=localhost
+
+CMD fastapi dev main.py --port 8000</code></pre>
+    <ul>
+      <li>O arquivo acima está otimizado para a aplicação? Você consegue dizer em quais pontos podemos melhorar?</li>
+      <li>Ao construir a imagem, notará que o tamanho excede 1G, enquanto que a imagem construida em sala está em torno de 300MB. Procure tentar diminuir a imagem, e explique seu caminho.</li>
+      <li>Ao rodar <code>docker build</code> uma vez, adicione algum comentário no <code>main.py</code> e construa outra vez. O tempo para construção foi similar? Podemos melhorar isso?</li>
+      <li>Tente iniciar sua aplicação com Docker Compose. Descubra por quê está falhando.</li>
+    </ul>
+  </li>
+</ol>
+
+</body></html>
